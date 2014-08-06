@@ -1,0 +1,9 @@
+ÀÄmain
+   ÃÄMAIN  0/116  Ram=1
+   ³  ÃÄ@cinit1  (Inline)  Ram=0
+   ³  ÃÄ@PSTRINGC_9600_31766_31767  0/36  Ram=2
+   ³  ÃÄ@delay_ms1  0/42  Ram=1
+   ³  ÃÄ@PSTRINGCN_9600_31766_31767  0/34  Ram=3
+   ³  ÀÄ@PSTRINGR_9600_31766_31767  0/40  Ram=2
+   ÀÄSSP_isr  0/88  Ram=2
+      ÀÄ@I2C_WRITE_1  0/24  Ram=1

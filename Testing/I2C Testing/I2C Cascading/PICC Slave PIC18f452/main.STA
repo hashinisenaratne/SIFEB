@@ -1,0 +1,55 @@
+
+ROM used:   548/16384 (2%)
+            548/16384 (2%) including unused fragments
+
+            0.7 Average locations per line
+            32.2 Average locations per statement
+
+RAM used:   28/1536 (2%) at main() level
+            32/1536 (2%) worst case
+
+Stack used: 3 worst case (1 in main + 2 for interrupts)
+Stack size: 31
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+   54    17 100  main.c
+   13     0   0  main.h
+  701     0   0  C:\Program Files (x86)\PICC\Devices\18F452.h
+----- -----
+  768    17 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     42   4    1             @delay_ms1
+0     24   2    1             @I2C_WRITE_1
+0     88   8    2   242  5.4  SSP_isr
+0    116  11    1   202  2.6  MAIN
+0      8   1    0             @const634
+0     36   3    2             @PSTRINGC_9600_31766_31767
+0     14   1    0             @const636
+0     34   3    3             @PSTRINGCN_9600_31766_31767
+0     40   4    2             @PSTRINGR_9600_31766_31767
+ Inline         0             @cinit1
+
+Program metrics:
+    Functions               2
+    Statements              17
+    Comments                128
+    Volume (V)              550
+    Difficulty (D)          6.7
+    Effort to implement (E) 3687
+    Time to implement (T)   3 minutes
+    Est Delivered Bugs (B)  0
+    Cyclomatic Complexity   3
+    Maintainability (MI)    98
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00002     4  0  
+00004-00006     0  4  
+00008-00094   142  0  
+00096-07FFE   402  32216  
+
+
+

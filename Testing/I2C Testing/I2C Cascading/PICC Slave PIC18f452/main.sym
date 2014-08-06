@@ -1,0 +1,99 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     @INTERRUPT_AREA
+005     @INTERRUPT_AREA
+006     @INTERRUPT_AREA
+007     @INTERRUPT_AREA
+008     @INTERRUPT_AREA
+009     @INTERRUPT_AREA
+00A     @INTERRUPT_AREA
+00B     @INTERRUPT_AREA
+00C     @INTERRUPT_AREA
+00D     @INTERRUPT_AREA
+00E     @INTERRUPT_AREA
+00F     @INTERRUPT_AREA
+010     @INTERRUPT_AREA
+011     @INTERRUPT_AREA
+012     @INTERRUPT_AREA
+013     @INTERRUPT_AREA
+014     @INTERRUPT_AREA
+015     @INTERRUPT_AREA
+016-018 buffer
+019     state
+01A     @I2C_STATE
+01B     @PSTRINGCN_9600_31766_31767.P1
+01B     MAIN.@SCRATCH1
+01B     @PSTRINGC_9600_31766_31767.@SCRATCH1
+01B     @PSTRINGR_9600_31766_31767.@SCRATCH1
+01C     @delay_ms1.P1
+01C     @PSTRINGC_9600_31766_31767.@SCRATCH2
+01C     @PSTRINGCN_9600_31766_31767.@SCRATCH1
+01C     @PSTRINGR_9600_31766_31767.@SCRATCH2
+01D     @PSTRINGCN_9600_31766_31767.@SCRATCH2
+01E     @I2C_WRITE_1.P1
+01E     SSP_isr.@SCRATCH1
+01F     SSP_isr.@SCRATCH2
+F83     PSP_DATA
+FBB     CCP_2
+FBB     CCP_2_LOW
+FBC     CCP_2_HIGH
+FBE     CCP_1_LOW
+FBE     CCP_1
+FBF     CCP_1_HIGH
+FE1-FE2 @WRITE_PACKED_MEMORY.P1
+FE1-FE2 @READ_PACKED_MEMORY.P2
+FE9-FEA @WRITE_PROGRAM_MEMORY.P1
+FE9-FEA @WRITE_PACKED_MEMORY.P2
+FE9-FEA @READ_PACKED_MEMORY.P3
+FE9-FEA @READ_PROGRAM_MEMORY.P4
+FF6-FF8 @WRITE_PROGRAM_MEMORY.P1
+FF6-FF8 @READ_PROGRAM_MEMORY.P2
+
+ROM Allocation:
+000096  @I2C_WRITE_1
+0000AE  SSP_isr
+000106  @const634.call
+00010E  @const636.call
+00011C  @PSTRINGC_9600_31766_31767
+000140  @delay_ms1
+00016A  @PSTRINGCN_9600_31766_31767
+00018C  @PSTRINGR_9600_31766_31767
+0001B4  MAIN
+0001B4  @cinit1
+0001E0  @cinit2
+
+Project Directory:
+    D:\Projects\SIFEB\Testing\Master to Slave Communication\PICC Slave PIC18f452\
+
+Project Files:
+    main.c                                                  [06-Aug-14 08:57  CRC=130324B8]
+    main.h                                                  [30-Jul-14 15:44  CRC=784CF644]
+    C:\Program Files (x86)\PICC\Devices\18F452.h            [03-Jul-13 14:28  CRC=8BB2C0D6]
+
+Source signature=A2B59CA8
+
+Units:
+    main (main)
+
+Compiler Settings:
+    Processor:      PIC18F452
+    Pointer Size:   16
+    ADC Range:      0-65535
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    XREF file:   main.xsym
+    Errors:      main.err
+    Ext Symbols: main.esym
+    INHX32:      main.hex
+    Symbols:     main.sym
+    List:        main.lst
+    Debug/COFF:  main.cof
+    Project:     main.ccspjt
+    Call Tree:   main.tre
+    Statistics:  main.STA
