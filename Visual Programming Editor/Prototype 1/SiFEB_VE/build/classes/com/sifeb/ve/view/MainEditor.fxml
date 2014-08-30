@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
@@ -30,7 +31,7 @@
                                  <content>
                                     <ScrollPane prefHeight="400.0" prefWidth="200.0">
                                        <content>
-                                          <VBox fx:id="actuatorBox" alignment="CENTER_LEFT" prefWidth="200.0" />
+                                          <VBox fx:id="actuatorBox" prefWidth="200.0" />
                                        </content>
                                     </ScrollPane>
                                  </content>

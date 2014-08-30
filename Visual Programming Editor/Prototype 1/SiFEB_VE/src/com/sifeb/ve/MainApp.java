@@ -6,6 +6,7 @@
 package com.sifeb.ve;
 
 import com.sun.deploy.util.FXLoader;
+import com.sun.javaws.Main;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -37,6 +38,9 @@ public class MainApp extends Application {
         loadMainEditor();
         
         Scene scene = new Scene(rootLayout);
+        
+      //  scene.getStylesheets().add(MainApp.class.getResource("stylesheet.css").toExternalForm());
+        
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
         primaryStage.setResizable(false);
@@ -72,6 +76,7 @@ public class MainApp extends Application {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/RootLayout.fxml"));
+            
             rootLayout = (BorderPane) loader.load();
         } catch (IOException e) {
             e.printStackTrace();
