@@ -5,18 +5,12 @@
  */
 package com.sifeb.ve;
 
-import com.sun.deploy.util.FXLoader;
-import com.sun.javaws.Main;
 import java.io.IOException;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
@@ -38,31 +32,9 @@ public class MainApp extends Application {
         loadMainEditor();
         
         Scene scene = new Scene(rootLayout);
-        
-      //  scene.getStylesheets().add(MainApp.class.getResource("stylesheet.css").toExternalForm());
-        
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
-        primaryStage.setResizable(false);
         primaryStage.show();
-//        Button btn = new Button();
-//        btn.setText("Say 'Hello World'");
-//        btn.setOnAction(new EventHandler<ActionEvent>() {
-//            
-//            @Override
-//            public void handle(ActionEvent event) {
-//                System.out.println("Hello World!");
-//            }
-//        });
-//        
-//        StackPane root = new StackPane();
-//        root.getChildren().add(btn);
-//        
-//        Scene scene = new Scene(root, 300, 250);
-//        
-//        primaryStage.setTitle("Hello World!");
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
     }
 
     /**
@@ -76,7 +48,6 @@ public class MainApp extends Application {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/RootLayout.fxml"));
-            
             rootLayout = (BorderPane) loader.load();
         } catch (IOException e) {
             e.printStackTrace();

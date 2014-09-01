@@ -17,89 +17,64 @@
               <items>
                   <AnchorPane maxWidth="200.0" minWidth="200.0">
                      <children>
-                        <Label alignment="CENTER" text="Devices" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <Label alignment="CENTER" text="I Have" textAlignment="CENTER" textFill="#9e0f7a" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
-                              <Font size="18.0" />
+                              <Font name="Comic Sans MS" size="20.0" />
                            </font>
                         </Label>
-                        <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
-                           <children>
-                              <TitledPane text="Actuators">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font>
-                                 <content>
-                                    <ScrollPane prefHeight="400.0" prefWidth="200.0">
-                                       <content>
-                                          <VBox fx:id="actuatorBox" prefWidth="200.0" />
-                                       </content>
-                                    </ScrollPane>
-                                 </content>
-                              </TitledPane>
-                              <TitledPane text="Sensors">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font>
-                                 <content>
-                                    <ScrollPane prefHeight="400.0" prefWidth="200.0">
-                                       <content>
-                                          <VBox fx:id="sensorBox" alignment="CENTER_LEFT" prefWidth="200.0" />
-                                       </content>
-                                    </ScrollPane>
-                                 </content>
-                              </TitledPane>
-                           </children>
-                        </VBox>
+                        <ScrollPane prefHeight="400.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+                           <content>
+                              <VBox fx:id="devicesBox" prefWidth="200.0" spacing="10.0">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
                      </children>
                   </AnchorPane>
                 <AnchorPane maxWidth="200.0" minWidth="200.0">
                      <children>
-                        <Label alignment="CENTER" text="Capabilities" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <Label alignment="CENTER" text="I can Do" textAlignment="CENTER" textFill="#9e0f7a" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
-                              <Font size="18.0" />
+                              <Font name="Comic Sans MS" size="20.0" />
                            </font>
                         </Label>
-                        <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
-                           <children>
-                              <TitledPane maxWidth="200.0" text="I can DO">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font>
-                                 <content>
-                                    <ScrollPane prefHeight="400.0" prefWidth="200.0">
-                                       <content>
-                                          <VBox fx:id="capabilityBox" alignment="CENTER_LEFT" prefWidth="200.0" />
-                                       </content>
-                                    </ScrollPane>
-                                 </content>
-                              </TitledPane>
-                              <TitledPane text="I can SENSE">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font>
-                                 <content>
-                                    <ScrollPane prefHeight="400.0" prefWidth="200.0">
-                                       <content>
-                                          <VBox fx:id="senseBox" alignment="CENTER_LEFT" prefWidth="200.0" />
-                                       </content>
-                                    </ScrollPane>
-                                 </content>
-                              </TitledPane>
-                           </children>
-                        </VBox>
+                        <ScrollPane prefHeight="400.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+                           <content>
+                              <VBox fx:id="capabilityBox" prefWidth="200.0" spacing="10.0">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
                      </children>
                   </AnchorPane>
-                <AnchorPane />
+                <AnchorPane>
+                     <children>
+                        <ScrollPane fitToHeight="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <content>
+                              <Pane fx:id="editorPane" minWidth="1000.0" prefHeight="200.0">
+                                 <children>
+                                    <HBox fx:id="editorBox" alignment="CENTER_LEFT" layoutX="-6.0" layoutY="249.0">
+                                       <padding>
+                                          <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                       </padding>
+                                    </HBox>
+                                 </children></Pane>
+                           </content>
+                        </ScrollPane>
+                     </children></AnchorPane>
               </items>
             </SplitPane>
          </center>
          <top>
             <HBox alignment="CENTER" spacing="20.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="addActuatorBtn" mnemonicParsing="false" text="Add Actuator" />
-                  <Button fx:id="addSensorBtn" mnemonicParsing="false" text="Add Sensor" />
+                  <Button fx:id="addDeviceBtn" mnemonicParsing="false" text="Add Device" />
                   <Button fx:id="addCapBtn" layoutX="425.0" layoutY="20.0" mnemonicParsing="false" text="Add Capability" />
-                  <Button fx:id="addSenseBtn" layoutX="318.0" layoutY="20.0" mnemonicParsing="false" text="Add Sense" />
+                  <Button fx:id="addHolderBtn" layoutX="412.0" layoutY="20.0" mnemonicParsing="false" text="Add Holder" />
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

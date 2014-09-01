@@ -5,42 +5,25 @@
  */
 package com.sifeb.ve;
 
-import java.awt.Dialog;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.Side;
 import javafx.scene.Cursor;
-import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Scene;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
-import javafx.scene.effect.Blend;
-import javafx.scene.effect.Bloom;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBoxBuilder;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialogs;
-import static sun.security.krb5.KrbException.errorMessage;
 
 /**
  *
@@ -59,10 +42,9 @@ public final class ActuatorBlock extends Pane {
         this.blockImg = blockImg;
         this.btnImg = btnImg;
         this.type = type;
-        System.out.println("fdsfhd");
         setShape(this.type, this.blockImg);
-        
-        super.setPrefSize(this.blockImg.getWidth(),this.blockImg.getHeight());
+
+        super.setPrefSize(this.blockImg.getWidth(), this.blockImg.getHeight());
         super.setBackground(new Background(new BackgroundImage(this.blockImg, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 
         if (btnImg != null) {
@@ -72,6 +54,33 @@ public final class ActuatorBlock extends Pane {
             checkDevice(this.btn);
         }
 
+        setEventHandlers();
+    }
+
+    public void setEventHandlers() {
+
+        this.setOnDragDetected((MouseEvent event) -> {
+            Parent p = this.getParent();
+            System.out.println("parent:::"+p);
+            if (p.getClass().getName().contains("ActionBlock")) {
+                System.out.println("dragged");
+                Dragboard db = this.startDragAndDrop(TransferMode.COPY_OR_MOVE);
+                db.setDragView(this.getBlockImg());
+                ClipboardContent content = new ClipboardContent();
+                content.putString(p.getId());
+                db.setContent(content);
+                event.consume();
+            }
+            else if (p.getId().contains("editor")) {
+                System.out.println("dragged");
+                Dragboard db = this.startDragAndDrop(TransferMode.COPY_OR_MOVE);
+                db.setDragView(this.getBlockImg());
+                ClipboardContent content = new ClipboardContent();
+                content.putString(this.getId());
+                db.setContent(content);
+                event.consume();
+            }
+        });
     }
 
     public void setShape(String type, Image img) {
@@ -80,7 +89,7 @@ public final class ActuatorBlock extends Pane {
 //                Rectangle r = new Rectangle(img.getWidth(), img.getHeight(), new ImagePattern(img));
 //                r.setArcHeight(20);
 //                r.setArcWidth(20);
-              //  super.getChildren().add(r);
+                //  super.getChildren().add(r);
                 break;
         }
 
