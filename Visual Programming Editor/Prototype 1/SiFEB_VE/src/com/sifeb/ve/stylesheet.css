@@ -28,8 +28,8 @@ and open the template in the editor.
   // -fx-background-size: 18 18;
 //-fx-background-color: skyblue, blue;
 //-fx-background-insets: 0, 20 20 20 20;
--fx-background-image: url('/com/sifeb/ve/images/MSPlay.png');
--fx-background-color: transparent;
+//-fx-background-image: url('/com/sifeb/ve/images/MSPlay.png');
+//-fx-background-color: transparent;
 }
 .label {
     
@@ -46,6 +46,7 @@ and open the template in the editor.
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
 .button:hover {
-    //-fx-background-color: linear-gradient(#2A5058, #61a2b1);
-    -fx-background-color: transparent
+   //-fx-background-color: linear-gradient(#2A5058, #61a2b1);
+  // -fx-background-image: url('/com/sifeb/ve/images/MASSHOW.png');
+  // -fx-background-color: transparent;
 }
