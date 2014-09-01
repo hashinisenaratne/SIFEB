@@ -89,13 +89,13 @@ public class MainEditorController implements Initializable {
                 addBlock(capabilityBox);
             }
         });
-        addHolderBtn.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-//                addBlockHolder();
-            }
-        });
+//        addHolderBtn.setOnAction(new EventHandler<ActionEvent>() {
+//
+//            @Override
+//            public void handle(ActionEvent event) {
+////                addBlockHolder();
+//            }
+//        });
 
         editorPane.setOnDragDropped((DragEvent event) -> {
             System.out.println("dropped");
