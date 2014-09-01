@@ -28,6 +28,7 @@ public class ActionBlock extends Pane {
     private final Button btn;
     private final Image fullBlockImg, blockImg, btnImg;
     private final String type;
+    private final ActuatorBlock actuatorBlock;
     // private final Rectangle rectangle;
 
     public ActionBlock(String type, Image fullBlockImg, Image blockImg, Image btnImg) {
@@ -39,24 +40,18 @@ public class ActionBlock extends Pane {
         this.type = type;
 
         Double heightValue = (this.fullBlockImg.getHeight() - this.blockImg.getHeight()) / 2;
-        //Double widthValue = (this.fullBlockImg.getWidth()-this.blockImg.getWidth()-this.btnImg.getWidth())/2;
         super.setPrefSize(this.fullBlockImg.getWidth(), this.fullBlockImg.getHeight());
 
         setButtonProperties(this.btn, this.fullBlockImg, this.btnImg);
         setShape(this.type, this.fullBlockImg);
-
-        //rectangle = new Rectangle(blockImg.getWidth(), blockImg.getHeight(), new ImagePattern(this.blockImg));
-        // rectangle = new Rectangle
-        // rectangle.relocate(this.btnImg.getWidth() + 1, heightValue);
-        //   changeBackgroundOnHover(rectangle);
-        //   moveRectangle(rectangle);
-        //   rectangle.setCursor(Cursor.CLOSED_HAND);
-        ActuatorBlock block = new ActuatorBlock("rectangle", this.blockImg, null);
-        block.relocate(this.btnImg.getWidth()+0.65, heightValue+0.5);
-        block.setCursor(Cursor.CLOSED_HAND);
-        moveBlock(block);
-        // parent.getChildren().add(new Block("rectangle", img, null));
-        super.getChildren().addAll(this.btn, block);
+        
+        this.actuatorBlock = new ActuatorBlock("rectangle", this.blockImg, null);
+        this.actuatorBlock.relocate(this.btnImg.getWidth()+0.65, heightValue+0.5);
+        this.actuatorBlock.setCursor(Cursor.CLOSED_HAND);
+        moveBlock(this.actuatorBlock);        
+        super.getChildren().addAll(this.btn, this.actuatorBlock);
+        
+        this.setId(Integer.toString(this.hashCode()));
 
     }
 
@@ -145,6 +140,10 @@ public class ActionBlock extends Pane {
 
     public String getType() {
         return type;
+    }
+
+    public ActuatorBlock getActuatorBlock() {
+        return actuatorBlock;
     }
 
 }

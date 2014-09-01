@@ -9,31 +9,31 @@ and open the template in the editor.
 */
 
 /*controlStyle.css */
- 
+
 .scene{
     -fx-font: 14pt "Cambria Bold";
     -fx-color: #e79423;
     -fx-background: #67644e;
 }
- 
+
 .button{
-/*    -fx-text-fill: #006464;
-    -fx-background-color: #e79423;
-    -fx-border-radius: 20;
-    -fx-background-radius: 20;
-    -fx-padding: 5;*/
-   // -fx-shape:"triangle1.svg";
- //  -fx-background-radius: 50;
- //  -fx-shape: "M 0,0 L 0,2.5 2,1.25 Z";
-  // -fx-background-size: 18 18;
-//-fx-background-color: skyblue, blue;
-//-fx-background-insets: 0, 20 20 20 20;
-//-fx-background-image: url('/com/sifeb/ve/images/MSPlay.png');
-//-fx-background-color: transparent;
+    /*    -fx-text-fill: #006464;
+        -fx-background-color: #e79423;
+        -fx-border-radius: 20;
+        -fx-background-radius: 20;
+        -fx-padding: 5;*/
+    // -fx-shape:"triangle1.svg";
+    //  -fx-background-radius: 50;
+    //  -fx-shape: "M 0,0 L 0,2.5 2,1.25 Z";
+    // -fx-background-size: 18 18;
+    //-fx-background-color: skyblue, blue;
+    //-fx-background-insets: 0, 20 20 20 20;
+    //-fx-background-image: url('/com/sifeb/ve/images/MSPlay.png');
+    //-fx-background-color: transparent;
 }
 .label {
-    
-   // -fx-font-size: 12px;
+
+    // -fx-font-size: 12px;
     -fx-font-weight:bold;
     -fx-text-fill: #555553;
     -fx-effect: dropshadow( gaussian,rgba(255,255,255,0.5),0,0,0,1);
@@ -46,7 +46,13 @@ and open the template in the editor.
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
 .button:hover {
-   //-fx-background-color: linear-gradient(#2A5058, #61a2b1);
-  // -fx-background-image: url('/com/sifeb/ve/images/MASSHOW.png');
-  // -fx-background-color: transparent;
+    //-fx-background-color: linear-gradient(#2A5058, #61a2b1);
+    // -fx-background-image: url('/com/sifeb/ve/images/MASSHOW.png');
+    // -fx-background-color: transparent;
+}
+
+#editorPane{
+    -fx-background-image: url('images/tiny_grid.png');
+    -fx-background-position: center center;
+    -fx-background-repeat: repeat;
 }
