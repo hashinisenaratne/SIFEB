@@ -28,7 +28,7 @@ public class ActionBlock extends Pane {
     private final Button btn;
     private final Image fullBlockImg, blockImg, btnImg;
     private final String type;
-    private final Rectangle rectangle;
+    // private final Rectangle rectangle;
 
     public ActionBlock(String type, Image fullBlockImg, Image blockImg, Image btnImg) {
 
@@ -45,13 +45,18 @@ public class ActionBlock extends Pane {
         setButtonProperties(this.btn, this.fullBlockImg, this.btnImg);
         setShape(this.type, this.fullBlockImg);
 
-        rectangle = new Rectangle(blockImg.getWidth(), blockImg.getHeight(), new ImagePattern(this.blockImg));
-        rectangle.relocate(this.btnImg.getWidth() + 1, heightValue);
-
-        changeBackgroundOnHover(rectangle);
-        moveRectangle(rectangle);
-        rectangle.setCursor(Cursor.CLOSED_HAND);
-        super.getChildren().addAll(this.btn, rectangle);
+        //rectangle = new Rectangle(blockImg.getWidth(), blockImg.getHeight(), new ImagePattern(this.blockImg));
+        // rectangle = new Rectangle
+        // rectangle.relocate(this.btnImg.getWidth() + 1, heightValue);
+        //   changeBackgroundOnHover(rectangle);
+        //   moveRectangle(rectangle);
+        //   rectangle.setCursor(Cursor.CLOSED_HAND);
+        ActuatorBlock block = new ActuatorBlock("rectangle", this.blockImg, null);
+        block.relocate(this.btnImg.getWidth()+0.65, heightValue+0.5);
+        block.setCursor(Cursor.CLOSED_HAND);
+        moveBlock(block);
+        // parent.getChildren().add(new Block("rectangle", img, null));
+        super.getChildren().addAll(this.btn, block);
 
     }
 
@@ -106,7 +111,7 @@ public class ActionBlock extends Pane {
         });
     }
 
-    public void moveRectangle(final Node node) {
+    public void moveBlock(final Node node) {
 
         node.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
@@ -142,7 +147,4 @@ public class ActionBlock extends Pane {
         return type;
     }
 
-    public Rectangle getRectangle() {
-        return rectangle;
-    }
 }
