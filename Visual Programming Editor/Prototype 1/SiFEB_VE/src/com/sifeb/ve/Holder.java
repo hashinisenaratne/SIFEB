@@ -6,11 +6,22 @@
 package com.sifeb.ve;
 
 import com.sifeb.ve.controller.MainEditorController;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -26,13 +37,22 @@ import javafx.scene.layout.VBox;
  */
 public class Holder extends Pane {
 
-    private Image blockImg;
+    private Image blockImg, crossImg;
     private VBox actions;
     MainEditorController mainCtrl;
+    private Button button;
 
     public Holder(MainEditorController mainCtrl) {
 
         this.setBlockImg(new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Holder.png")));
+        this.crossImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/cross.png"));
+        this.button = new Button();
+
+        setButtonProperties(this.button);
+        changeBackgroundOnHoverUsingEvents(this.button);
+        super.getChildren().add(this.button);
+
+        System.out.println("here");
         this.mainCtrl = mainCtrl;
         this.actions = new VBox();
         this.actions.relocate(18, 15);
@@ -83,6 +103,13 @@ public class Holder extends Pane {
             }
             event.consume();
         });
+
+    }
+
+    public void deleteElement() {
+
+        ((Pane) this.getParent()).getChildren().remove(this);
+
     }
 
     public void addElementToVbox(Node node) {
@@ -103,4 +130,41 @@ public class Holder extends Pane {
         super.setPrefSize(this.blockImg.getWidth(), this.blockImg.getHeight());
         super.setBackground(new Background(new BackgroundImage(this.blockImg, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
     }
+
+    private void setButtonProperties(Button button) {
+
+        button.relocate(0, 7);
+        button.setGraphic(new ImageView(this.crossImg));
+        button.setMaxHeight(this.crossImg.getHeight());
+        button.setMaxWidth(this.crossImg.getWidth());
+        button.setMinHeight(this.crossImg.getHeight());
+        button.setMinWidth(this.crossImg.getWidth());
+        button.setCursor(Cursor.HAND);
+        button.setStyle("-fx-background-color: transparent");
+        button.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                deleteElement();
+
+            }
+        });
+    }
+
+    public void changeBackgroundOnHoverUsingEvents(final Node node) {
+
+        node.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                node.setEffect(new DropShadow());
+            }
+        });
+        node.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                node.setEffect(null);
+            }
+        });
+    }
+
 }

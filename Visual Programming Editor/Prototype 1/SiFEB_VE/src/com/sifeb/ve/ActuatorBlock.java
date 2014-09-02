@@ -10,6 +10,8 @@ import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -17,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
@@ -84,6 +87,31 @@ public final class ActuatorBlock extends Pane {
         this.setOnDragDone((DragEvent event)->{
             this.setVisible(true);
         });
+
+        ContextMenu contextMenu = new ContextMenu();
+
+        MenuItem item1 = new MenuItem("Delete");
+        item1.setOnAction((ActionEvent e) -> {
+
+            ((Pane) this.getParent()).getChildren().remove(this);
+        });
+
+        contextMenu.getItems().add(item1);
+
+        this.setOnMouseClicked((MouseEvent event) -> {
+
+            if (event.getButton() == MouseButton.SECONDARY) {
+
+                if (this.getParent().getClass().getName().contains("ActionBlock") == false) {
+
+                    if (type.equals("action") || type.equals("sense") || type.equals("condition")) {
+                        contextMenu.show(this, event.getSceneX(), event.getSceneY());
+    }
+
+                }
+            }
+        });
+
     }
 
     public void setShape(String type, Image img) {

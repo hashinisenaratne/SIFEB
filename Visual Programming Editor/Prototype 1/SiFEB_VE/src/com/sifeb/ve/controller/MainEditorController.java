@@ -221,6 +221,7 @@ public class MainEditorController implements Initializable {
 
             //adding conditions
             blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Constraint1.png"));
+          //  blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Constraint2.png"));
             parent.getChildren().add(new ActionBlock("condition", fullImg, blkImg, btnnImg));
             blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Constraint2.png"));
             parent.getChildren().add(new ActionBlock("condition", fullImg, blkImg, btnnImg));
