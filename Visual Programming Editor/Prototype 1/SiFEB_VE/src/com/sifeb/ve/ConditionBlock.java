@@ -6,6 +6,9 @@
 package com.sifeb.ve;
 
 import com.sifeb.ve.controller.MainEditorController;
+import com.sun.javafx.beans.event.AbstractNotifyListener;
+import javafx.beans.Observable;
+import javafx.collections.ObservableArray;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
@@ -33,6 +36,8 @@ public class ConditionBlock extends Holder {
         this.condition.setPrefSize(90, 60);
         this.condition.relocate(158, 15);
         super.getChildren().add(this.condition);
+
+        addListeners();
     }
 
     public void addCondition(Node node) {
@@ -102,6 +107,25 @@ public class ConditionBlock extends Holder {
             }
             event.consume();
         });
+    }
+
+    private void addListeners() {
+        super.getActions().getChildren().addListener(new AbstractNotifyListener() {
+
+            @Override
+            public void invalidated(Observable observable) {
+                changeBackToHolder();
+            }
+        });
+
+    }
+
+    private void changeBackToHolder() {
+        int numActions = super.getActions().getChildren().size();
+        int numConditions = this.getCondition().getChildren().size();
+        if ((numConditions == 0) && (numActions == 0)) {
+            super.mainCtrl.changeHolderType(this, null);
+        }
     }
 
 }

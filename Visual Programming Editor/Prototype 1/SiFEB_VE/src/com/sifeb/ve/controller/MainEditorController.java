@@ -94,7 +94,9 @@ public class MainEditorController implements Initializable {
         } else {
             addBlockHolder(index, false);
         }
-        holders.get(index).addElementToVbox(node);
+        if (node != null) {
+            holders.get(index).addElementToVbox(node);
+        }
     }
 
     public void addHolderAfterMe(Holder holder) {
