@@ -53,11 +53,12 @@
                   </AnchorPane>
                 <AnchorPane>
                      <children>
-                        <ScrollPane fitToHeight="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <Pane fx:id="hintPane" prefHeight="100.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <ScrollPane fitToHeight="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
                            <content>
                               <Pane fx:id="editorPane" minWidth="1000.0" prefHeight="200.0">
                                  <children>
-                                    <HBox fx:id="editorBox" alignment="CENTER_LEFT" layoutX="-6.0" layoutY="249.0">
+                                    <HBox fx:id="editorBox" alignment="CENTER_LEFT" layoutX="-6.0" layoutY="108.0">
                                        <padding>
                                           <Insets bottom="20.0" left="20.0" right="20.0" top="70.0" />
                                        </padding>
