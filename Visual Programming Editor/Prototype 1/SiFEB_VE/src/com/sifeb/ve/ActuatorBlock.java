@@ -5,6 +5,12 @@
  */
 package com.sifeb.ve;
 
+import com.sifeb.ve.controller.ComPortController;
+import gnu.io.PortInUseException;
+import gnu.io.UnsupportedCommOperationException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -83,8 +89,8 @@ public final class ActuatorBlock extends Pane {
                 event.consume();
             }
         });
-        
-        this.setOnDragDone((DragEvent event)->{
+
+        this.setOnDragDone((DragEvent event) -> {
             this.setVisible(true);
         });
 
@@ -104,9 +110,9 @@ public final class ActuatorBlock extends Pane {
 
                 if (this.getParent().getClass().getName().contains("ActionBlock") == false) {
 
-                    if (type.equals("action") || type.equals("sense") || type.equals("condition")) {
+                    if (type.contains("action") || type.equals("sense") || type.equals("condition")) {
                         contextMenu.show(this, event.getSceneX(), event.getSceneY());
-    }
+                    }
 
                 }
             }
@@ -168,6 +174,11 @@ public final class ActuatorBlock extends Pane {
     public void checkDevice(Button btn) {
         btn.setOnAction((ActionEvent event) -> {
 
+            try {
+                ComPortController.writeComPort("COM17", 10, "");
+            } catch (PortInUseException | IOException | UnsupportedCommOperationException ex) {
+                Logger.getLogger(ActuatorBlock.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
 
     }

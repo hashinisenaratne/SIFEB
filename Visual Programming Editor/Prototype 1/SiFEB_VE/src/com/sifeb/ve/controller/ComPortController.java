@@ -3,69 +3,74 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.sifeb.ve.controller;
 
 /**
  *
  * @author Hashini Senaratne
  */
- 
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class ComPortController
-{
+public class ComPortController {
+
     static Enumeration ports;
     static CommPortIdentifier pID;
     static OutputStream outStream;
-    SerialPort serPort;
-    
-    public void writeComPort (String port, int address, String message) 
-            throws PortInUseException, IOException, UnsupportedCommOperationException{    
-            // 's'(show) , 't1'(test action 1)
+    static SerialPort serPort;
+
+    public static void writeComPort(String port, int address, String message)
+            throws PortInUseException, IOException, UnsupportedCommOperationException {
+        // 's'(show) , 't1'(test action 1)
         ports = CommPortIdentifier.getPortIdentifiers();
         boolean portFound = false;
-        
-        while(ports.hasMoreElements())
-        {
-            pID = (CommPortIdentifier)ports.nextElement();
+
+        while (ports.hasMoreElements()) {
+            pID = (CommPortIdentifier) ports.nextElement();
             System.out.println("Port " + pID.getName());
-            
-            if (pID.getPortType() == CommPortIdentifier.PORT_SERIAL)
-            {
-                if (pID.getName().equals(port))     // if found the needed port
+
+            if (pID.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+                if (pID.getName().equals(port)) // if found the needed port
                 {
-                    serPort = (SerialPort)pID.open(port,2000);
+                    serPort = (SerialPort) pID.open(port, 2000);
+
                     outStream = serPort.getOutputStream();
                     serPort.setSerialPortParams(9600, SerialPort.DATABITS_8,
-                        SerialPort.STOPBITS_1,
-                        SerialPort.PARITY_NONE);
+                            SerialPort.STOPBITS_1,
+                            SerialPort.PARITY_NONE);
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     System.out.println(port + " found");
                     portFound = true;
                     break;
                 }
             }
         }
-        
-        if(portFound){
-            outStream.write((address + " " + message).getBytes());  // write to the port
-            if (port != null) serPort.close();
+
+        if (portFound) {
+          outStream.write((10 + ":" + "t,1\n").getBytes());  // write to the port
+           // outStream.write(("").getBytes());  // write to the port
+            if (port != null) {
+                serPort.close();
+            }
             System.out.print("wrote to the port");
-        }
-        
-        else{
+        } else {
             System.out.println("port not found");
         }
     }
-    
+
     // Test
     /*public static void main(String[] args) throws Exception {
-        ComPortController cc = new ComPortController();
-        cc.writeComPort("COM1", 10, "s");
-    }*/
+     ComPortController cc = new ComPortController();
+     cc.writeComPort("COM1", 10, "s");
+     }*/
 }
