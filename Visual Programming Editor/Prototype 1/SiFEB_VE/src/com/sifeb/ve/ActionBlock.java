@@ -18,6 +18,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.Dialog;
 
 /**
  *
@@ -58,6 +60,7 @@ public class ActionBlock extends Pane {
     public void setShape(String type, Image fullBImg) {
         switch (type) {
             case "action":
+            case "condition":
             case "sense":
                 Rectangle r = new Rectangle(fullBImg.getWidth(), fullBImg.getHeight(), new ImagePattern(fullBImg));
                 r.setArcHeight(20);
@@ -82,13 +85,8 @@ public class ActionBlock extends Pane {
         button.setStyle("-fx-background-color: transparent");
         changeBackgroundOnHover(button);
 
-        button.setOnAction(new EventHandler<ActionEvent>() {
+        checkButton(button);
 
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("button clicked");
-            }
-        });
     }
 
     public void changeBackgroundOnHover(final Node node) {
@@ -112,7 +110,7 @@ public class ActionBlock extends Pane {
         node.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                node.setEffect(new Bloom(0.4));
+                node.setEffect(new Bloom(0.3));
             }
         });
         node.setOnMouseExited(new EventHandler<MouseEvent>() {
@@ -145,6 +143,37 @@ public class ActionBlock extends Pane {
 
     public ActuatorBlock getActuatorBlock() {
         return actuatorBlock;
+    }
+
+    private void checkButton(Button button) {
+
+        button.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+
+                Dialog dlg = new Dialog(null, "Message from SiFEB");
+                dlg.setResizable(false);
+                dlg.setIconifiable(false);
+                dlg.setGraphic(new ImageView(blockImg));
+                dlg.setMasthead("Would You Like to Check Me?");
+                //dlg.setContent(content);
+                dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
+                dlg.show();
+
+                Action response = dlg.getActions().get(0);
+
+                if (response == Dialog.Actions.YES) {
+
+                    System.out.println("on respones");
+                    //  dlg.show();
+                    // ... submit user input
+                } else {
+                    // ... user cancelled, reset form to default
+                }
+
+            }
+        });
     }
 
 }

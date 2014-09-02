@@ -75,9 +75,9 @@ public class MainEditorController implements Initializable {
         ConditionBlock cond = new ConditionBlock();
         holders.add(holder);
         holders.add(cond);
-        
+
         editorBox.getChildren().add(editorBox.getChildren().size() - 1, holder);
-        editorBox.getChildren().add(editorBox.getChildren().size()-1, cond);
+        editorBox.getChildren().add(editorBox.getChildren().size() - 1, cond);
 //        lastHolder = holder;
     }
 
@@ -187,11 +187,16 @@ public class MainEditorController implements Initializable {
                 blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/" + sensorImage + ".png"));
                 parent.getChildren().add(new ActionBlock("action", fullImg, blkImg, btnnImg));
             }
+            blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Constraint1.png"));
+            parent.getChildren().add(new ActionBlock("condition", fullImg, blkImg, btnnImg));
+            
+
             for (int i = 1; i <= 2; i++) {
 
                 sensorImage = "Sense" + String.valueOf(i);
                 blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/" + sensorImage + ".png"));
                 parent.getChildren().add(new ActionBlock("sense", fullImg, blkImg, btnnImg));
+                // parent.getChildren().add(new ActionBlock("sense", fullImg, blkImg, btnnImg));
             }
 
         }

@@ -10,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,6 +24,7 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
 
 /**
  *
@@ -35,6 +37,7 @@ public final class ActuatorBlock extends Pane {
     private Image btnImg;
     private final String type;
     private final boolean dragable;
+    private TextField textField;
 
     public ActuatorBlock(String type, Image blockImg, Image btnImg, boolean dragable) {
 
@@ -43,6 +46,7 @@ public final class ActuatorBlock extends Pane {
         this.btnImg = btnImg;
         this.type = type;
         this.dragable = dragable;
+        this.textField = null;
         setShape(this.type, this.blockImg);
 
         super.setPrefSize(this.blockImg.getWidth(), this.blockImg.getHeight());
@@ -54,7 +58,7 @@ public final class ActuatorBlock extends Pane {
             setButtonProperties(this.btn, this.blockImg, this.btnImg);
             checkDevice(this.btn);
         }
-        
+
         setEventHandlers();
         this.setId(Integer.toString(this.hashCode()));
     }
@@ -84,6 +88,15 @@ public final class ActuatorBlock extends Pane {
 //                r.setArcHeight(20);
 //                r.setArcWidth(20);
                 //  super.getChildren().add(r);
+                break;
+            case "condition":
+                textField = new TextField();
+                textField.setPrefSize(30, 2);
+                textField.setFont(new Font(8));
+                textField.relocate(27, 40);
+                textField.setDisable(true);
+                super.getChildren().add(textField);
+
                 break;
         }
 
@@ -124,6 +137,10 @@ public final class ActuatorBlock extends Pane {
 
         });
 
+    }
+
+    public void disableTextField(boolean bool) {
+        textField.setDisable(bool);
     }
 
     public Button getBtn() {
