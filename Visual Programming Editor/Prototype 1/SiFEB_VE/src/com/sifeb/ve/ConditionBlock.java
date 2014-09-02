@@ -12,6 +12,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 /**
  *
@@ -19,32 +20,41 @@ import javafx.scene.layout.Pane;
  */
 public class ConditionBlock extends Holder {
 
-    private Pane pane;
+    private VBox condition;
 
     public ConditionBlock() {
-        
+
         super();
         System.out.println("here here");
         super.setBlockImg(new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Conditional.png")));
-        super.getVbox().relocate(21, 15);
-        this.pane = new Pane();
-        this.pane.setPrefSize(90, 60);
-        this.pane.relocate(158, 15);
-        super.getChildren().add(this.pane);
+        super.getActions().relocate(21, 15);
+//        this.pane = new Pane();
+        this.condition = new VBox();
+        this.condition.setPrefSize(90, 60);
+        this.condition.relocate(158, 15);
+        super.getChildren().add(this.condition);
     }
 
-    public void addElementToPane(Node node) {
-        pane.getChildren().add(node);
+    public void addCondition(Node node) {
+        condition.getChildren().add(node);
     }
 
-    public Pane getPane() {
-        return pane;
+    public boolean hasCondition() {
+        return (condition.getChildren().size() > 0);
     }
 
-    public void setPane(Pane pane) {
-        this.pane = pane;
-    }  
-    
+    public void removeCurrentCondition() {
+        condition.getChildren().remove(0);
+    }
+
+    public VBox getCondition() {
+        return condition;
+    }
+
+    public void setCondition(VBox condition) {
+        this.condition = condition;
+    }
+
     @Override
     public void setEventHandlers() {
         this.setOnDragDropped((DragEvent event) -> {
@@ -66,17 +76,21 @@ public class ConditionBlock extends Holder {
                     if (draggedBlock.getType().equals("action")) {
                         this.addElementToVbox(draggedBlock);
                         success = true;
-                    }
-                    else if (draggedBlock.getType().equals("sense")) {
-                        this.addElementToPane(draggedBlock);
+                    } else if (draggedBlock.getType().equals("sense")) {
+                        if (this.hasCondition()) {
+                            this.removeCurrentCondition();
+                        }
+                        this.addCondition(draggedBlock);
                         success = true;
                     }
                 }
+
+                draggedBlock.setVisible(true);
             }
             event.setDropCompleted(success);
             event.consume();
         });
-        
+
         this.setOnDragOver((DragEvent event) -> {
             if (event.getDragboard().hasString()) {
                 event.acceptTransferModes(TransferMode.COPY);

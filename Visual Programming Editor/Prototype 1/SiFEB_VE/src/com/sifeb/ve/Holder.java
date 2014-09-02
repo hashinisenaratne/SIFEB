@@ -26,16 +26,16 @@ import javafx.scene.layout.VBox;
 public class Holder extends Pane {
 
     private Image blockImg;
-    private VBox vbox;
+    private VBox actions;
 
     public Holder() {
 
         this.setBlockImg(new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Holder.png")));
         System.out.println("here");
-        this.vbox = new VBox();
-        this.vbox.relocate(18, 15);
+        this.actions = new VBox();
+        this.actions.relocate(18, 15);
 
-        super.getChildren().add(this.vbox);
+        super.getChildren().add(this.actions);
 
         setEventHandlers();
     }
@@ -64,6 +64,8 @@ public class Holder extends Pane {
                         success = true;
                     }
                 }
+
+                draggedBlock.setVisible(true);
             }
             event.setDropCompleted(success);
             event.consume();
@@ -78,16 +80,16 @@ public class Holder extends Pane {
     }
 
     public void addElementToVbox(Node node) {
-        vbox.getChildren().add(node);
+        actions.getChildren().add(node);
 
     }
 
-    public VBox getVbox() {
-        return vbox;
+    public VBox getActions() {
+        return actions;
     }
 
-    public void setVbox(VBox vbox) {
-        this.vbox = vbox;
+    public void setActions(VBox actions) {
+        this.actions = actions;
     }
 
     public void setBlockImg(Image blockImg) {
@@ -95,5 +97,4 @@ public class Holder extends Pane {
         super.setPrefSize(this.blockImg.getWidth(), this.blockImg.getHeight());
         super.setBackground(new Background(new BackgroundImage(this.blockImg, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
     }
-
 }

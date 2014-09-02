@@ -62,13 +62,14 @@ public final class ActuatorBlock extends Pane {
     public void setEventHandlers() {
 
         this.setOnDragDetected((MouseEvent event) -> {
-//            Parent p = this.getParent();
             if (this.isDragable()) {
-                System.out.println("dragged");
+                if (!this.getParent().getClass().getName().contains("ActionBlock")) {
+                    this.setVisible(false);
+                }
+//                System.out.println("dragged");
                 Dragboard db = this.startDragAndDrop(TransferMode.COPY_OR_MOVE);
                 db.setDragView(this.getBlockImg());
                 ClipboardContent content = new ClipboardContent();
-//                content.
                 content.putString(this.getId());
                 db.setContent(content);
                 event.consume();

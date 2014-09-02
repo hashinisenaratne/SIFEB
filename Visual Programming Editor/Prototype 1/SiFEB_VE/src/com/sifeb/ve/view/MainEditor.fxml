@@ -59,7 +59,7 @@
                                  <children>
                                     <HBox fx:id="editorBox" alignment="CENTER_LEFT" layoutX="-6.0" layoutY="249.0">
                                        <padding>
-                                          <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                          <Insets bottom="20.0" left="20.0" right="20.0" top="70.0" />
                                        </padding>
                                     </HBox>
                                  </children></Pane>

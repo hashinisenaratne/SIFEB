@@ -114,7 +114,7 @@ public class MainEditorController implements Initializable {
                 ActuatorBlock draggedBlock = (ActuatorBlock) p.lookup("#" + nodeId);
 
                 if (draggedBlock != null) {
-                    System.out.println(p.getClass().getName());
+//                    System.out.println(p.getClass().getName());
                     if (p.getClass().getName().contains("ActionBlock")) {
                         draggedBlock = new ActuatorBlock(draggedBlock.getType(), draggedBlock.getBlockImg(), draggedBlock.getBtnImg(), draggedBlock.isDragable());
                     } else {
@@ -124,6 +124,7 @@ public class MainEditorController implements Initializable {
                     editorPane.getChildren().add(draggedBlock);
                     draggedBlock.setLayoutX(event.getX());
                     draggedBlock.setLayoutY(event.getY());
+                    draggedBlock.setVisible(true);
                 }
             }
             event.setDropCompleted(success);
