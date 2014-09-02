@@ -5,6 +5,7 @@
  */
 package com.sifeb.ve;
 
+import com.sifeb.ve.controller.MainEditorController;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
@@ -22,9 +23,9 @@ public class ConditionBlock extends Holder {
 
     private VBox condition;
 
-    public ConditionBlock() {
+    public ConditionBlock(MainEditorController mainCtrl) {
 
-        super();
+        super(mainCtrl);
         super.setBlockImg(new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Conditional.png")));
         super.getActions().relocate(21, 15);
 //        this.pane = new Pane();
@@ -66,14 +67,18 @@ public class ConditionBlock extends Holder {
                 ActuatorBlock draggedBlock = (ActuatorBlock) p.lookup("#" + nodeId);
 
                 if (draggedBlock != null) {
-                    System.out.println(p.getClass().getName());
+                    this.mainCtrl.addHolderAfterMe(this);
                     if (p.getClass().getName().contains("ActionBlock")) {
                         draggedBlock = new ActuatorBlock(draggedBlock.getType(), draggedBlock.getBlockImg(), draggedBlock.getBtnImg(), draggedBlock.isDragable());
                     } else {
                         ((Pane) p).getChildren().remove(draggedBlock);
                     }
-                    if (draggedBlock.getType().equals("action")) {
+                    if (draggedBlock.getType().equals("actionC")) {
                         this.addElementToVbox(draggedBlock);
+                        success = true;
+                        this.mainCtrl.addHolderAfterMe(this);
+                    } else if (draggedBlock.getType().equals("action")) {
+                        super.mainCtrl.changeHolderType(this, draggedBlock);
                         success = true;
                     } else if ((draggedBlock.getType().equals("sense")) || (draggedBlock.getType().equals("condition"))) {
                         if (this.hasCondition()) {

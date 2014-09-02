@@ -5,6 +5,7 @@
  */
 package com.sifeb.ve;
 
+import com.sifeb.ve.controller.MainEditorController;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
@@ -27,10 +28,12 @@ public class Holder extends Pane {
 
     private Image blockImg;
     private VBox actions;
+    MainEditorController mainCtrl;
 
-    public Holder() {
+    public Holder(MainEditorController mainCtrl) {
 
         this.setBlockImg(new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Holder.png")));
+        this.mainCtrl = mainCtrl;
         this.actions = new VBox();
         this.actions.relocate(18, 15);
 
@@ -49,8 +52,8 @@ public class Holder extends Pane {
                 String nodeId = db.getString();
                 ActuatorBlock draggedBlock = (ActuatorBlock) p.lookup("#" + nodeId);
 
-                if (draggedBlock != null) {
-                    System.out.println(p.getClass().getName());
+                if (draggedBlock != null) {                    
+                    this.mainCtrl.addHolderAfterMe(this);
                     if (p.getClass().getName().contains("ActionBlock")) {
                         draggedBlock = new ActuatorBlock(draggedBlock.getType(), draggedBlock.getBlockImg(), draggedBlock.getBtnImg(), draggedBlock.isDragable());
                     } else {
@@ -58,8 +61,9 @@ public class Holder extends Pane {
                     }
                     if (draggedBlock.getType().equals("action")) {
                         this.addElementToVbox(draggedBlock);
-                        draggedBlock.setLayoutX(event.getX());
-                        draggedBlock.setLayoutY(event.getY());
+                        success = true;
+                    } else if (draggedBlock.getType().equals("actionC")) {
+                        this.mainCtrl.changeHolderType(this, draggedBlock);
                         success = true;
                     }
                 }
@@ -71,10 +75,9 @@ public class Holder extends Pane {
         this.setOnDragOver((DragEvent event) -> {
             if (event.getDragboard().hasString()) {
                 String dbStr = event.getDragboard().getString();
-                if(dbStr.contains("action")){
+                if (dbStr.contains("action")) {
                     event.acceptTransferModes(TransferMode.COPY);
-                }
-                else{
+                } else {
                     System.out.println("not allowed");
                 }
             }

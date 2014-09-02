@@ -60,6 +60,7 @@ public class ActionBlock extends Pane {
     public void setShape(String type, Image fullBImg) {
         switch (type) {
             case "action":
+            case "actionC":
             case "condition":
             case "sense":
                 Rectangle r = new Rectangle(fullBImg.getWidth(), fullBImg.getHeight(), new ImagePattern(fullBImg));
