@@ -44,20 +44,21 @@ public class ActionBlock extends Pane {
 
         setButtonProperties(this.btn, this.fullBlockImg, this.btnImg);
         setShape(this.type, this.fullBlockImg);
-        
-        this.actuatorBlock = new ActuatorBlock("rectangle", this.blockImg, null);
-        this.actuatorBlock.relocate(this.btnImg.getWidth()+0.65, heightValue+0.5);
+
+        this.actuatorBlock = new ActuatorBlock(this.type, this.blockImg, null, true);
+        this.actuatorBlock.relocate(this.btnImg.getWidth() + 0.65, heightValue + 0.5);
         this.actuatorBlock.setCursor(Cursor.CLOSED_HAND);
-        moveBlock(this.actuatorBlock);        
+        moveBlock(this.actuatorBlock);
         super.getChildren().addAll(this.btn, this.actuatorBlock);
-        
+
         this.setId(Integer.toString(this.hashCode()));
 
     }
 
     public void setShape(String type, Image fullBImg) {
         switch (type) {
-            case "rectangle":
+            case "action":
+            case "sense":
                 Rectangle r = new Rectangle(fullBImg.getWidth(), fullBImg.getHeight(), new ImagePattern(fullBImg));
                 r.setArcHeight(20);
                 r.setArcWidth(20);

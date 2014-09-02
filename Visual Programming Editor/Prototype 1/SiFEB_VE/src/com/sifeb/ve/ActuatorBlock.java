@@ -9,7 +9,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -35,13 +34,15 @@ public final class ActuatorBlock extends Pane {
     private final Image blockImg;
     private Image btnImg;
     private final String type;
+    private final boolean dragable;
 
-    public ActuatorBlock(String type, Image blockImg, Image btnImg) {
+    public ActuatorBlock(String type, Image blockImg, Image btnImg, boolean dragable) {
 
         // this.btn = new Button();
         this.blockImg = blockImg;
         this.btnImg = btnImg;
         this.type = type;
+        this.dragable = dragable;
         setShape(this.type, this.blockImg);
 
         super.setPrefSize(this.blockImg.getWidth(), this.blockImg.getHeight());
@@ -53,29 +54,21 @@ public final class ActuatorBlock extends Pane {
             setButtonProperties(this.btn, this.blockImg, this.btnImg);
             checkDevice(this.btn);
         }
-
+        
         setEventHandlers();
+        this.setId(Integer.toString(this.hashCode()));
     }
 
     public void setEventHandlers() {
 
         this.setOnDragDetected((MouseEvent event) -> {
-            Parent p = this.getParent();
-            System.out.println("parent:::"+p);
-            if (p.getClass().getName().contains("ActionBlock")) {
+//            Parent p = this.getParent();
+            if (this.isDragable()) {
                 System.out.println("dragged");
                 Dragboard db = this.startDragAndDrop(TransferMode.COPY_OR_MOVE);
                 db.setDragView(this.getBlockImg());
                 ClipboardContent content = new ClipboardContent();
-                content.putString(p.getId());
-                db.setContent(content);
-                event.consume();
-            }
-            else if (p.getId().contains("editor")) {
-                System.out.println("dragged");
-                Dragboard db = this.startDragAndDrop(TransferMode.COPY_OR_MOVE);
-                db.setDragView(this.getBlockImg());
-                ClipboardContent content = new ClipboardContent();
+//                content.
                 content.putString(this.getId());
                 db.setContent(content);
                 event.consume();
@@ -146,5 +139,9 @@ public final class ActuatorBlock extends Pane {
 
     public String getType() {
         return type;
+    }
+
+    public boolean isDragable() {
+        return dragable;
     }
 }

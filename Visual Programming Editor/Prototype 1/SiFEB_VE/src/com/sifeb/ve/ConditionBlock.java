@@ -6,60 +6,35 @@
 package com.sifeb.ve;
 
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
 /**
  *
  * @author Pubudu
  */
-public class ConditionBlock extends Pane {
+public class ConditionBlock extends Holder {
 
-    private final Image blockImg;
-    private VBox vbox;
     private Pane pane;
 
-    public ConditionBlock(Image blkImg) {
-
-        this.blockImg = blkImg;
-        this.vbox = new VBox();
+    public ConditionBlock() {
+        
+        super();
+        System.out.println("here here");
+        super.setBlockImg(new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Conditional.png")));
+        super.getVbox().relocate(21, 15);
         this.pane = new Pane();
         this.pane.setPrefSize(90, 60);
-        this.pane.relocate(175, 15);
-        this.vbox.relocate(38, 15);
-       // this.pane.setStyle("-fx-background-color:red;");
-        //super.getChildren().add(this.vbox);
-        //System.out.print("dfffffff");
-        //Image btnImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/MSPlay.png"));
-        // parent.getChildren().add(new ActuatorBlock("rectangle", img, null));
-        //  this.pane.getChildren().add(new ActuatorBlock("rectangle", img, null));
-
-        super.setPrefSize(this.blockImg.getWidth(), this.blockImg.getHeight());
-        super.setBackground(new Background(new BackgroundImage(this.blockImg, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-        super.getChildren().addAll(this.vbox, this.pane);
-    }
-
-    public void addElementToVbox(Node node) {
-        vbox.getChildren().add(node);
-
+        this.pane.relocate(158, 15);
+        super.getChildren().add(this.pane);
     }
 
     public void addElementToPane(Node node) {
         pane.getChildren().add(node);
-    }
-
-    public VBox getVbox() {
-        return vbox;
-    }
-
-    public void setVbox(VBox vbox) {
-        this.vbox = vbox;
     }
 
     public Pane getPane() {
@@ -68,7 +43,46 @@ public class ConditionBlock extends Pane {
 
     public void setPane(Pane pane) {
         this.pane = pane;
-    }
+    }  
     
+    @Override
+    public void setEventHandlers() {
+        this.setOnDragDropped((DragEvent event) -> {
+            System.out.println("dropped");
+            Dragboard db = event.getDragboard();
+            Parent p = ((Node) event.getGestureSource()).getParent();
+            boolean success = false;
+            if (db.hasString()) {
+                String nodeId = db.getString();
+                ActuatorBlock draggedBlock = (ActuatorBlock) p.lookup("#" + nodeId);
+
+                if (draggedBlock != null) {
+                    System.out.println(p.getClass().getName());
+                    if (p.getClass().getName().contains("ActionBlock")) {
+                        draggedBlock = new ActuatorBlock(draggedBlock.getType(), draggedBlock.getBlockImg(), draggedBlock.getBtnImg(), draggedBlock.isDragable());
+                    } else {
+                        ((Pane) p).getChildren().remove(draggedBlock);
+                    }
+                    if (draggedBlock.getType().equals("action")) {
+                        this.addElementToVbox(draggedBlock);
+                        success = true;
+                    }
+                    else if (draggedBlock.getType().equals("sense")) {
+                        this.addElementToPane(draggedBlock);
+                        success = true;
+                    }
+                }
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
+        
+        this.setOnDragOver((DragEvent event) -> {
+            if (event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.COPY);
+            }
+            event.consume();
+        });
+    }
 
 }
