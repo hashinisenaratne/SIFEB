@@ -15,6 +15,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
@@ -60,7 +61,7 @@ public final class ActuatorBlock extends Pane {
         }
 
         setEventHandlers();
-        this.setId(Integer.toString(this.hashCode()));
+        this.setId(this.type + Integer.toString(this.hashCode()));
     }
 
     public void setEventHandlers() {
@@ -78,6 +79,10 @@ public final class ActuatorBlock extends Pane {
                 db.setContent(content);
                 event.consume();
             }
+        });
+        
+        this.setOnDragDone((DragEvent event)->{
+            this.setVisible(true);
         });
     }
 

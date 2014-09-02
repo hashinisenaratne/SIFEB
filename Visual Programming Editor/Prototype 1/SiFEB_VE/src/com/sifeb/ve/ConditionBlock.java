@@ -25,7 +25,6 @@ public class ConditionBlock extends Holder {
     public ConditionBlock() {
 
         super();
-        System.out.println("here here");
         super.setBlockImg(new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Conditional.png")));
         super.getActions().relocate(21, 15);
 //        this.pane = new Pane();
@@ -76,16 +75,17 @@ public class ConditionBlock extends Holder {
                     if (draggedBlock.getType().equals("action")) {
                         this.addElementToVbox(draggedBlock);
                         success = true;
-                    } else if (draggedBlock.getType().equals("sense")) {
+                    } else if ((draggedBlock.getType().equals("sense")) || (draggedBlock.getType().equals("condition"))) {
                         if (this.hasCondition()) {
                             this.removeCurrentCondition();
                         }
                         this.addCondition(draggedBlock);
+                        if (draggedBlock.getType().equals("condition")) {
+                            draggedBlock.disableTextField(false);
+                        }
                         success = true;
                     }
                 }
-
-                draggedBlock.setVisible(true);
             }
             event.setDropCompleted(success);
             event.consume();

@@ -31,7 +31,6 @@ public class Holder extends Pane {
     public Holder() {
 
         this.setBlockImg(new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Holder.png")));
-        System.out.println("here");
         this.actions = new VBox();
         this.actions.relocate(18, 15);
 
@@ -64,8 +63,6 @@ public class Holder extends Pane {
                         success = true;
                     }
                 }
-
-                draggedBlock.setVisible(true);
             }
             event.setDropCompleted(success);
             event.consume();
@@ -73,7 +70,13 @@ public class Holder extends Pane {
 
         this.setOnDragOver((DragEvent event) -> {
             if (event.getDragboard().hasString()) {
-                event.acceptTransferModes(TransferMode.COPY);
+                String dbStr = event.getDragboard().getString();
+                if(dbStr.contains("action")){
+                    event.acceptTransferModes(TransferMode.COPY);
+                }
+                else{
+                    System.out.println("not allowed");
+                }
             }
             event.consume();
         });

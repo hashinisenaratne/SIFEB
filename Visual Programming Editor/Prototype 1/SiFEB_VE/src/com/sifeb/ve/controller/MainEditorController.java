@@ -124,7 +124,9 @@ public class MainEditorController implements Initializable {
                     editorPane.getChildren().add(draggedBlock);
                     draggedBlock.setLayoutX(event.getX());
                     draggedBlock.setLayoutY(event.getY());
-                    draggedBlock.setVisible(true);
+                    if (draggedBlock.getType().equals("condition")) {
+                        draggedBlock.disableTextField(true);
+                    }
                 }
             }
             event.setDropCompleted(success);
@@ -189,7 +191,6 @@ public class MainEditorController implements Initializable {
             }
             blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Constraint1.png"));
             parent.getChildren().add(new ActionBlock("condition", fullImg, blkImg, btnnImg));
-            
 
             for (int i = 1; i <= 2; i++) {
 
