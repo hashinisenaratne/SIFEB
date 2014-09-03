@@ -8,11 +8,14 @@ package com.sifeb.ve.controller;
 import com.sifeb.ve.ActionBlock;
 import com.sifeb.ve.ActuatorBlock;
 import com.sifeb.ve.ConditionBlock;
+import com.sifeb.ve.FeedBackLogger;
 import com.sifeb.ve.Holder;
 import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.animation.Animation;
+import javafx.animation.Transition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -20,13 +23,27 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.Effect;
+import javafx.scene.effect.Glow;
+import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.TextFlow;
+import javafx.util.Duration;
 
 /**
  *
@@ -48,6 +65,14 @@ public class MainEditorController implements Initializable {
     Pane editorPane;
     @FXML
     HBox editorBox;
+    @FXML
+    ImageView fbFace;
+    @FXML
+    ImageView fbLeft;
+    @FXML
+    ImageView fbRight;
+    @FXML
+    Label fbText;
 
     ArrayList<Holder> holders;
     Holder lastHolder;
@@ -63,6 +88,21 @@ public class MainEditorController implements Initializable {
         addBlock(capabilityBox);
 
         setEventHandlers();
+        
+        FeedBackLogger.setControls(this.fbFace, this.fbText);
+        setFeedbackPanel();
+
+    }
+
+    private void setFeedbackPanel() {
+        Image img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/bubbleLeft.png"));
+        fbLeft.setImage(img);
+        img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/bubbleRight.png"));
+        fbRight.setImage(img);
+        img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/bubbleMid.png"));
+        fbText.setBackground(new Background(new BackgroundImage(img, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+        
+        FeedBackLogger.sendGoodMessage("Hi, Welcome to SiFEB !!!");
     }
 
     private void addStartEndBlocks() {
@@ -118,7 +158,7 @@ public class MainEditorController implements Initializable {
             editorBox.getChildren().remove(1, editorBox.getChildren().size() - 1);
             editorBox.getChildren().addAll(1, holders);
         } else {
-            System.out.println("Last holder cannot be deleted");
+            FeedBackLogger.sendBadMessage("Sorry, You cannot delete the only holder");
         }
     }
 
@@ -134,14 +174,14 @@ public class MainEditorController implements Initializable {
 
             @Override
             public void handle(ActionEvent event) {
-                addBlock(capabilityBox);
+                FeedBackLogger.sendGoodMessage("This is a happy message!");
             }
         });
         addHolderBtn.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-                addBlockHolder(-1, false);
+                FeedBackLogger.sendBadMessage("This is a sad message!");
             }
         });
 
@@ -259,4 +299,11 @@ public class MainEditorController implements Initializable {
 
     }
 
+    public ImageView getFbFace() {
+        return fbFace;
+    }
+
+    public Label getFbText() {
+        return fbText;
+    }
 }

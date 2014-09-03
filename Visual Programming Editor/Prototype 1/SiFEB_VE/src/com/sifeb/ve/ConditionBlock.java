@@ -9,6 +9,10 @@ import com.sifeb.ve.controller.MainEditorController;
 import com.sun.javafx.beans.event.AbstractNotifyListener;
 import javafx.beans.Observable;
 import javafx.collections.ObservableArray;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
@@ -117,7 +121,14 @@ public class ConditionBlock extends Holder {
                 changeBackToHolder();
             }
         });
+        
+        this.getCondition().getChildren().addListener(new AbstractNotifyListener() {
 
+            @Override
+            public void invalidated(Observable observable) {
+                changeBackToHolder();
+            }
+        });
     }
 
     private void changeBackToHolder() {

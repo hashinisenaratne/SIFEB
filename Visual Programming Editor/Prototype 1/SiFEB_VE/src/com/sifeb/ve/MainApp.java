@@ -5,6 +5,7 @@
  */
 package com.sifeb.ve;
 
+import com.sifeb.ve.controller.MainEditorController;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
