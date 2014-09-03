@@ -58,8 +58,8 @@ public class ComPortController {
         }
 
         if (portFound) {
-          outStream.write((10 + ":" + "t,1\n").getBytes());  // write to the port
-           // outStream.write(("").getBytes());  // write to the port
+          //outStream.write((10 + ":" + "t,1\n").getBytes());  // write to the port
+           outStream.write((message).getBytes());  // write to the port
             if (port != null) {
                 serPort.close();
             }
