@@ -72,7 +72,7 @@ public class Holder extends Pane {
                 String nodeId = db.getString();
                 ActuatorBlock draggedBlock = (ActuatorBlock) p.lookup("#" + nodeId);
 
-                if (draggedBlock != null) {                    
+                if (draggedBlock != null) {
                     this.mainCtrl.addHolderAfterMe(this);
                     if (p.getClass().getName().contains("ActionBlock")) {
                         draggedBlock = new ActuatorBlock(draggedBlock.getType(), draggedBlock.getBlockImg(), draggedBlock.getBtnImg(), draggedBlock.isDragable());
@@ -103,13 +103,6 @@ public class Holder extends Pane {
             }
             event.consume();
         });
-
-    }
-
-    public void deleteElement() {
-
-        ((Pane) this.getParent()).getChildren().remove(this);
-
     }
 
     public void addElementToVbox(Node node) {
@@ -141,14 +134,11 @@ public class Holder extends Pane {
         button.setMinWidth(this.crossImg.getWidth());
         button.setCursor(Cursor.HAND);
         button.setStyle("-fx-background-color: transparent");
-        button.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                deleteElement();
-
-            }
+        
+        button.setOnAction((ActionEvent event) -> {
+            this.mainCtrl.deleteHolder(this);
         });
+
     }
 
     public void changeBackgroundOnHoverUsingEvents(final Node node) {

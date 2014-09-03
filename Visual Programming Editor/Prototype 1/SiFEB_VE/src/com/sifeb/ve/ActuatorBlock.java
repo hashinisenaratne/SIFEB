@@ -174,11 +174,11 @@ public final class ActuatorBlock extends Pane {
     public void checkDevice(Button btn) {
         btn.setOnAction((ActionEvent event) -> {
 
-            try {
-                ComPortController.writeComPort("COM17", 10, "");
-            } catch (PortInUseException | IOException | UnsupportedCommOperationException ex) {
-                Logger.getLogger(ActuatorBlock.class.getName()).log(Level.SEVERE, null, ex);
-            }
+//            try {
+//                ComPortController.writeComPort("COM17", 10, "");
+//            } catch (PortInUseException | IOException | UnsupportedCommOperationException ex) {
+//                Logger.getLogger(ActuatorBlock.class.getName()).log(Level.SEVERE, null, ex);
+//            }
         });
 
     }

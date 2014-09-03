@@ -5,6 +5,12 @@
  */
 package com.sifeb.ve;
 
+import com.sifeb.ve.controller.ComPortController;
+import gnu.io.PortInUseException;
+import gnu.io.UnsupportedCommOperationException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -20,6 +26,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
+import org.controlsfx.dialog.Dialogs;
 
 /**
  *
@@ -29,28 +36,28 @@ public class ActionBlock extends Pane {
 
     private final Button btn;
     private final Image fullBlockImg, blockImg, btnImg;
-    private final String type;
+    private final String type, message;
     private final ActuatorBlock actuatorBlock;
     // private final Rectangle rectangle;
 
-    public ActionBlock(String type, Image fullBlockImg, Image blockImg, Image btnImg) {
+    public ActionBlock(String type, String message, Image fullBlockImg, Image blockImg, Image btnImg) {
 
         this.btn = new Button();
         this.fullBlockImg = fullBlockImg;
         this.blockImg = blockImg;
         this.btnImg = btnImg;
         this.type = type;
+        this.message = message;
+
+        this.actuatorBlock = new ActuatorBlock(this.type, this.blockImg, null, true);
+        this.actuatorBlock.setCursor(Cursor.CLOSED_HAND);
+        moveBlock(this.actuatorBlock);
 
         Double heightValue = (this.fullBlockImg.getHeight() - this.blockImg.getHeight()) / 2;
         super.setPrefSize(this.fullBlockImg.getWidth(), this.fullBlockImg.getHeight());
-
         setButtonProperties(this.btn, this.fullBlockImg, this.btnImg);
         setShape(this.type, this.fullBlockImg);
-
-        this.actuatorBlock = new ActuatorBlock(this.type, this.blockImg, null, true);
         this.actuatorBlock.relocate(this.btnImg.getWidth() + 0.65, heightValue + 0.5);
-        this.actuatorBlock.setCursor(Cursor.CLOSED_HAND);
-        moveBlock(this.actuatorBlock);
         super.getChildren().addAll(this.btn, this.actuatorBlock);
 
         this.setId(Integer.toString(this.hashCode()));
@@ -84,6 +91,10 @@ public class ActionBlock extends Pane {
         ImageView imgView = new ImageView(btnImg);
         button.setGraphic(imgView);
         button.setStyle("-fx-background-color: transparent");
+
+        if (message.equals("err")) {
+            button.setDisable(true);
+        }
         changeBackgroundOnHover(button);
 
         checkButton(button);
@@ -160,15 +171,18 @@ public class ActionBlock extends Pane {
                 dlg.setMasthead("Would You Like to Check Me?");
                 //dlg.setContent(content);
                 dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
-                dlg.show();
 
-                Action response = dlg.getActions().get(0);
+                Action response = dlg.show();
+                System.out.println("response" + response);
 
                 if (response == Dialog.Actions.YES) {
 
-                    System.out.println("on respones");
-                    //  dlg.show();
-                    // ... submit user input
+                    try {
+                        ComPortController.writeComPort("COM17", 10, message);
+                    } catch (PortInUseException | IOException | UnsupportedCommOperationException ex) {
+                        Logger.getLogger(ActuatorBlock.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
                 } else {
                     // ... user cancelled, reset form to default
                 }
