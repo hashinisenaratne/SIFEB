@@ -74,12 +74,18 @@ void loop() {
       Serial.println(Wire.endTransmission());    // stop transmitting
     }
     
-    else if(incomingByte == 'g'){
+    if(incomingByte == 'g'){  
       Wire.beginTransmission(11); // transmit to device #11
+      Wire.write('s'); 
+      Serial.println(Wire.endTransmission());    // stop transmitting
+    }
+    
+    else if(incomingByte == 'h'){
+      /*Wire.beginTransmission(11); // transmit to device #11
       Wire.write('t'); 
       Wire.write(1); 
       Serial.println(Wire.endTransmission());    // stop transmitting
-      
+      */
       Wire.requestFrom(11, 1);    // request 1 byte from slave device #11
       while(Wire.available())    // slave may send less than requested
       { 
@@ -101,7 +107,7 @@ void loop() {
       Wire.write(3); 
       Wire.endTransmission();
       
-      /*int close = false;
+      int close = false;
       while(!close){
         Wire.requestFrom(11, 1);    // request 6 bytes from slave device #11
           while(Wire.available())    // slave may send less than requested
@@ -111,7 +117,7 @@ void loop() {
               close = true;
             }
           }
-      }*/
+      }
       
       Wire.beginTransmission(10); // stop
       Wire.write('a'); 

@@ -8,6 +8,7 @@
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
 int led = 13;
 byte distance;
+boolean ledshow=false;
 
 void setup() {
   Wire.begin(11);                  // join i2c bus with address #11
@@ -20,7 +21,12 @@ void loop() {
   delay(50);                      // Wait 50ms between pings (about 20 pings/sec). 29ms should be the shortest delay between pings.
   unsigned int uS = sonar.ping(); // Send ping, get ping time in microseconds (uS).
   distance = (byte)(uS / US_ROUNDTRIP_CM); // Convert ping time to distance in cm and print result (0 = outside set distance range)
-  
+  if(ledshow == true){
+    digitalWrite(led, HIGH);
+    delay(5000);               // wait for 5 seconds
+    digitalWrite(led, LOW);
+    ledshow = false;
+  }
 }
 
 void requestEvent()
@@ -57,8 +63,6 @@ void receiveEvent(int howMany)
 
 // show device
 void show(){
-    digitalWrite(led, HIGH);
-    delay(5000);               // wait for 5 seconds
-    digitalWrite(led, LOW);
+    ledshow = true;
     Serial.println("Shown");
 }
