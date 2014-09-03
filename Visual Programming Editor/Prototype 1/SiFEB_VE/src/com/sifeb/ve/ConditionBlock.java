@@ -30,11 +30,11 @@ public class ConditionBlock extends Holder {
 
         super(mainCtrl);
         super.setBlockImg(new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Conditional.png")));
-        super.getActions().relocate(21, 15);
+        super.getActions().relocate(20, 15);
 //        this.pane = new Pane();
         this.condition = new VBox();
         this.condition.setPrefSize(90, 60);
-        this.condition.relocate(158, 15);
+        this.condition.relocate(161.25, 15.5);
         super.getChildren().add(this.condition);
 
         addListeners();

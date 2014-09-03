@@ -31,6 +31,7 @@ public class ComPortController {
         ports = CommPortIdentifier.getPortIdentifiers();
         boolean portFound = false;
 
+        System.out.println("message - "+message);
         while (ports.hasMoreElements()) {
             pID = (CommPortIdentifier) ports.nextElement();
             System.out.println("Port " + pID.getName());

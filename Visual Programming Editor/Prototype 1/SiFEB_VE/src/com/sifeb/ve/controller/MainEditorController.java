@@ -9,6 +9,7 @@ import com.sifeb.ve.ActionBlock;
 import com.sifeb.ve.ActuatorBlock;
 import com.sifeb.ve.ConditionBlock;
 import com.sifeb.ve.Holder;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -58,6 +59,8 @@ public class MainEditorController implements Initializable {
         editorBox.setSpacing(-17);
         addStartEndBlocks();
         addBlockHolder(0, false);
+        addBlock(devicesBox);
+        addBlock(capabilityBox);
 
         setEventHandlers();
     }
@@ -220,6 +223,7 @@ public class MainEditorController implements Initializable {
             Image btnnImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/ActionTestBtn.png"));
             Image blkImg;
             String sensorImage;
+            String[] strList = {"b", "c", "e", "d", "err", "errLight", "errLight"};
 
             //adding actions
             for (int i = 1; i < 8; i++) {
@@ -227,28 +231,27 @@ public class MainEditorController implements Initializable {
                 blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/" + sensorImage + ".png"));
 
                 if (i < 3 || i > 5) {
-                    parent.getChildren().add(new ActionBlock("actionC", fullImg, blkImg, btnnImg));
+                    parent.getChildren().add(new ActionBlock("actionC", strList[i-1], fullImg, blkImg, btnnImg));
                 } else {
-                    parent.getChildren().add(new ActionBlock("action", fullImg, blkImg, btnnImg));
+                    parent.getChildren().add(new ActionBlock("action", strList[i-1], fullImg, blkImg, btnnImg));
                 }
 
             }
 
             //adding conditions
             blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Constraint1.png"));
-            //  blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Constraint2.png"));
-            parent.getChildren().add(new ActionBlock("condition", fullImg, blkImg, btnnImg));
+            parent.getChildren().add(new ActionBlock("condition", "err", fullImg, blkImg, btnnImg));
             blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Constraint2.png"));
-            parent.getChildren().add(new ActionBlock("condition", fullImg, blkImg, btnnImg));
+            parent.getChildren().add(new ActionBlock("condition", "err", fullImg, blkImg, btnnImg));
             blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Constraint3.png"));
-            parent.getChildren().add(new ActionBlock("sense", fullImg, blkImg, btnnImg));
+            parent.getChildren().add(new ActionBlock("sense", "err", fullImg, blkImg, btnnImg));
 
             //adding senses
             for (int i = 1; i <= 2; i++) {
 
                 sensorImage = "Sense" + String.valueOf(i);
                 blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/" + sensorImage + ".png"));
-                parent.getChildren().add(new ActionBlock("sense", fullImg, blkImg, btnnImg));
+                parent.getChildren().add(new ActionBlock("sense", "err", fullImg, blkImg, btnnImg));
                 // parent.getChildren().add(new ActionBlock("sense", fullImg, blkImg, btnnImg));
             }
 
