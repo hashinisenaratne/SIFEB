@@ -10,10 +10,15 @@ import com.sifeb.ve.ActuatorBlock;
 import com.sifeb.ve.ConditionBlock;
 import com.sifeb.ve.FeedBackLogger;
 import com.sifeb.ve.Holder;
+import gnu.io.PortInUseException;
+import gnu.io.UnsupportedCommOperationException;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.event.ActionEvent;
@@ -58,6 +63,8 @@ public class MainEditorController implements Initializable {
     @FXML
     Button addHolderBtn;
     @FXML
+    Button runBtn;
+    @FXML
     VBox devicesBox;
     @FXML
     VBox capabilityBox;
@@ -88,7 +95,6 @@ public class MainEditorController implements Initializable {
         addBlock(capabilityBox);
 
         setEventHandlers();
-        
         FeedBackLogger.setControls(this.fbFace, this.fbText);
         setFeedbackPanel();
 
@@ -175,6 +181,11 @@ public class MainEditorController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 FeedBackLogger.sendGoodMessage("This is a happy message!");
+                try {
+                    ComPortController.writeComPort(ComPortController.port, 10, "r");
+                } catch (PortInUseException|IOException|UnsupportedCommOperationException ex) {
+                    Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         addHolderBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -182,6 +193,14 @@ public class MainEditorController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 FeedBackLogger.sendBadMessage("This is a sad message!");
+            }
+        });
+        
+        runBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                FeedBackLogger.sendGoodMessage("Program is running!");
             }
         });
 

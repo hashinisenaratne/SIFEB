@@ -51,6 +51,16 @@ and open the template in the editor.
     // -fx-background-color: transparent;
 }
 
+#runBtn {
+    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-cursor: hand;
+}
+#runBtn:hover {
+     -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+}
+
 #editorPane{
     -fx-background-image: url('images/tiny_grid.png');
     -fx-background-position: center center;

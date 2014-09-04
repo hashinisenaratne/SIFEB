@@ -24,6 +24,7 @@ public class ComPortController {
     static CommPortIdentifier pID;
     static OutputStream outStream;
     static SerialPort serPort;
+    public static String port = "COM15";
 
     public static void writeComPort(String port, int address, String message)
             throws PortInUseException, IOException, UnsupportedCommOperationException {

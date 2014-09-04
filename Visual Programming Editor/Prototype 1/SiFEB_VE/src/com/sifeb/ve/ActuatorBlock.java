@@ -175,7 +175,7 @@ public final class ActuatorBlock extends Pane {
         btn.setOnAction((ActionEvent event) -> {
 
             try {
-                ComPortController.writeComPort("COM15", 10, "g");
+                ComPortController.writeComPort(ComPortController.port, 10, "g");
             } catch (PortInUseException | IOException | UnsupportedCommOperationException ex) {
                 Logger.getLogger(ActuatorBlock.class.getName()).log(Level.SEVERE, null, ex);
             }

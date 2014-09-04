@@ -178,7 +178,7 @@ public class ActionBlock extends Pane {
                 if (response == Dialog.Actions.YES) {
 
                     try {
-                        ComPortController.writeComPort("COM15", 10, message);
+                        ComPortController.writeComPort(ComPortController.port, 10, message);
                     } catch (PortInUseException | IOException | UnsupportedCommOperationException ex) {
                         Logger.getLogger(ActuatorBlock.class.getName()).log(Level.SEVERE, null, ex);
                     }
