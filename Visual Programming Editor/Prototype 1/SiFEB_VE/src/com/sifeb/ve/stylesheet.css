@@ -60,6 +60,9 @@ and open the template in the editor.
 #runBtn:hover {
      -fx-background-color: linear-gradient(#2A5058, #61a2b1);
 }
+#runBtn:pressed {
+     -fx-background-color: linear-gradient(#0A0008, #61a2b1);
+}
 
 #editorPane{
     -fx-background-image: url('images/tiny_grid.png');
