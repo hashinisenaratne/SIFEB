@@ -10,9 +10,6 @@ import com.sifeb.ve.ActuatorBlock;
 import com.sifeb.ve.ConditionBlock;
 import com.sifeb.ve.FeedBackLogger;
 import com.sifeb.ve.Holder;
-import gnu.io.PortInUseException;
-import gnu.io.UnsupportedCommOperationException;
-import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
@@ -197,11 +194,7 @@ public class MainEditorController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 FeedBackLogger.sendGoodMessage("Program is running!");
-                 try {
-                    ComPortController.writeComPort(ComPortController.port, 10, "r");
-                } catch (PortInUseException|IOException|UnsupportedCommOperationException ex) {
-                    Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                ComPortController.writeComPort(ComPortController.port, 10, "r");
             }
         });
 

@@ -6,8 +6,6 @@
 package com.sifeb.ve;
 
 import com.sifeb.ve.controller.ComPortController;
-import gnu.io.PortInUseException;
-import gnu.io.UnsupportedCommOperationException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -178,11 +176,7 @@ public class ActionBlock extends Pane {
                 if (response == Dialog.Actions.YES) {
 
                     FeedBackLogger.sendGoodMessage("We are testing now...");
-                    try {
                         ComPortController.writeComPort(ComPortController.port, 10, message);
-                    } catch (PortInUseException | IOException | UnsupportedCommOperationException ex) {
-                        Logger.getLogger(ActuatorBlock.class.getName()).log(Level.SEVERE, null, ex);
-                    }
 
                 } else {
                     

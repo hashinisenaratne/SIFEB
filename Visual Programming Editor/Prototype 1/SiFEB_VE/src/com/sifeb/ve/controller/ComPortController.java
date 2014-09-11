@@ -9,76 +9,71 @@ package com.sifeb.ve.controller;
  *
  * @author Hashini Senaratne
  */
-import gnu.io.CommPortIdentifier;
-import gnu.io.NoSuchPortException;
-import gnu.io.PortInUseException;
-import gnu.io.SerialPort;
-import gnu.io.UnsupportedCommOperationException;
-import java.io.*;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import jssc.*;
 
 public class ComPortController {
 
-    static Enumeration ports;
-    static CommPortIdentifier pID;
-    static OutputStream outStream;
-    static SerialPort serPort;
     public static String port = "COM16";
     
-    public static void writeComPort(String port, int address, String message)
-            throws PortInUseException, IOException, UnsupportedCommOperationException {
-        // 's'(show) , 't1'(test action 1)
-        //ports = CommPortIdentifier.getPortIdentifiers();
-        boolean portFound = false;
-
-        System.out.println("message - "+message);
-        try {
-            //while (ports.hasMoreElements()) {
-            //pID = (CommPortIdentifier) ports.nextElement();
-            pID = CommPortIdentifier.getPortIdentifier(port);
-        } catch (NoSuchPortException ex) {
-            Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            System.out.println("Port " + pID.getName());
-
-            if (pID.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-                if (pID.getName().equals(port)) // if found the needed port
-                {
-                    serPort = (SerialPort) pID.open(port, 2000);
-
-                    outStream = serPort.getOutputStream();
-                    serPort.setSerialPortParams(9600, SerialPort.DATABITS_8,
-                            SerialPort.STOPBITS_1,
-                            SerialPort.PARITY_NONE);
-                    try {
-                        Thread.sleep(1500);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    System.out.println(port + " found");
-                    portFound = true;
-                    //break;
-                }
-            }
-        //}
-
-        if (portFound) {
-          //outStream.write((10 + ":" + "t,1\n").getBytes());  // write to the port
-           outStream.write((message).getBytes());  // write to the port
-            if (port != null) {
-                serPort.close();
-            }
-            System.out.print("wrote to the port");
-        } else {
-            System.out.println("port not found");
+    public static void listComPorts(){
+        String[] portNames = SerialPortList.getPortNames();
+        for(int i = 0; i < portNames.length; i++){
+            System.out.println(portNames[i]);
         }
     }
 
+    public static String read(String port, int bytes){
+        SerialPort serialPort = new SerialPort(port);
+    try {
+        //Open port
+        serialPort.openPort();
+        //We expose the settings. You can also use this line - serialPort.setParams(9600, 8, 1, 0);
+        serialPort.setParams(SerialPort.BAUDRATE_9600, 
+                             SerialPort.DATABITS_8,
+                             SerialPort.STOPBITS_1,
+                             SerialPort.PARITY_NONE);
+        //Read the data of 10 bytes. Be careful with the method readBytes(), if the number of bytes in the input buffer
+        //is less than you need, then the method will wait for the right amount. Better to use it in conjunction with the
+        //interface SerialPortEventListener.
+        byte[] buffer = serialPort.readBytes(bytes);
+        //Closing the port
+        serialPort.closePort();
+        return buffer.toString();
+    }
+    catch (SerialPortException ex) {
+        System.out.println(ex);
+    }
+    return null;
+    }
+
+    public static void writeComPort(String port, int address, String msg){
+        SerialPort serialPort = new SerialPort(port);
+        try {
+            //Open port
+            serialPort.openPort();
+            //We expose the settings. You can also use this line - serialPort.setParams(9600, 8, 1, 0);
+            serialPort.setParams(SerialPort.BAUDRATE_9600, 
+                                 SerialPort.DATABITS_8,
+                                 SerialPort.STOPBITS_1,
+                                 SerialPort.PARITY_NONE);
+            //Writes data to port
+            serialPort.writeBytes(msg.getBytes());
+            //serialPort.writeBytes((address + ":" + msg).getBytes());  // write to the port
+            //(10 + ":" + "t,1\n")
+
+            //Closing the port
+            serialPort.closePort();
+            System.out.print("wrote to the port");
+        }
+        catch (SerialPortException ex) {
+            System.out.println(ex);
+        }
+    }
     // Test
-    /*public static void main(String[] args) throws Exception {
-     ComPortController cc = new ComPortController();
-     cc.writeComPort("COM1", 10, "s");
-     }*/
+    /*public static void main(String[] args) {
+        //Method getPortNames() returns an array of strings. Elements of the array is already sorted.
+        listComPorts();
+        write("COM44", "C");
+        //System.out.println(read("COM4",1));
+    }*/
 }

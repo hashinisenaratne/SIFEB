@@ -6,9 +6,6 @@
 package com.sifeb.ve;
 
 import com.sifeb.ve.controller.ComPortController;
-import gnu.io.PortInUseException;
-import gnu.io.UnsupportedCommOperationException;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -175,11 +172,7 @@ public final class ActuatorBlock extends Pane {
         btn.setOnAction((ActionEvent event) -> {
 
             FeedBackLogger.sendGoodMessage("We are showing the device");
-            try {
-                ComPortController.writeComPort(ComPortController.port, 10, "g");
-            } catch (PortInUseException | IOException | UnsupportedCommOperationException ex) {
-                Logger.getLogger(ActuatorBlock.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            ComPortController.writeComPort(ComPortController.port, 10, "g");
         });
 
     }
