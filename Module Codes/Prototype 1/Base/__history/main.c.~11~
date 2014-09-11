@@ -93,8 +93,7 @@ void main()
    
    SET_TRIS_B(0);
 
-   delay_ms(2000); 
-   
+
    while(TRUE)
    {
       delay_ms(1000);    

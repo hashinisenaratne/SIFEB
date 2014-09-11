@@ -1,0 +1,97 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     @INTERRUPT_AREA
+005     @INTERRUPT_AREA
+006     @INTERRUPT_AREA
+007     @INTERRUPT_AREA
+008     @INTERRUPT_AREA
+009     @INTERRUPT_AREA
+00A     @INTERRUPT_AREA
+00B     @INTERRUPT_AREA
+00C     @INTERRUPT_AREA
+00D     @INTERRUPT_AREA
+00E     @INTERRUPT_AREA
+00F     @INTERRUPT_AREA
+010     @INTERRUPT_AREA
+011     @INTERRUPT_AREA
+012     @INTERRUPT_AREA
+013     @INTERRUPT_AREA
+014     @INTERRUPT_AREA
+015     @INTERRUPT_AREA
+016     @INTERRUPT_AREA
+017-018 buffer
+019     state
+01A     @I2C_STATE
+01B     MAIN.@SCRATCH1
+01D     @I2C_WRITE_1.P1
+01D     SSP_isr.@SCRATCH1
+01D     show.@SCRATCH1
+01D     go_forward.@SCRATCH1
+01D     go_backward.@SCRATCH1
+01E     @delay_ms1.P1
+01E     SSP_isr.@SCRATCH2
+F83     PSP_DATA
+FBB     CCP_2_LOW
+FBB     CCP_2
+FBC     CCP_2_HIGH
+FBE     CCP_1_LOW
+FBE     CCP_1
+FBF     CCP_1_HIGH
+FE1-FE2 @WRITE_PACKED_MEMORY.P1
+FE1-FE2 @READ_PACKED_MEMORY.P2
+FE9-FEA @WRITE_PACKED_MEMORY.P1
+FE9-FEA @WRITE_PROGRAM_MEMORY.P2
+FE9-FEA @READ_PROGRAM_MEMORY.P3
+FE9-FEA @READ_PACKED_MEMORY.P4
+FF6-FF8 @READ_PROGRAM_MEMORY.P1
+FF6-FF8 @WRITE_PROGRAM_MEMORY.P2
+
+ROM Allocation:
+000096  @I2C_WRITE_1
+0000AE  @delay_ms1
+0000D6  show
+0000F4  stop
+000108  go_forward
+000134  go_backward
+000160  turn_right
+00017E  turn_left
+00019C  SSP_isr
+000230  MAIN
+000230  @cinit1
+000250  @cinit2
+
+Project Directory:
+    G:\sem7\Final Year Project\Programs\GIT\SIFEB\Module Codes\Prototype 1\Base\
+
+Project Files:
+    main.c                                                  [03-Sep-14 16:39  CRC=1E9782C6]
+    main.h                                                  [01-Sep-14 20:53  CRC=053EFE05]
+    C:\Program Files (x86)\PICC\Devices\18F452.h            [04-Jul-13 02:58  CRC=8BB2C0D6]
+
+Source signature=3B3C0277
+
+Units:
+    main (main)
+
+Compiler Settings:
+    Processor:      PIC18F452
+    Pointer Size:   16
+    ADC Range:      0-65535
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    XREF file:   main.xsym
+    Errors:      main.err
+    Ext Symbols: main.esym
+    INHX32:      main.hex
+    Symbols:     main.sym
+    List:        main.lst
+    Debug/COFF:  main.cof
+    Project:     main.ccspjt
+    Call Tree:   main.tre
+    Statistics:  main.STA

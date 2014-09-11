@@ -1,0 +1,22 @@
+ÀÄmain
+   ÃÄMAIN  0/142  Ram=1
+   ³  ÃÄ@cinit1  (Inline)  Ram=0
+   ³  ÃÄ@delay_ms1  0/40  Ram=1
+   ³  ÀÄ@delay_ms1  0/40  Ram=1
+   ÀÄSSP_isr  0/148  Ram=2
+      ÃÄ@I2C_WRITE_1  0/24  Ram=1
+      ÃÄshow  0/30  Ram=1
+      ³  ÀÄ@delay_ms1  0/40  Ram=1
+      ÃÄgo_forward  0/44  Ram=1
+      ³  ÃÄ@delay_ms1  0/40  Ram=1
+      ³  ÀÄstop  0/20  Ram=0
+      ÃÄgo_backward  0/44  Ram=1
+      ³  ÃÄ@delay_ms1  0/40  Ram=1
+      ³  ÀÄstop  0/20  Ram=0
+      ÃÄturn_right  0/30  Ram=0
+      ³  ÃÄ@delay_ms1  0/40  Ram=1
+      ³  ÀÄstop  0/20  Ram=0
+      ÃÄturn_left  0/30  Ram=0
+      ³  ÃÄ@delay_ms1  0/40  Ram=1
+      ³  ÀÄstop  0/20  Ram=0
+      ÀÄstop  0/20  Ram=0

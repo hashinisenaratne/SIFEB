@@ -97,7 +97,7 @@ void main()
    
    while(TRUE)
    {
-      delay_ms(1000);    
+      delay_ms(10);    
    }
 
 }

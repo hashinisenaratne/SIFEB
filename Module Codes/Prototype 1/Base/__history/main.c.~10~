@@ -93,8 +93,7 @@ void main()
    
    SET_TRIS_B(0);
 
-   delay_ms(2000); 
-   
+
    while(TRUE)
    {
       delay_ms(1000);    
@@ -117,7 +116,7 @@ void go_forward()      //forward
       OUTPUT_LOW(MotorRight2);   
       
       if(buffer[0] == 't'){
-         delay_ms(500);
+         delay_ms(1000);
          stop();
       }
 }
@@ -130,7 +129,7 @@ void go_backward()      //reverse
       OUTPUT_HIGH(MotorRight2); 
       
       if(buffer[0] == 't'){
-         delay_ms(500);
+         delay_ms(1000);
          stop();
       }
 }
@@ -150,7 +149,7 @@ void turn_right()      //turn right using 2 wheels (by 90 degree)
       OUTPUT_LOW(MotorRight1);
       OUTPUT_HIGH(MotorRight2);
       
-      delay_ms(200);
+      delay_ms(1000);
       
       stop();
 }
@@ -162,7 +161,7 @@ void turn_left()      //turn left using 2 wheels (by 90 degree)
       OUTPUT_HIGH(MotorRight1);
       OUTPUT_LOW(MotorRight2); 
       
-      delay_ms(200);
+      delay_ms(1000);
       
       stop();
 }
