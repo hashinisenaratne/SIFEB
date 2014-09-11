@@ -177,6 +177,7 @@ public class ActionBlock extends Pane {
 
                 if (response == Dialog.Actions.YES) {
 
+                    FeedBackLogger.sendGoodMessage("We are testing now...");
                     try {
                         ComPortController.writeComPort(ComPortController.port, 10, message);
                     } catch (PortInUseException | IOException | UnsupportedCommOperationException ex) {
@@ -184,6 +185,8 @@ public class ActionBlock extends Pane {
                     }
 
                 } else {
+                    
+                    FeedBackLogger.sendBadMessage("We are not testing now...");
                     // ... user cancelled, reset form to default
                 }
 

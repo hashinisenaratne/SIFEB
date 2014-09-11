@@ -10,6 +10,7 @@ package com.sifeb.ve.controller;
  * @author Hashini Senaratne
  */
 import gnu.io.CommPortIdentifier;
+import gnu.io.NoSuchPortException;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
@@ -24,17 +25,22 @@ public class ComPortController {
     static CommPortIdentifier pID;
     static OutputStream outStream;
     static SerialPort serPort;
-    public static String port = "COM15";
-
+    public static String port = "COM16";
+    
     public static void writeComPort(String port, int address, String message)
             throws PortInUseException, IOException, UnsupportedCommOperationException {
         // 's'(show) , 't1'(test action 1)
-        ports = CommPortIdentifier.getPortIdentifiers();
+        //ports = CommPortIdentifier.getPortIdentifiers();
         boolean portFound = false;
 
         System.out.println("message - "+message);
-        while (ports.hasMoreElements()) {
-            pID = (CommPortIdentifier) ports.nextElement();
+        try {
+            //while (ports.hasMoreElements()) {
+            //pID = (CommPortIdentifier) ports.nextElement();
+            pID = CommPortIdentifier.getPortIdentifier(port);
+        } catch (NoSuchPortException ex) {
+            Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+        }
             System.out.println("Port " + pID.getName());
 
             if (pID.getPortType() == CommPortIdentifier.PORT_SERIAL) {
@@ -53,10 +59,10 @@ public class ComPortController {
                     }
                     System.out.println(port + " found");
                     portFound = true;
-                    break;
+                    //break;
                 }
             }
-        }
+        //}
 
         if (portFound) {
           //outStream.write((10 + ":" + "t,1\n").getBytes());  // write to the port

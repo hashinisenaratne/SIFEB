@@ -181,11 +181,7 @@ public class MainEditorController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 FeedBackLogger.sendGoodMessage("This is a happy message!");
-                try {
-                    ComPortController.writeComPort(ComPortController.port, 10, "r");
-                } catch (PortInUseException|IOException|UnsupportedCommOperationException ex) {
-                    Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+               
             }
         });
         addHolderBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -201,6 +197,11 @@ public class MainEditorController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 FeedBackLogger.sendGoodMessage("Program is running!");
+                 try {
+                    ComPortController.writeComPort(ComPortController.port, 10, "r");
+                } catch (PortInUseException|IOException|UnsupportedCommOperationException ex) {
+                    Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 

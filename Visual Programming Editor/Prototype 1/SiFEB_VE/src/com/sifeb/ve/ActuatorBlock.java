@@ -174,6 +174,7 @@ public final class ActuatorBlock extends Pane {
     public void checkDevice(Button btn) {
         btn.setOnAction((ActionEvent event) -> {
 
+            FeedBackLogger.sendGoodMessage("We are showing the device");
             try {
                 ComPortController.writeComPort(ComPortController.port, 10, "g");
             } catch (PortInUseException | IOException | UnsupportedCommOperationException ex) {
