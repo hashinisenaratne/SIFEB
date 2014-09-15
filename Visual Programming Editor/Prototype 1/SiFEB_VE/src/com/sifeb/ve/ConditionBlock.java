@@ -8,11 +8,6 @@ package com.sifeb.ve;
 import com.sifeb.ve.controller.MainEditorController;
 import com.sun.javafx.beans.event.AbstractNotifyListener;
 import javafx.beans.Observable;
-import javafx.collections.ObservableArray;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
@@ -73,28 +68,30 @@ public class ConditionBlock extends Holder {
             boolean success = false;
             if (db.hasString()) {
                 String nodeId = db.getString();
-                ActuatorBlock draggedBlock = (ActuatorBlock) p.lookup("#" + nodeId);
+                Block draggedBlock = (Block) p.lookup("#" + nodeId);
 
                 if (draggedBlock != null) {
                     this.mainCtrl.addHolderAfterMe(this);
                     if (p.getClass().getName().contains("ActionBlock")) {
-                        draggedBlock = new ActuatorBlock(draggedBlock.getType(), draggedBlock.getBlockImg(), draggedBlock.getBtnImg(), draggedBlock.isDragable());
+                        Capability cap = draggedBlock.getCapability().cloneCapability();
+                        draggedBlock = cap.getBlock();
                     } else {
                         ((Pane) p).getChildren().remove(draggedBlock);
                     }
-                    if (draggedBlock.getType().equals("actionC")) {
+                    String blockType = draggedBlock.getCapability().getType();
+                    if (blockType.equals("actionC")) {
                         this.addElementToVbox(draggedBlock);
                         success = true;
                         this.mainCtrl.addHolderAfterMe(this);
-                    } else if (draggedBlock.getType().equals("action")) {
+                    } else if (blockType.equals("action")) {
                         super.mainCtrl.changeHolderType(this, draggedBlock);
                         success = true;
-                    } else if ((draggedBlock.getType().equals("sense")) || (draggedBlock.getType().equals("condition"))) {
+                    } else if (blockType.equals("sense") || blockType.equals("condition")) {
                         if (this.hasCondition()) {
                             this.removeCurrentCondition();
                         }
                         this.addCondition(draggedBlock);
-                        if (draggedBlock.getType().equals("condition")) {
+                        if (blockType.equals("condition")) {
                             draggedBlock.disableTextField(false);
                         }
                         success = true;

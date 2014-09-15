@@ -6,30 +6,24 @@
 package com.sifeb.ve.controller;
 
 import com.sifeb.ve.ActionBlock;
-import com.sifeb.ve.ActuatorBlock;
+import com.sifeb.ve.Block;
+import com.sifeb.ve.Capability;
 import com.sifeb.ve.ConditionBlock;
+import com.sifeb.ve.Device;
 import com.sifeb.ve.FeedBackLogger;
 import com.sifeb.ve.Holder;
-import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.animation.Animation;
-import javafx.animation.Transition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.effect.Bloom;
-import javafx.scene.effect.Effect;
-import javafx.scene.effect.Glow;
-import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
@@ -43,9 +37,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.TextFlow;
-import javafx.util.Duration;
+import javafx.scene.text.Font;
 
 /**
  *
@@ -81,11 +73,22 @@ public class MainEditorController implements Initializable {
     ArrayList<Holder> holders;
     Holder lastHolder;
 
+    //temp
+    ArrayList<Device> devices;
+    ArrayList<Capability> capabilities;
+    //
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        //temp        
+        devices = new ArrayList<>();
+        capabilities = new ArrayList<>();
+
         holders = new ArrayList<>();
+        editorBox.setFillHeight(false);
         editorBox.setSpacing(-17);
+        editorBox.setAlignment(Pos.CENTER_LEFT);
         addStartEndBlocks();
         addBlockHolder(0, false);
         addBlock(devicesBox);
@@ -104,16 +107,16 @@ public class MainEditorController implements Initializable {
         fbRight.setImage(img);
         img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/bubbleMid.png"));
         fbText.setBackground(new Background(new BackgroundImage(img, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-        
+
         FeedBackLogger.sendGoodMessage("Hi, Welcome to SiFEB !!!");
     }
 
     private void addStartEndBlocks() {
         Image img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Start.png"));
-        editorBox.getChildren().add(new ActuatorBlock("rectangle", img, null, false));
+        editorBox.getChildren().add(new Block(img));
 
         img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Stop.png"));
-        editorBox.getChildren().add(new ActuatorBlock("rectangle", img, null, false));
+        editorBox.getChildren().add(new Block(img));
     }
 
     //use -1 as index to add a holder to the end
@@ -178,7 +181,7 @@ public class MainEditorController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 FeedBackLogger.sendGoodMessage("This is a happy message!");
-               
+
             }
         });
         addHolderBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -188,7 +191,7 @@ public class MainEditorController implements Initializable {
                 FeedBackLogger.sendBadMessage("This is a sad message!");
             }
         });
-        
+
         runBtn.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
@@ -205,12 +208,13 @@ public class MainEditorController implements Initializable {
             boolean success = false;
             if (db.hasString()) {
                 String nodeId = db.getString();
-                ActuatorBlock draggedBlock = (ActuatorBlock) p.lookup("#" + nodeId);
+                Block draggedBlock = (Block) p.lookup("#" + nodeId);
 
                 if (draggedBlock != null) {
 //                    System.out.println(p.getClass().getName());
                     if (p.getClass().getName().contains("ActionBlock")) {
-                        draggedBlock = new ActuatorBlock(draggedBlock.getType(), draggedBlock.getBlockImg(), draggedBlock.getBtnImg(), draggedBlock.isDragable());
+                        Capability cap = draggedBlock.getCapability().cloneCapability();
+                        draggedBlock = cap.getBlock();
                     } else {
                         ((Pane) p).getChildren().remove(draggedBlock);
                     }
@@ -218,8 +222,8 @@ public class MainEditorController implements Initializable {
                     editorPane.getChildren().add(draggedBlock);
                     draggedBlock.setLayoutX(event.getX());
                     draggedBlock.setLayoutY(event.getY());
-                    if (draggedBlock.getType().equals("condition")) {
-                        draggedBlock.disableTextField(true);
+                    if (draggedBlock.getCapability().getType().equals("condition")) {
+                        draggedBlock.disableTextField(false);
                     }
                 }
             }
@@ -235,7 +239,7 @@ public class MainEditorController implements Initializable {
         });
 
         editorBox.setOnDragDropped((DragEvent event) -> {
-            System.out.println("hb dropped");
+//            System.out.println("hb dropped");
         });
 
         editorBox.setOnDragOver((DragEvent event) -> {
@@ -255,59 +259,73 @@ public class MainEditorController implements Initializable {
 
         if (parentId.equals("devicesBox")) {
 
-            Image img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Mwheels.png"));
-            Image btnImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/MAPlay.png"));
+            Device device = new Device("00001", "Wheels", 10, "actuator", "Mwheels.png");
+            device.addToPane(devicesBox);
+            devices.add(device);
 
-            parent.getChildren().add(new ActuatorBlock("device", img, btnImg, false));
+            device = new Device("00002", "Object Detector", 11, "sensor", "Msonar.png");
+            device.addToPane(devicesBox);
+            devices.add(device);
 
-            img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Msonar.png"));
-            btnImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/MSPlay.png"));
-
-            parent.getChildren().add(new ActuatorBlock("device", img, btnImg, false));
-
-            img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Mlight.png"));
-            btnImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/MAPlay.png"));
-
-            parent.getChildren().add(new ActuatorBlock("device", img, btnImg, false));
+            device = new Device("00003", "Lights", 12, "actuator", "Mlight.png");
+            device.addToPane(devicesBox);
+            devices.add(device);
 
         } else if (parentId.equals("capabilityBox")) {
 
-            Image fullImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/ActionTest.png"));
-            Image btnnImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/ActionTestBtn.png"));
-            Image blkImg;
-            String sensorImage;
-            String[] strList = {"b", "c", "e", "d", "err", "errLight", "errLight"};
-
             //adding actions
+            String[] actionNames = {"Go Forward", "Reverse", "Turn Left", "Turn Right", "Stop", "Light ON", "Light OFF"};
+            String[] actionCmd = {"b", "c", "e", "d", "", "l", ""};
             for (int i = 1; i < 8; i++) {
-                sensorImage = "ActionA" + String.valueOf(i);
-                blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/" + sensorImage + ".png"));
-
-                if (i < 3 || i > 5) {
-                    parent.getChildren().add(new ActionBlock("actionC", strList[i-1], fullImg, blkImg, btnnImg));
+                Device d;
+                String type;
+                if (i <= 5) {
+                    d = devices.get(0);
                 } else {
-                    parent.getChildren().add(new ActionBlock("action", strList[i-1], fullImg, blkImg, btnnImg));
+                    d = devices.get(2);
+                }
+                if (i < 3 || i > 5) {
+                    type = "actionC";
+                } else {
+                    type = "action";
+                }
+                Capability cap = new Capability("1000" + i, actionNames[i - 1], d, type, actionCmd[i - 1], "ActionA" + i + ".png");
+                capabilities.add(cap);
+                d.addCapability(cap);
+                if (i == 5 || i == 7) {
+                    ActionBlock action = new ActionBlock(cap.getBlock(), false);
+                    action.addToPane(capabilityBox);
+                } else {
+                    ActionBlock action = new ActionBlock(cap.getBlock(), true);
+                    action.addToPane(capabilityBox);
                 }
 
             }
 
-            //adding conditions
-            blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Constraint1.png"));
-            parent.getChildren().add(new ActionBlock("condition", "err", fullImg, blkImg, btnnImg));
-            blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Constraint2.png"));
-            parent.getChildren().add(new ActionBlock("condition", "err", fullImg, blkImg, btnnImg));
-            blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Constraint3.png"));
-            parent.getChildren().add(new ActionBlock("sense", "err", fullImg, blkImg, btnnImg));
-
             //adding senses
+            String[] senseNames = {"No Object", "See Object"};
+            String[] senseCmd = {"s1", "s2"};
             for (int i = 1; i <= 2; i++) {
+                Capability cap = new Capability("2000" + i, senseNames[i - 1], devices.get(1), "sense", senseCmd[i - 1], "Sense" + i + ".png");
+                capabilities.add(cap);
+                devices.get(1).addCapability(cap);
 
-                sensorImage = "Sense" + String.valueOf(i);
-                blkImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/" + sensorImage + ".png"));
-                parent.getChildren().add(new ActionBlock("sense", "err", fullImg, blkImg, btnnImg));
-                // parent.getChildren().add(new ActionBlock("sense", fullImg, blkImg, btnnImg));
+                ActionBlock action = new ActionBlock(cap.getBlock(), true);
+                action.addToPane(capabilityBox);
+
             }
 
+            //adding conditions
+            for (int i = 1; i <= 3; i++) {
+                Capability cap = new Capability("3000" + i, "", null, "condition", "", "Constraint" + i + ".png");
+                if (i == 3) {
+                    cap = new Capability("3000" + i, "", null, "sense", "", "Constraint" + i + ".png");
+                }
+                capabilities.add(cap);
+                ActionBlock action = new ActionBlock(cap.getBlock(), false);
+                action.addToPane(capabilityBox);
+
+            }
         }
 
     }

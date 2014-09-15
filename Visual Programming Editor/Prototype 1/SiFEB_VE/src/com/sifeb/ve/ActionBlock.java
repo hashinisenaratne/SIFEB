@@ -6,186 +6,125 @@
 package com.sifeb.ve;
 
 import com.sifeb.ve.controller.ComPortController;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.effect.Bloom;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.Dialogs;
 
 /**
  *
  * @author Pubudu
  */
-public class ActionBlock extends Pane {
+public class ActionBlock extends HBox {
 
+    private final Image img;
     private final Button btn;
-    private final Image fullBlockImg, blockImg, btnImg;
-    private final String type, message;
-    private final ActuatorBlock actuatorBlock;
-    // private final Rectangle rectangle;
+    private final Block block;
+    
+    private static final String BACKGROUND_IMG = "/com/sifeb/ve/images/ActionTest.png";
+    private static final String TEST_BTN = "/com/sifeb/ve/images/ActionTestBtn.png";
 
-    public ActionBlock(String type, String message, Image fullBlockImg, Image blockImg, Image btnImg) {
+    public ActionBlock(Block block, boolean hasTestBtn) {
 
-        this.btn = new Button();
-        this.fullBlockImg = fullBlockImg;
-        this.blockImg = blockImg;
-        this.btnImg = btnImg;
-        this.type = type;
-        this.message = message;
-
-        this.actuatorBlock = new ActuatorBlock(this.type, this.blockImg, null, true);
-        this.actuatorBlock.setCursor(Cursor.CLOSED_HAND);
-        moveBlock(this.actuatorBlock);
-
-        Double heightValue = (this.fullBlockImg.getHeight() - this.blockImg.getHeight()) / 2;
-        super.setPrefSize(this.fullBlockImg.getWidth(), this.fullBlockImg.getHeight());
-        setButtonProperties(this.btn, this.fullBlockImg, this.btnImg);
-        setShape(this.type, this.fullBlockImg);
-        this.actuatorBlock.relocate(this.btnImg.getWidth() + 0.65, heightValue + 0.5);
-        super.getChildren().addAll(this.btn, this.actuatorBlock);
-
-        this.setId(Integer.toString(this.hashCode()));
-
-    }
-
-    public void setShape(String type, Image fullBImg) {
-        switch (type) {
-            case "action":
-            case "actionC":
-            case "condition":
-            case "sense":
-                Rectangle r = new Rectangle(fullBImg.getWidth(), fullBImg.getHeight(), new ImagePattern(fullBImg));
-                r.setArcHeight(20);
-                r.setArcWidth(20);
-                super.getChildren().add(r);
-                break;
+        this.block = block;
+        this.img = new Image(getClass().getResourceAsStream(ActionBlock.BACKGROUND_IMG));
+        super.setSpacing(1);
+        super.setFillHeight(false);
+        super.setAlignment(Pos.CENTER_LEFT);
+        super.setBackground(new Background(new BackgroundImage(this.img, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+        
+        this.btn = setTestButton(this.img.getWidth(), this.img.getHeight());
+        super.getChildren().add(this.btn);
+        super.getChildren().add(this.block);
+        
+        if(!hasTestBtn){
+            this.btn.setDisable(true);
         }
 
     }
 
-    public void setButtonProperties(Button button, Image img, Image btnImg) {
-
-        button.relocate(0, 0);
-        button.setMaxHeight(img.getHeight());
+//    public void setShape(String type, Image fullBImg) {
+//        switch (type) {
+//            case "action":
+//            case "actionC":
+//            case "condition":
+//            case "sense":
+//                Rectangle r = new Rectangle(fullBImg.getWidth(), fullBImg.getHeight(), new ImagePattern(fullBImg));
+//                r.setArcHeight(20);
+//                r.setArcWidth(20);
+//                super.getChildren().add(r);
+//                break;
+//        }
+//
+//    }
+    
+    public Button setTestButton(double width, double height){
+        Image btnImg = new Image(getClass().getResourceAsStream(ActionBlock.TEST_BTN));
+        
+        Button button = new Button();
+        button.setMaxHeight(height);
         button.setMaxWidth(btnImg.getWidth());
-        button.setMinHeight(img.getHeight());
+        button.setMinHeight(height);
         button.setMinWidth(btnImg.getWidth());
-        button.setCursor(Cursor.HAND);
 
         ImageView imgView = new ImageView(btnImg);
         button.setGraphic(imgView);
-        button.setStyle("-fx-background-color: transparent");
-
-        if (message.equals("err")) {
-            button.setDisable(true);
-        }
-        changeBackgroundOnHover(button);
-
-        checkButton(button);
-
+        button.getStyleClass().add("transparent-back");
+        setButtonEvents(button, imgView);
+        
+        return button;
     }
+    
+    public void setButtonEvents(Button btn, ImageView imgView) {
 
-    public void changeBackgroundOnHover(final Node node) {
-
-        node.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                node.setEffect(new DropShadow());
-            }
+        btn.setOnMouseEntered((MouseEvent mouseEvent) -> {
+            imgView.setEffect(new DropShadow());
         });
-        node.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                node.setEffect(null);
-            }
+        btn.setOnMouseExited((MouseEvent mouseEvent) -> {
+            imgView.setEffect(null);
         });
-    }
-
-    public void moveBlock(final Node node) {
-
-        node.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                node.setEffect(new Bloom(0.3));
-            }
+        btn.setOnMousePressed((MouseEvent event) -> {
+            imgView.setEffect(new InnerShadow());
         });
-        node.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                node.setEffect(null);
-            }
+        btn.setOnMouseReleased((MouseEvent event) -> {
+            imgView.setEffect(new DropShadow());
         });
-    }
+        btn.setOnAction((ActionEvent event) -> {
+            Capability cp = this.block.getCapability();
+            Dialog dlg = new Dialog(null, "Message from SiFEB");
+            dlg.setResizable(false);
+            dlg.setIconifiable(false);
+            dlg.setGraphic(new ImageView(cp.getImage()));
+            dlg.setMasthead("Would You Like to Check Me?");
+            dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
 
-    public Button getBtn() {
-        return btn;
-    }
+            Action response = dlg.show();
+            System.out.println("response" + response);
 
-    public Image getFullBlockImg() {
-        return fullBlockImg;
-    }
-
-    public Image getBlockImg() {
-        return blockImg;
-    }
-
-    public Image getBtnImg() {
-        return btnImg;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public ActuatorBlock getActuatorBlock() {
-        return actuatorBlock;
-    }
-
-    private void checkButton(Button button) {
-
-        button.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-
-                Dialog dlg = new Dialog(null, "Message from SiFEB");
-                dlg.setResizable(false);
-                dlg.setIconifiable(false);
-                dlg.setGraphic(new ImageView(blockImg));
-                dlg.setMasthead("Would You Like to Check Me?");
-                //dlg.setContent(content);
-                dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
-
-                Action response = dlg.show();
-                System.out.println("response" + response);
-
-                if (response == Dialog.Actions.YES) {
-
-                    FeedBackLogger.sendGoodMessage("We are testing now...");
-                        ComPortController.writeComPort(ComPortController.port, 10, message);
-
-                } else {
-                    
-                    FeedBackLogger.sendBadMessage("We are not testing now...");
-                    // ... user cancelled, reset form to default
-                }
-
-            }
+            if (response == Dialog.Actions.YES) {
+                FeedBackLogger.sendGoodMessage("We are testing \'" + cp.getCapName()+"\' capability...");
+                ComPortController.writeComPort(ComPortController.port, cp.getDevice().getAddress(), cp.getCommand());
+            } else {
+                FeedBackLogger.sendBadMessage("OK, Let's test later...");
+                // ... user cancelled, reset form to default
+            }           
         });
     }
-
+    
+    public void addToPane(Pane parent) {
+        parent.getChildren().add(this);
+    }
 }

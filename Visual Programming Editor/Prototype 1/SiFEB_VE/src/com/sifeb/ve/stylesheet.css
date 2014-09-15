@@ -46,6 +46,7 @@ and open the template in the editor.
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
 .button:hover {
+    -fx-cursor: hand;
     //-fx-background-color: linear-gradient(#2A5058, #61a2b1);
     // -fx-background-image: url('/com/sifeb/ve/images/MASSHOW.png');
     // -fx-background-color: transparent;
@@ -74,4 +75,12 @@ and open the template in the editor.
     -fx-background-image: url('images/clouds.jpg');
     -fx-background-position: center center;
     -fx-background-repeat: repeat-x;
+}
+
+.transparent-back{
+    -fx-background-color: transparent;
+}
+
+.showBtn{
+    padding-left: 0;
 }

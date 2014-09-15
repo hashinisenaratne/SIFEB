@@ -12,15 +12,11 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.effect.Bloom;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
@@ -70,19 +66,20 @@ public class Holder extends Pane {
             boolean success = false;
             if (db.hasString()) {
                 String nodeId = db.getString();
-                ActuatorBlock draggedBlock = (ActuatorBlock) p.lookup("#" + nodeId);
+                Block draggedBlock = (Block) p.lookup("#" + nodeId);
 
                 if (draggedBlock != null) {
                     this.mainCtrl.addHolderAfterMe(this);
                     if (p.getClass().getName().contains("ActionBlock")) {
-                        draggedBlock = new ActuatorBlock(draggedBlock.getType(), draggedBlock.getBlockImg(), draggedBlock.getBtnImg(), draggedBlock.isDragable());
+                        Capability cap = draggedBlock.getCapability().cloneCapability();
+                        draggedBlock = cap.getBlock();
                     } else {
                         ((Pane) p).getChildren().remove(draggedBlock);
                     }
-                    if (draggedBlock.getType().equals("action")) {
+                    if (draggedBlock.getCapability().getType().equals("action")) {
                         this.addElementToVbox(draggedBlock);
                         success = true;
-                    } else if (draggedBlock.getType().equals("actionC")) {
+                    } else if (draggedBlock.getCapability().getType().equals("actionC")) {
                         this.mainCtrl.changeHolderType(this, draggedBlock);
                         success = true;
                     }
@@ -134,7 +131,7 @@ public class Holder extends Pane {
         button.setMinWidth(this.crossImg.getWidth());
         button.setCursor(Cursor.HAND);
         button.setStyle("-fx-background-color: transparent");
-        
+
         button.setOnAction((ActionEvent event) -> {
             this.mainCtrl.deleteHolder(this);
         });
