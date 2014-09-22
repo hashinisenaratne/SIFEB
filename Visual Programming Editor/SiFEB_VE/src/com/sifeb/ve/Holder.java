@@ -40,7 +40,7 @@ public class Holder extends Pane {
 
     public Holder(MainEditorController mainCtrl) {
 
-        this.setBlockImg(new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Holder.png")));
+        this.setBlockImg(new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Holder_V.png")));
         this.crossImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/cross.png"));
         this.button = new Button();
 
@@ -48,10 +48,9 @@ public class Holder extends Pane {
         changeBackgroundOnHoverUsingEvents(this.button);
         super.getChildren().add(this.button);
 
-        System.out.println("here");
         this.mainCtrl = mainCtrl;
         this.actions = new VBox();
-        this.actions.relocate(18, 15);
+        this.actions.relocate(16, 19);
 
         super.getChildren().add(this.actions);
 
@@ -60,7 +59,6 @@ public class Holder extends Pane {
 
     public void setEventHandlers() {
         this.setOnDragDropped((DragEvent event) -> {
-            System.out.println("dropped");
             Dragboard db = event.getDragboard();
             Parent p = ((Node) event.getGestureSource()).getParent();
             boolean success = false;
@@ -117,13 +115,14 @@ public class Holder extends Pane {
 
     public void setBlockImg(Image blockImg) {
         this.blockImg = blockImg;
-        super.setPrefSize(this.blockImg.getWidth(), this.blockImg.getHeight());
+        super.setPrefWidth(this.blockImg.getWidth());
+        super.setMinHeight(this.blockImg.getHeight());
         super.setBackground(new Background(new BackgroundImage(this.blockImg, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
     }
 
     private void setButtonProperties(Button button) {
 
-        button.relocate(0, 7);
+        button.relocate(0, 0);
         button.setGraphic(new ImageView(this.crossImg));
         button.setMaxHeight(this.crossImg.getHeight());
         button.setMaxWidth(this.crossImg.getWidth());

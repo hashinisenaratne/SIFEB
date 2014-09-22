@@ -34,10 +34,8 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 
 /**
  *
@@ -60,7 +58,7 @@ public class MainEditorController implements Initializable {
     @FXML
     Pane editorPane;
     @FXML
-    HBox editorBox;
+    VBox editorBox;
     @FXML
     ImageView fbFace;
     @FXML
@@ -86,9 +84,9 @@ public class MainEditorController implements Initializable {
         capabilities = new ArrayList<>();
 
         holders = new ArrayList<>();
-        editorBox.setFillHeight(false);
-        editorBox.setSpacing(-17);
-        editorBox.setAlignment(Pos.CENTER_LEFT);
+        editorBox.setFillWidth(false);
+        editorBox.setSpacing(-15);
+        editorBox.setAlignment(Pos.TOP_LEFT);
         addStartEndBlocks();
         addBlockHolder(0, false);
         addBlock(devicesBox);
@@ -112,10 +110,10 @@ public class MainEditorController implements Initializable {
     }
 
     private void addStartEndBlocks() {
-        Image img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Start.png"));
+        Image img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Start_V.png"));
         editorBox.getChildren().add(new Block(img));
 
-        img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Stop.png"));
+        img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Stop_V.png"));
         editorBox.getChildren().add(new Block(img));
     }
 
@@ -202,7 +200,6 @@ public class MainEditorController implements Initializable {
         });
 
         editorPane.setOnDragDropped((DragEvent event) -> {
-//            System.out.println("dropped");
             Dragboard db = event.getDragboard();
             Parent p = ((Node) event.getGestureSource()).getParent();
             boolean success = false;
@@ -211,7 +208,6 @@ public class MainEditorController implements Initializable {
                 Block draggedBlock = (Block) p.lookup("#" + nodeId);
 
                 if (draggedBlock != null) {
-//                    System.out.println(p.getClass().getName());
                     if (p.getClass().getName().contains("ActionBlock")) {
                         Capability cap = draggedBlock.getCapability().cloneCapability();
                         draggedBlock = cap.getBlock();
@@ -239,7 +235,6 @@ public class MainEditorController implements Initializable {
         });
 
         editorBox.setOnDragDropped((DragEvent event) -> {
-//            System.out.println("hb dropped");
         });
 
         editorBox.setOnDragOver((DragEvent event) -> {

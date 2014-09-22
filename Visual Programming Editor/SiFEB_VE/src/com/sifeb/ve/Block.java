@@ -136,6 +136,13 @@ public final class Block extends Pane {
 
                 break;
         }
+//        Label name = new Label(this.capability.getCapName());
+//        name.setAlignment(Pos.CENTER);
+//        name.setFont(new Font(16));
+//        name.setPrefSize(img.getWidth()*0.8, 30);
+//        name.setMaxWidth(img.getWidth()*0.8);
+//        name.relocate((img.getWidth()*0.1), 30);
+//        super.getChildren().add(name);
 
     }
 
