@@ -12,8 +12,12 @@ import com.sifeb.ve.ConditionBlock;
 import com.sifeb.ve.Device;
 import com.sifeb.ve.FeedBackLogger;
 import com.sifeb.ve.Holder;
+import com.sifeb.ve.resources.Strings;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -67,6 +71,10 @@ public class MainEditorController implements Initializable {
     ImageView fbRight;
     @FXML
     Label fbText;
+    @FXML
+    Label haveLabel;
+    @FXML
+    Label doLabel;
 
     ArrayList<Holder> holders;
     Holder lastHolder;
@@ -96,6 +104,7 @@ public class MainEditorController implements Initializable {
         FeedBackLogger.setControls(this.fbFace, this.fbText);
         setFeedbackPanel();
 
+        setTextStrings();
     }
 
     private void setFeedbackPanel() {
@@ -106,7 +115,7 @@ public class MainEditorController implements Initializable {
         img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/bubbleMid.png"));
         fbText.setBackground(new Background(new BackgroundImage(img, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 
-        FeedBackLogger.sendGoodMessage("Hi, Welcome to SiFEB !!!");
+        FeedBackLogger.sendWelcomeMessage();
     }
 
     private void addStartEndBlocks() {
@@ -116,6 +125,19 @@ public class MainEditorController implements Initializable {
         img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Stop_V.png"));
         editorBox.getChildren().add(new Block(img));
     }
+    
+    public void setTextStrings(){
+        runBtn.setText(Strings.getString("btn.run"));
+        haveLabel.setText(Strings.getString("label.have"));
+        doLabel.setText(Strings.getString("label.do"));
+        
+        ((Block)editorBox.getChildren().get(0)).setBlockText(Strings.getString("block.start"));
+        ((Block)editorBox.getChildren().get(editorBox.getChildren().size()-1)).setBlockText(Strings.getString("block.end"));
+        
+        for(Capability c:capabilities){
+            c.getBlock().setBlockText();
+        }
+   }
 
     //use -1 as index to add a holder to the end
     private void addBlockHolder(int index, boolean withCondition) {
@@ -167,36 +189,19 @@ public class MainEditorController implements Initializable {
     }
 
     private void setEventHandlers() {
-        addDeviceBtn.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                addBlock(devicesBox);
-            }
+        addDeviceBtn.setOnAction((ActionEvent event) -> {
+            addBlock(devicesBox);
         });
-        addCapBtn.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                FeedBackLogger.sendGoodMessage("This is a happy message!");
-
-            }
+        addCapBtn.setOnAction((ActionEvent event) -> {
+            FeedBackLogger.sendGoodMessage("This is a happy message!");
         });
-        addHolderBtn.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                FeedBackLogger.sendBadMessage("This is a sad message!");
-            }
+        addHolderBtn.setOnAction((ActionEvent event) -> {
+            FeedBackLogger.sendBadMessage("This is a sad message!");
         });
 
-        runBtn.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                FeedBackLogger.sendGoodMessage("Program is running!");
-                ComPortController.writeComPort(ComPortController.port, 10, "r");
-            }
+        runBtn.setOnAction((ActionEvent event) -> {
+            FeedBackLogger.sendGoodMessage("Program is running!");
+            ComPortController.writeComPort(ComPortController.port, 10, "r");
         });
 
         editorPane.setOnDragDropped((DragEvent event) -> {
@@ -269,7 +274,8 @@ public class MainEditorController implements Initializable {
         } else if (parentId.equals("capabilityBox")) {
 
             //adding actions
-            String[] actionNames = {"Go Forward", "Reverse", "Turn Left", "Turn Right", "Stop", "Light ON", "Light OFF"};
+            String[] actionNames_en = {"Go Forward", "Reverse", "Turn Left", "Turn Right", "Stop", "Light ON", "Light OFF"};
+            String[] actionNames_si = {"ඉදිරියට යන්න", "පසුපසට යන්න", "වමට හැරෙන්න", "දකුණට හැරෙන්න", "නවතින්න", "Light ON", "Light OFF"};
             String[] actionCmd = {"b", "c", "e", "d", "", "l", ""};
             for (int i = 1; i < 8; i++) {
                 Device d;
@@ -284,7 +290,12 @@ public class MainEditorController implements Initializable {
                 } else {
                     type = "action";
                 }
-                Capability cap = new Capability("1000" + i, actionNames[i - 1], d, type, actionCmd[i - 1], "ActionA" + i + ".png");
+//                Capability cap = new Capability("1000" + i, actionNames[i - 1], d, type, actionCmd[i - 1], "ActionA" + i + ".png");
+                Map<Locale,String> actNames = new HashMap<>();
+                actNames.put(new Locale("en", "US"), actionNames_en[i-1]);
+                actNames.put(new Locale("si", "LK"), actionNames_si[i-1]);
+                
+                Capability cap = new Capability("1000" + i, actNames, d, type, actionCmd[i - 1], "Action.png");
                 capabilities.add(cap);
                 d.addCapability(cap);
                 if (i == 5 || i == 7) {
@@ -298,10 +309,15 @@ public class MainEditorController implements Initializable {
             }
 
             //adding senses
-            String[] senseNames = {"No Object", "See Object"};
+            String[] senseNames_en = {"No Object", "See Object"};
+            String[] senseNames_si = {"No Object", "See Object"};
             String[] senseCmd = {"s1", "s2"};
             for (int i = 1; i <= 2; i++) {
-                Capability cap = new Capability("2000" + i, senseNames[i - 1], devices.get(1), "sense", senseCmd[i - 1], "Sense" + i + ".png");
+                Map<Locale,String> senseNames = new HashMap<>();
+                senseNames.put(new Locale("en", "US"), senseNames_en[i-1]);
+                senseNames.put(new Locale("si", "LK"), senseNames_si[i-1]);
+//                Capability cap = new Capability("2000" + i, senseNames[i - 1], devices.get(1), "sense", senseCmd[i - 1], "Sense" + i + ".png");
+                Capability cap = new Capability("2000" + i, senseNames, devices.get(1), "sense", senseCmd[i - 1], "Sense.png");
                 capabilities.add(cap);
                 devices.get(1).addCapability(cap);
 
@@ -312,9 +328,12 @@ public class MainEditorController implements Initializable {
 
             //adding conditions
             for (int i = 1; i <= 3; i++) {
-                Capability cap = new Capability("3000" + i, "", null, "condition", "", "Constraint" + i + ".png");
+                Map<Locale,String> condNames = new HashMap<>();
+                condNames.put(new Locale("en", "US"), "Time is");
+                condNames.put(new Locale("si", "LK"), "කාලය");
+                Capability cap = new Capability("3000" + i, condNames, null, "condition", "", "Constraint" + i + ".png");
                 if (i == 3) {
-                    cap = new Capability("3000" + i, "", null, "sense", "", "Constraint" + i + ".png");
+                    cap = new Capability("3000" + i, condNames, null, "sense", "", "Constraint" + i + ".png");
                 }
                 capabilities.add(cap);
                 ActionBlock action = new ActionBlock(cap.getBlock(), false);

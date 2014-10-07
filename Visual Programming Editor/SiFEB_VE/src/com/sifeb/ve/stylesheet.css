@@ -11,9 +11,9 @@ and open the template in the editor.
 /*controlStyle.css */
 
 .scene{
-    -fx-font: 14pt "Cambria Bold";
-    -fx-color: #e79423;
-    -fx-background: #67644e;
+/*    -fx-font: 14pt "Cambria Bold";*/
+    /*-fx-color: #e79423;*/
+    /*-fx-background: #67644e;*/
 }
 
 .button{
@@ -35,7 +35,7 @@ and open the template in the editor.
 
     // -fx-font-size: 12px;
     -fx-font-weight:bold;
-    -fx-text-fill: #555553;
+    /*-fx-text-fill: #555553;*/
     -fx-effect: dropshadow( gaussian,rgba(255,255,255,0.5),0,0,0,1);
 }
 .buttollln {
@@ -63,6 +63,16 @@ and open the template in the editor.
 }
 #runBtn:pressed {
      -fx-background-color: linear-gradient(#0A0008, #61a2b1);
+}
+
+.blockPane{
+/*    -fx-background-image: url('images/wood_texture.jpg');
+    -fx-background-position: center center;
+    -fx-background-repeat: repeat-y;*/
+}
+
+#btnPanel{
+    /*-fx-background-color: linear-gradient(#0A0008, #61a2b1);*/
 }
 
 #editorPane{

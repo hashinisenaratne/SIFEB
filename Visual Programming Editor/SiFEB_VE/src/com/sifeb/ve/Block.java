@@ -6,8 +6,10 @@
 package com.sifeb.ve;
 
 import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.Bloom;
@@ -37,11 +39,14 @@ public final class Block extends Pane {
 
     private final Capability capability;
     private TextField textField;
+    private Label name;
 
     public Block(Capability capability) {
 
         this.capability = capability;
         this.textField = null;
+        name = new Label();
+        Block.this.setBlockText();
         setShape(capability.getType(), capability.getImage());
 
         super.setPrefSize(capability.getImage().getWidth(), capability.getImage().getHeight());
@@ -61,6 +66,14 @@ public final class Block extends Pane {
 
         super.setPrefSize(image.getWidth(), image.getHeight());
         super.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+
+        name = new Label();
+        name.setFont(new Font(14));
+        name.setPrefSize(image.getWidth() * 0.8, 30);
+        name.setMaxWidth(image.getWidth() * 0.8);
+        name.relocate((image.getWidth() * 0.1), 30);        
+        name.setAlignment(Pos.CENTER);
+        super.getChildren().add(name);
     }
 
     public Capability getCapability() {
@@ -119,14 +132,39 @@ public final class Block extends Pane {
                 }
             }
         });
-
+    }
+    
+    public void setBlockText(){
+        name.setText(this.capability.getCapName());
+    }
+    
+    public void setBlockText(String text){
+        name.setText(text);
     }
 
-    public void setShape(String type, Image img) {
+    private void setShape(String type, Image img) {
         switch (type) {
             case "rectangle":
                 break;
+            case "action":
+            case "actionC":
+                name.setFont(new Font(12));
+                name.setPrefSize(img.getWidth() * 0.9, 30);
+                name.setMaxWidth(img.getWidth() * 0.9);
+                name.relocate((img.getWidth() * 0.05), 30);
+                break;
+            case "sense":
+                name.setFont(new Font(12));
+                name.setPrefSize(img.getWidth() * 0.9, 30);
+                name.setMaxWidth(img.getWidth() * 0.9);
+                name.relocate((img.getWidth() * 0.05), 23);
+                break;
             case "condition":
+                name.setFont(new Font(13));
+                name.setPrefSize(img.getWidth() * 0.9, 30);
+                name.setMaxWidth(img.getWidth() * 0.9);
+                name.relocate((img.getWidth() * 0.05), 24);
+
                 textField = new TextField();
                 textField.setPrefSize(30, 2);
                 textField.setFont(new Font(8));
@@ -136,14 +174,9 @@ public final class Block extends Pane {
 
                 break;
         }
-//        Label name = new Label(this.capability.getCapName());
-//        name.setAlignment(Pos.CENTER);
-//        name.setFont(new Font(16));
-//        name.setPrefSize(img.getWidth()*0.8, 30);
-//        name.setMaxWidth(img.getWidth()*0.8);
-//        name.relocate((img.getWidth()*0.1), 30);
-//        super.getChildren().add(name);
-
+        
+        name.setAlignment(Pos.CENTER);
+        super.getChildren().add(name);
     }
 
     public void disableTextField(boolean bool) {

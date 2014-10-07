@@ -5,6 +5,9 @@
  */
 package com.sifeb.ve;
 
+import com.sifeb.ve.resources.Strings;
+import java.util.Locale;
+import java.util.Map;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
@@ -15,7 +18,7 @@ import javafx.scene.layout.Pane;
 public class Capability {
 
     private final String capID;
-    private final String capName;
+    private final Map<Locale,String> capNames;
     private final Device device;
     private final String type;
     private final String command;
@@ -23,9 +26,9 @@ public class Capability {
     private final Image image;
     private final Block block;
 
-    public Capability(String capID, String capName, Device device, String type, String command,String imageName) {
+    public Capability(String capID, Map<Locale,String> capNames, Device device, String type, String command,String imageName) {
         this.capID = capID;
-        this.capName = capName;
+        this.capNames = capNames;
         this.device = device;
         this.type = type;
         this.command = command;
@@ -40,7 +43,8 @@ public class Capability {
     }
 
     public String getCapName() {
-        return capName;
+        Locale currentLocale = Strings.getLocale();
+        return capNames.get(currentLocale);
     }
 
     public Device getDevice() {
@@ -64,7 +68,7 @@ public class Capability {
     }
 
     public Capability cloneCapability(){
-        Capability cap = new Capability(this.capID, this.capName, this.device, this.type, this.command,this.imageName);
+        Capability cap = new Capability(this.capID, this.capNames, this.device, this.type, this.command,this.imageName);
         System.out.println(this.block.getParent().getEffect());
         if(this.device != null){
             this.device.addCapability(cap);

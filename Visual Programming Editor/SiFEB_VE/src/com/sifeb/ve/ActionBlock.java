@@ -6,6 +6,7 @@
 package com.sifeb.ve;
 
 import com.sifeb.ve.controller.ComPortController;
+import com.sifeb.ve.resources.Strings;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -33,7 +34,7 @@ public class ActionBlock extends HBox {
     private final Image img;
     private final Button btn;
     private final Block block;
-    
+
     private static final String BACKGROUND_IMG = "/com/sifeb/ve/images/ActionTest.png";
     private static final String TEST_BTN = "/com/sifeb/ve/images/ActionTestBtn.png";
 
@@ -45,12 +46,12 @@ public class ActionBlock extends HBox {
         super.setFillHeight(false);
         super.setAlignment(Pos.CENTER_LEFT);
         super.setBackground(new Background(new BackgroundImage(this.img, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-        
+
         this.btn = setTestButton(this.img.getWidth(), this.img.getHeight());
         super.getChildren().add(this.btn);
         super.getChildren().add(this.block);
-        
-        if(!hasTestBtn){
+
+        if (!hasTestBtn) {
             this.btn.setDisable(true);
         }
 
@@ -70,10 +71,9 @@ public class ActionBlock extends HBox {
 //        }
 //
 //    }
-    
-    public Button setTestButton(double width, double height){
+    public Button setTestButton(double width, double height) {
         Image btnImg = new Image(getClass().getResourceAsStream(ActionBlock.TEST_BTN));
-        
+
         Button button = new Button();
         button.setMaxHeight(height);
         button.setMaxWidth(btnImg.getWidth());
@@ -84,10 +84,10 @@ public class ActionBlock extends HBox {
         button.setGraphic(imgView);
         button.getStyleClass().add("transparent-back");
         setButtonEvents(button, imgView);
-        
+
         return button;
     }
-    
+
     public void setButtonEvents(Button btn, ImageView imgView) {
 
         btn.setOnMouseEntered((MouseEvent mouseEvent) -> {
@@ -104,26 +104,28 @@ public class ActionBlock extends HBox {
         });
         btn.setOnAction((ActionEvent event) -> {
             Capability cp = this.block.getCapability();
-            Dialog dlg = new Dialog(null, "Message from SiFEB");
+            Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
             dlg.setResizable(false);
             dlg.setIconifiable(false);
             dlg.setGraphic(new ImageView(cp.getImage()));
-            dlg.setMasthead("Would You Like to Check Me?");
+            dlg.setMasthead(Strings.getString("message.liketocheck"));
+            Dialog.Actions.YES.textProperty().set(Strings.getString("btn.yes"));
+            Dialog.Actions.NO.textProperty().set(Strings.getString("btn.no"));
             dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
 
             Action response = dlg.show();
             System.out.println("response" + response);
 
             if (response == Dialog.Actions.YES) {
-                FeedBackLogger.sendGoodMessage("We are testing \'" + cp.getCapName()+"\' capability...");
+                FeedBackLogger.sendGoodMessage(Strings.getString("message.testing") + " \'" + cp.getCapName() + "\' " + Strings.getString("message.capability") + "...");
                 ComPortController.writeComPort(ComPortController.port, cp.getDevice().getAddress(), cp.getCommand());
             } else {
-                FeedBackLogger.sendBadMessage("OK, Let's test later...");
+                FeedBackLogger.sendBadMessage(Strings.getString("message.testlater") + "...");
                 // ... user cancelled, reset form to default
-            }           
+            }
         });
     }
-    
+
     public void addToPane(Pane parent) {
         parent.getChildren().add(this);
     }
