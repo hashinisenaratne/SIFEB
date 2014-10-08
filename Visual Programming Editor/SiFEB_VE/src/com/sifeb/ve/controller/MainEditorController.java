@@ -97,8 +97,8 @@ public class MainEditorController implements Initializable {
         editorBox.setAlignment(Pos.TOP_LEFT);
         addStartEndBlocks();
         addBlockHolder(0, false);
-        addBlock(devicesBox);
-        addBlock(capabilityBox);
+        //addBlock(devicesBox);
+        //  addBlock(capabilityBox);
 
         setEventHandlers();
         FeedBackLogger.setControls(this.fbFace, this.fbText);
@@ -125,19 +125,19 @@ public class MainEditorController implements Initializable {
         img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Stop_V.png"));
         editorBox.getChildren().add(new Block(img));
     }
-    
-    public void setTextStrings(){
+
+    public void setTextStrings() {
         runBtn.setText(Strings.getString("btn.run"));
         haveLabel.setText(Strings.getString("label.have"));
         doLabel.setText(Strings.getString("label.do"));
-        
-        ((Block)editorBox.getChildren().get(0)).setBlockText(Strings.getString("block.start"));
-        ((Block)editorBox.getChildren().get(editorBox.getChildren().size()-1)).setBlockText(Strings.getString("block.end"));
-        
-        for(Capability c:capabilities){
+
+        ((Block) editorBox.getChildren().get(0)).setBlockText(Strings.getString("block.start"));
+        ((Block) editorBox.getChildren().get(editorBox.getChildren().size() - 1)).setBlockText(Strings.getString("block.end"));
+
+        for (Capability c : capabilities) {
             c.getBlock().setBlockText();
         }
-   }
+    }
 
     //use -1 as index to add a holder to the end
     private void addBlockHolder(int index, boolean withCondition) {
@@ -251,6 +251,39 @@ public class MainEditorController implements Initializable {
         });
     }
 
+    public void addDeviceBlock(VBox parent, Device dev) {
+        String parentId = parent.getId();
+
+        if (parentId.equals("devicesBox")) {
+            dev.addToPane(devicesBox);
+            devices.add(dev);
+        }
+
+    }
+
+    public void addCapabilityBlock(VBox parent, Capability cap, Device dev, boolean hasTestButton) {
+
+        String parentId = parent.getId();
+
+        if (parentId.equals("capabilityBox")) {
+            capabilities.add(cap);
+            dev.addCapability(cap);
+            ActionBlock action = new ActionBlock(cap.getBlock(), hasTestButton);
+            action.addToPane(capabilityBox);
+        }
+
+    }
+
+    public VBox getDeviceVbox() {
+
+        return devicesBox;
+    }
+    
+    public VBox getCapabilityVbox() {
+
+        return capabilityBox;
+    }
+
     //for testing only
     private void addBlock(VBox parent) {
 
@@ -291,10 +324,10 @@ public class MainEditorController implements Initializable {
                     type = "action";
                 }
 //                Capability cap = new Capability("1000" + i, actionNames[i - 1], d, type, actionCmd[i - 1], "ActionA" + i + ".png");
-                Map<Locale,String> actNames = new HashMap<>();
-                actNames.put(new Locale("en", "US"), actionNames_en[i-1]);
-                actNames.put(new Locale("si", "LK"), actionNames_si[i-1]);
-                
+                Map<Locale, String> actNames = new HashMap<>();
+                actNames.put(new Locale("en", "US"), actionNames_en[i - 1]);
+                actNames.put(new Locale("si", "LK"), actionNames_si[i - 1]);
+
                 Capability cap = new Capability("1000" + i, actNames, d, type, actionCmd[i - 1], "Action.png");
                 capabilities.add(cap);
                 d.addCapability(cap);
@@ -313,9 +346,9 @@ public class MainEditorController implements Initializable {
             String[] senseNames_si = {"No Object", "See Object"};
             String[] senseCmd = {"s1", "s2"};
             for (int i = 1; i <= 2; i++) {
-                Map<Locale,String> senseNames = new HashMap<>();
-                senseNames.put(new Locale("en", "US"), senseNames_en[i-1]);
-                senseNames.put(new Locale("si", "LK"), senseNames_si[i-1]);
+                Map<Locale, String> senseNames = new HashMap<>();
+                senseNames.put(new Locale("en", "US"), senseNames_en[i - 1]);
+                senseNames.put(new Locale("si", "LK"), senseNames_si[i - 1]);
 //                Capability cap = new Capability("2000" + i, senseNames[i - 1], devices.get(1), "sense", senseCmd[i - 1], "Sense" + i + ".png");
                 Capability cap = new Capability("2000" + i, senseNames, devices.get(1), "sense", senseCmd[i - 1], "Sense.png");
                 capabilities.add(cap);
@@ -328,7 +361,7 @@ public class MainEditorController implements Initializable {
 
             //adding conditions
             for (int i = 1; i <= 3; i++) {
-                Map<Locale,String> condNames = new HashMap<>();
+                Map<Locale, String> condNames = new HashMap<>();
                 condNames.put(new Locale("en", "US"), "Time is");
                 condNames.put(new Locale("si", "LK"), "කාලය");
                 Capability cap = new Capability("3000" + i, condNames, null, "condition", "", "Constraint" + i + ".png");

@@ -22,6 +22,8 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
+import javafx.scene.image.Image;
+import jdk.nashorn.internal.objects.NativeDebug;
 
 public class FileHandler {
 
@@ -29,17 +31,17 @@ public class FileHandler {
 
         //  writeToFile(new File("output.xml"));
         // readDeviceFile(new File("output.xml"));
-        writeToDeviceFile(new File("dev_12.xml"));
-        writeToCapabilityFile(new File("cap_012.xml"));
-      //  Element el = readFromDeviceFile(new File("device1.xml"));
-      //  Element e2 = readFromCapabilityFile(new File("capability-001.xml"));
-        
-        BlockCreator blockC = new BlockCreator();
-        blockC.createBlock("12");
+        writeToDeviceFile("dev_12");
+        writeToCapabilityFile();
+        //  Element el = readFromDeviceFile(new File("device1.xml"));
+        //  Element e2 = readFromCapabilityFile(new File("capability-001.xml"));
+
+        //BlockCreator blockC = new BlockCreator();
+        // blockC.createBlock("12");
         //System.out.println("++ " + el.getElementsByTagName("Names"));
     }
 
-    public static void writeToDeviceFile(File file) {
+    public static void writeToDeviceFile(String fileName) {
         try {
 
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -89,9 +91,8 @@ public class FileHandler {
             device.appendChild(type);
 
             Element image = doc.createElement("Image");
-            image.appendChild(doc.createTextNode("imageName"));
+            image.appendChild(doc.createTextNode("Mwheels.png"));
             device.appendChild(image);
-            
 
 //            Element staticImage = doc.createElement("static_Image");
 //            staticImage.appendChild(doc.createTextNode("ImageName"));
@@ -100,22 +101,28 @@ public class FileHandler {
 //            Element dyncImage = doc.createElement("dync_Image");
 //            dyncImage.appendChild(doc.createTextNode("img name"));
 //            images.appendChild(dyncImage);
-
             Element capabilities = doc.createElement("Capabilities");
             device.appendChild(capabilities);
 
-            Element cap1 = doc.createElement("capability_1");
-            cap1.appendChild(doc.createTextNode("cap_012"));
-            capabilities.appendChild(cap1);
+            // Element cap1 = doc.createElement("capability_1");
+            for (int i = 1; i < 6; i++) {
+                String capS = "capability_" + i;
+                String capST = "cap_00" + i;
+                Element cap1 = doc.createElement(capS);
+                cap1.appendChild(doc.createTextNode(capST));
+                capabilities.appendChild(cap1);
+            }
+            // cap1.appendChild(doc.createTextNode("cap_001"));
+            //  capabilities.appendChild(cap1);
 
 //            Element cap2 = doc.createElement("capability_2");
 //            cap2.appendChild(doc.createTextNode("cap-0034"));
 //            capabilities.appendChild(cap2);
-
             // write the content into xml file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
+            File file = new File("src/com/sifeb/ve/files/devices/" + fileName + ".xml");
             StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
 
             // Output to console for testing
@@ -129,16 +136,19 @@ public class FileHandler {
         }
     }
 
-    public static Element readFromDeviceFile(File fXmlFile) {
+    public static Element readFromDeviceFile(String fileName) {
 
         Element eElement = null;
 
+        File file = new File("src/com/sifeb/ve/files/devices/" + fileName + ".xml");
+
+        //  Image img=new Image()
         try {
 
             //File fXmlFile = new File("/Users/mkyong/staff.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(fXmlFile);
+            Document doc = dBuilder.parse(file);
 
             //optional, but recommended
             doc.getDocumentElement().normalize();
@@ -177,46 +187,67 @@ public class FileHandler {
         return eElement;
     }
 
-    public static void writeToCapabilityFile(File file) {
-        try {
+    public static void writeToCapabilityFile() {
 
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        String[] ids = {"cap_001", "cap_002", "cap_003", "cap_004", "cap_005", "cap_006", "cap_007"};
+        String[] actionNames_en = {"Go Forward", "Reverse", "Turn Left", "Turn Right", "Stop", "Light ON", "Light OFF"};
+        String[] actionNames_si = {"ඉදිරියට යන්න", "පසුපසට යන්න", "වමට හැරෙන්න", "දකුණට හැරෙන්න", "නවතින්න", "Light ON", "Light OFF"};
+        String[] actionCmd = {"b", "c", "e", "d", "", "l", ""};
+        String[] buttonList = {"true", "true", "true", "true", "false", "true", "false"};
 
-            // root elements
-            Document doc = docBuilder.newDocument();
-            Element rootElement = doc.createElement("Sifeb");
-            doc.appendChild(rootElement);
+        for (int i = 0; i < 7; i++) {
 
-            Element device = doc.createElement("Capability");
-            rootElement.appendChild(device);
+            String types;
 
-            Element firstname = doc.createElement("Id");
-            firstname.appendChild(doc.createTextNode("1234"));
-            device.appendChild(firstname);
+            if (i < 3 || i > 5) {
+                types = "actionC";
+            } else {
+                types = "action";
+            }
 
-            Element name = doc.createElement("Names");
-            device.appendChild(name);
+            try {
 
-            Element usName = doc.createElement("en_US");
-            usName.appendChild(doc.createTextNode("go forward"));
-            name.appendChild(usName);
+                DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
-            Element lkName = doc.createElement("si_LK");
-            lkName.appendChild(doc.createTextNode("go forward"));
-            name.appendChild(lkName);
+                // root elements
+                Document doc = docBuilder.newDocument();
+                Element rootElement = doc.createElement("Sifeb");
+                doc.appendChild(rootElement);
 
-            Element type = doc.createElement("Type");
-            type.appendChild(doc.createTextNode("type"));
-            device.appendChild(type);
+                Element device = doc.createElement("Capability");
+                rootElement.appendChild(device);
 
-            Element address = doc.createElement("Command");
-            address.appendChild(doc.createTextNode("a"));
-            device.appendChild(address);
+                Element firstname = doc.createElement("Id");
+                firstname.appendChild(doc.createTextNode(ids[i]));
+                device.appendChild(firstname);
 
-            Element image = doc.createElement("Image");
-            image.appendChild(doc.createTextNode("ImageName"));
-            device.appendChild(image);
+                Element name = doc.createElement("Names");
+                device.appendChild(name);
+
+                Element usName = doc.createElement("en_US");
+                usName.appendChild(doc.createTextNode(actionNames_en[i]));
+                name.appendChild(usName);
+
+                Element lkName = doc.createElement("si_LK");
+                lkName.appendChild(doc.createTextNode(actionNames_si[i]));
+                name.appendChild(lkName);
+
+                Element type = doc.createElement("Type");
+                type.appendChild(doc.createTextNode(types));
+                device.appendChild(type);
+
+                Element address = doc.createElement("Command");
+                address.appendChild(doc.createTextNode(actionCmd[i]));
+                device.appendChild(address);
+
+                Element button = doc.createElement("HasTestButton");
+                button.appendChild(doc.createTextNode(buttonList[i]));
+                device.appendChild(button);
+
+                Element image = doc.createElement("Image");
+                image.appendChild(doc.createTextNode("Action.png"));
+                device.appendChild(image);
 
 //            Element staticImage = doc.createElement("static_Image");
 //            staticImage.appendChild(doc.createTextNode("ImageName"));
@@ -225,32 +256,34 @@ public class FileHandler {
 //            Element dyncImage = doc.createElement("dync_Image");
 //            dyncImage.appendChild(doc.createTextNode("img name"));
 //            images.appendChild(dyncImage);
+                // write the content into xml file
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
+                DOMSource source = new DOMSource(doc);
+                File file = new File("src/com/sifeb/ve/files/capabilities/" + ids[i] + ".xml");
+                StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
 
-            // write the content into xml file
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
+                transformer.transform(source, result);
 
-            transformer.transform(source, result);
+                System.out.println("File saved!");
 
-            System.out.println("File saved!");
+            } catch (ParserConfigurationException | TransformerException pce) {
+                pce.printStackTrace();
+            }
 
-        } catch (ParserConfigurationException | TransformerException pce) {
-            pce.printStackTrace();
         }
     }
 
-    public static Element readFromCapabilityFile(File fXmlFile) {
+    public static Element readFromCapabilityFile(String fileName) {
 
         Element eElement = null;
-
+        File file = new File("src/com/sifeb/ve/files/capabilities/" + fileName + ".xml");
         try {
 
             //File fXmlFile = new File("/Users/mkyong/staff.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(fXmlFile);
+            Document doc = dBuilder.parse(file);
 
             //optional, but recommended
             doc.getDocumentElement().normalize();

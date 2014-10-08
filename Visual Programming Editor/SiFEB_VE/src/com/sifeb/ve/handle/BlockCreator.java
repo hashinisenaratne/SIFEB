@@ -5,8 +5,14 @@
  */
 package com.sifeb.ve.handle;
 
+import com.sifeb.ve.Capability;
 import com.sifeb.ve.Device;
+import com.sifeb.ve.controller.MainEditorController;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import javafx.scene.layout.VBox;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -17,15 +23,21 @@ import org.w3c.dom.NodeList;
 public class BlockCreator {
 
     FileHandler fileHandler;
+    MainEditorController mainEditor;
+    VBox deviceVbox;
+    VBox capabilityVbox;
 
-    public BlockCreator() {
+    public BlockCreator(MainEditorController mainEditor) {
         fileHandler = new FileHandler();
+        this.mainEditor = mainEditor;
+        this.deviceVbox = this.mainEditor.getDeviceVbox();
+        this.capabilityVbox = this.mainEditor.getCapabilityVbox();
     }
 
     // sends an integer value
     public void createBlock(String id) {
-        String fileName = "dev_" + id + ".xml";
-        Element devElement = fileHandler.readFromDeviceFile(new File(fileName));
+        String fileName = "dev_" + id;
+        Element devElement = fileHandler.readFromDeviceFile(fileName);
 
         String devId = devElement.getElementsByTagName("Id").item(0).getTextContent();
         int nameLength = devElement.getElementsByTagName("Names").item(0).getChildNodes().getLength();
@@ -38,34 +50,40 @@ public class BlockCreator {
         String image = devElement.getElementsByTagName("Image").item(0).getTextContent();
 
         // create device
-        //Device device =new Device
+        Device device = new Device(devId, "wheel", Integer.parseInt(address), type, image);
+        mainEditor.addDeviceBlock(deviceVbox, device);
+
         //Device device = new Device("00001", "Wheels", 10, "actuator", "Mwheels.png");
-        //  int capabilities = devElement.getElementsByTagName("Capabilities").item(0).getChildNodes().getLength();
         NodeList nodeList = devElement.getElementsByTagName("Capabilities").item(0).getChildNodes();
 
         for (int j = 0; j < nodeList.getLength(); j++) {
             String capId = nodeList.item(j).getTextContent();
-            createCapability(capId);
+            createCapability(capId, device);
         }
 
     }
 
-    public void createCapability(String id) {
+    public void createCapability(String id, Device device) {
 
-        String fileName = id + ".xml";
-        Element devElement = fileHandler.readFromCapabilityFile(new File(fileName));
+        Element devElement = fileHandler.readFromCapabilityFile(id);
 
         String capId = devElement.getElementsByTagName("Id").item(0).getTextContent();
-        int nameLength = devElement.getElementsByTagName("Names").item(0).getChildNodes().getLength();
+        NodeList nodeList = devElement.getElementsByTagName("Names").item(0).getChildNodes();
+        Map<Locale, String> actNames = new HashMap<>();
+        Locale[] localeList = {new Locale("en", "US"), new Locale("si", "LK")};
 
-        for (int i = 0; i < nameLength; i++) {
-            // add to map
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            actNames.put(localeList[i], nodeList.item(i).getTextContent());
         }
+
         String command = devElement.getElementsByTagName("Command").item(0).getTextContent();
         String type = devElement.getElementsByTagName("Type").item(0).getTextContent();
         String image = devElement.getElementsByTagName("Image").item(0).getTextContent();
-        
-        //create capability
+        boolean hasTestButton = Boolean.parseBoolean(devElement.getElementsByTagName("HasTestButton").item(0).getTextContent());
+        Capability cap = new Capability(capId, actNames, device, type, command, image);
+        mainEditor.addCapabilityBlock(capabilityVbox, cap, device, hasTestButton);
+
+        System.out.println("capability added");
 
     }
 
