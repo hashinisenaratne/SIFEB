@@ -5,6 +5,7 @@
  */
 package com.sifeb.ve;
 
+import javafx.scene.Group;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -12,10 +13,12 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.Bloom;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -98,6 +101,7 @@ public final class Block extends Pane {
 
             Dragboard db = this.startDragAndDrop(TransferMode.COPY_OR_MOVE);
             db.setDragView(capability.getImage());
+            
             ClipboardContent content = new ClipboardContent();
             content.putString(this.getId());
             db.setContent(content);
