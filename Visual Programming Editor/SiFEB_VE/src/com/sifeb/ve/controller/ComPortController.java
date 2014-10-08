@@ -16,7 +16,7 @@ import jssc.*;
 
 public class ComPortController {
 
-    public static String port = "COM18";
+    public static String port = "COM15";
     public static SerialPort serialPort = new SerialPort(port);
     public static BlockCreator blkCreator;
 
@@ -134,9 +134,12 @@ public class ComPortController {
                 if (event.getEventValue() == 1) {//Check bytes count in the input buffer
                     //Read data, if 10 bytes available 
                     try {
-                        byte buffer[] = serialPort.readBytes(1);
-                        System.out.println(buffer[0]);
-                        blkC.createBlock(buffer.toString());
+                        //byte buffer[] = serialPort.readBytes(1);
+
+                        String readValue = serialPort.readString(13);
+
+                        System.out.println(readValue);
+                        //   blkC.createBlock(buffer.toString());
                     } catch (SerialPortException ex) {
                         System.out.println(ex);
                     }

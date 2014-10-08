@@ -8,7 +8,6 @@ package com.sifeb.ve.handle;
 import com.sifeb.ve.Capability;
 import com.sifeb.ve.Device;
 import com.sifeb.ve.controller.MainEditorController;
-import java.io.File;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
