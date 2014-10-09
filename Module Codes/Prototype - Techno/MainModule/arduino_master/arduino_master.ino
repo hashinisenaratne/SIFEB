@@ -1,4 +1,6 @@
 #include <Wire.h>
+#include <TimerOne.h>
+
 /*
 
 LIST OF COMMANDS
@@ -16,14 +18,65 @@ char incomingByte = 0;   // for incoming serial data
 int dPin = 12;
 int cPin = 13;
 
+
+unsigned long lastSec=0;
+
+//auto detection support variables
+//edit according to the devices
+int addresses[] = {10, 11};
+boolean lastState[] = {false, false};
+
 void setup() {
   Wire.begin();
   Serial.begin(9600);     // opens serial port, sets data rate to 9600 bps
   pinMode(dPin, OUTPUT);
   pinMode(cPin, OUTPUT);
+  
 }
 
+void notifyAllChanges(void)
+{
+  //Serial.println("Checking...");
+  for(int i=0; i< sizeof(addresses);i++)
+  {
+    notifySingleChange(i);
+  }
+}
+
+//print two bytes, c or d & address as a byte followed by a new line.
+void notifySingleChange(int addressIndex)
+{
+  Wire.beginTransmission(addresses[addressIndex]);
+  if(Wire.endTransmission()==0)
+  {
+    if(!lastState[addressIndex])
+    {
+      Serial.print('c');
+      lastState[addressIndex] = true;
+      Serial.println((char)addresses[addressIndex]);
+    }
+  }
+  else
+  {
+    if(lastState[addressIndex])
+    {
+      lastState[addressIndex] = false;
+      Serial.print('d');
+      Serial.println((char)addresses[addressIndex]);
+    }
+  }
+}
+
+
 void loop() {
+  
+  
+  /*if(millis()-lastSec >= 5000)
+  {
+    lastSec = millis();
+    notifyAllChanges();
+  }*/
+  
   // send data only when you receive data:
   if (Serial.available() > 0) {
     // read the incoming byte:
@@ -33,6 +86,10 @@ void loop() {
     //Serial.print("I received: ");
     //Serial.println(incomingByte, DEC);
 
+    if(incomingByte == 'z'){  
+      notifyAllChanges();
+    }
+    
     if(incomingByte == 'a'){  
       Wire.beginTransmission(10); // transmit to device #11
       Wire.write('s'); 
