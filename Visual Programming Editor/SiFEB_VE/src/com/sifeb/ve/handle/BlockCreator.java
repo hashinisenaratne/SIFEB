@@ -39,24 +39,27 @@ public class BlockCreator {
         Element devElement = fileHandler.readFromDeviceFile(fileName);
 
         String devId = devElement.getElementsByTagName("Id").item(0).getTextContent();
-        int nameLength = devElement.getElementsByTagName("Names").item(0).getChildNodes().getLength();
+        NodeList nameList = devElement.getElementsByTagName("Names").item(0).getChildNodes();
+        Map<Locale, String> devNames = new HashMap<>();
+        Locale[] localeList = {new Locale("en", "US"), new Locale("si", "LK")};
 
-        for (int i = 0; i < nameLength; i++) {
-            // add to map
+        for (int i = 0; i < nameList.getLength(); i++) {
+            devNames.put(localeList[i], nameList.item(i).getTextContent());
         }
+        
         String address = devElement.getElementsByTagName("Address").item(0).getTextContent();
         String type = devElement.getElementsByTagName("Type").item(0).getTextContent();
         String image = devElement.getElementsByTagName("Image").item(0).getTextContent();
 
         // create device
-        Device device = new Device(devId, "wheel", Integer.parseInt(address), type, image);
+        Device device = new Device(devId, devNames, Integer.parseInt(address), type, image);
         mainEditor.addDeviceBlock(deviceVbox, device);
 
         //Device device = new Device("00001", "Wheels", 10, "actuator", "Mwheels.png");
-        NodeList nodeList = devElement.getElementsByTagName("Capabilities").item(0).getChildNodes();
+        NodeList capList = devElement.getElementsByTagName("Capabilities").item(0).getChildNodes();
 
-        for (int j = 0; j < nodeList.getLength(); j++) {
-            String capId = nodeList.item(j).getTextContent();
+        for (int j = 0; j < capList.getLength(); j++) {
+            String capId = capList.item(j).getTextContent();
             createCapability(capId, device);
         }
 

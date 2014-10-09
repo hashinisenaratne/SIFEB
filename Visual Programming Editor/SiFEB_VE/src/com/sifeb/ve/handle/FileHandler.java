@@ -22,26 +22,16 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
-import javafx.scene.image.Image;
-import jdk.nashorn.internal.objects.NativeDebug;
 
 public class FileHandler {
 
     public static void main(String[] args) {
 
-        //  writeToFile(new File("output.xml"));
-        // readDeviceFile(new File("output.xml"));
-        writeToDeviceFile("dev_12");
-        writeToCapabilityFile();
-        //  Element el = readFromDeviceFile(new File("device1.xml"));
-        //  Element e2 = readFromCapabilityFile(new File("capability-001.xml"));
-
-        //BlockCreator blockC = new BlockCreator();
-        // blockC.createBlock("12");
-        //System.out.println("++ " + el.getElementsByTagName("Names"));
+        FileHandler fh = new FileHandler();
+        fh.writeToDeviceFile("dev_12");
     }
 
-    public static void writeToDeviceFile(String fileName) {
+    public void writeToDeviceFile(String fileName) {
         try {
 
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -52,22 +42,13 @@ public class FileHandler {
             Element rootElement = doc.createElement("Sifeb");
             doc.appendChild(rootElement);
 
-            // staff elements
             Element device = doc.createElement("Device");
             rootElement.appendChild(device);
 
-            // set attribute to staff element
-//            Attr attr = doc.createAttribute("id");
-//            attr.setValue("1");
-//            staff.setAttributeNode(attr);
-            // shorten way
-            // staff.setAttribute("id", "1");
-            // firstname elements
-            Element firstname = doc.createElement("Id");
-            firstname.appendChild(doc.createTextNode("1234"));
-            device.appendChild(firstname);
-
-            // lastname elements
+            Element id = doc.createElement("Id");
+            id.appendChild(doc.createTextNode("1234"));
+            device.appendChild(id);
+            
             Element name = doc.createElement("Names");
             device.appendChild(name);
 
@@ -78,14 +59,11 @@ public class FileHandler {
             Element lkName = doc.createElement("si_LK");
             lkName.appendChild(doc.createTextNode("go forward"));
             name.appendChild(lkName);
-          //  lastname.appendChild(doc.createTextNode("im"));
-
-            // nickname elements
+            
             Element address = doc.createElement("Address");
             address.appendChild(doc.createTextNode("12"));
             device.appendChild(address);
 
-            // salary elements
             Element type = doc.createElement("Type");
             type.appendChild(doc.createTextNode("type"));
             device.appendChild(type);
@@ -94,13 +72,6 @@ public class FileHandler {
             image.appendChild(doc.createTextNode("Mwheels.png"));
             device.appendChild(image);
 
-//            Element staticImage = doc.createElement("static_Image");
-//            staticImage.appendChild(doc.createTextNode("ImageName"));
-//            images.appendChild(staticImage);
-//
-//            Element dyncImage = doc.createElement("dync_Image");
-//            dyncImage.appendChild(doc.createTextNode("img name"));
-//            images.appendChild(dyncImage);
             Element capabilities = doc.createElement("Capabilities");
             device.appendChild(capabilities);
 
@@ -136,7 +107,7 @@ public class FileHandler {
         }
     }
 
-    public static Element readFromDeviceFile(String fileName) {
+    public Element readFromDeviceFile(String fileName) {
 
         Element eElement = null;
 
@@ -187,7 +158,7 @@ public class FileHandler {
         return eElement;
     }
 
-    public static void writeToCapabilityFile() {
+    public void writeToCapabilityFile() {
 
         String[] ids = {"cap_001", "cap_002", "cap_003", "cap_004", "cap_005", "cap_006", "cap_007"};
         String[] actionNames_en = {"Go Forward", "Reverse", "Turn Left", "Turn Right", "Stop", "Light ON", "Light OFF"};
@@ -274,7 +245,7 @@ public class FileHandler {
         }
     }
 
-    public static Element readFromCapabilityFile(String fileName) {
+    public Element readFromCapabilityFile(String fileName) {
 
         Element eElement = null;
         File file = new File("src/com/sifeb/ve/files/capabilities/" + fileName + ".xml");

@@ -23,7 +23,8 @@ public class Capability {
     private final String type;
     private final String command;
     private final String imageName;
-    private final Image image;
+    private final Image staticImage;
+    private Image dynamicImage;
     private final Block block;
 
     public Capability(String capID, Map<Locale,String> capNames, Device device, String type, String command,String imageName) {
@@ -33,7 +34,12 @@ public class Capability {
         this.type = type;
         this.command = command;
         this.imageName = imageName;
-        this.image = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/" + imageName));
+        this.staticImage = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/static/" + imageName+".png"));
+        try{
+            this.dynamicImage = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/dynamic/" + imageName+".gif"));
+        } catch(NullPointerException ex){
+            this.dynamicImage = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/static/" + imageName+".png"));
+        }
         
         this.block = new Block(this);
     }
@@ -55,8 +61,12 @@ public class Capability {
         return type;
     }
 
-    public Image getImage() {
-        return image;
+    public Image getStaticImage() {
+        return staticImage;
+    }
+
+    public Image getDynamicImage() {
+        return dynamicImage;
     }
 
     public Block getBlock() {

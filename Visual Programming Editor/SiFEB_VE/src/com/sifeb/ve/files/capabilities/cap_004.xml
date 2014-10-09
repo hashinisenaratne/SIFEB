@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><Sifeb><Capability><Id>cap_004</Id><Names><en_US>Turn Right</en_US><si_LK>දකුණට හැරෙන්න</si_LK></Names><Type>action</Type><Command>d</Command><HasTestButton>true</HasTestButton><Image>Action.png</Image></Capability></Sifeb>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><Sifeb><Capability><Id>cap_004</Id><Names><en_US>Turn Right</en_US><si_LK>දකුණට හැරෙන්න</si_LK></Names><Type>action</Type><Command>d</Command><HasTestButton>true</HasTestButton><Image>right</Image></Capability></Sifeb>

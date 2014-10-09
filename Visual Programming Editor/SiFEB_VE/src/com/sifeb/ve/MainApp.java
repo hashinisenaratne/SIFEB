@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  *
@@ -36,6 +37,9 @@ public class MainApp extends Application {
         Scene scene = new Scene(rootLayout);
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
+//        primaryStage.setOnCloseRequest((WindowEvent event)->{
+//            FeedBackLogger.timer.cancel();
+//        });
         primaryStage.show();
     }
 

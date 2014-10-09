@@ -5,15 +5,16 @@
  */
 package com.sifeb.ve;
 
-import javafx.scene.Group;
 import javafx.event.ActionEvent;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.BlendMode;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.Bloom;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
@@ -42,20 +43,31 @@ public final class Block extends Pane {
 
     private final Capability capability;
     private TextField textField;
-    private Label name;
+    private final Label name;
+    private final ImageView blockIcon;
+
+    private static final String ACTION_BCK_IMG = "/com/sifeb/ve/images/Action.png";
+    private static final String SENSE_BCK_IMG = "/com/sifeb/ve/images/Sense.png";
+    private static final String CONST_BCK_IMG = "/com/sifeb/ve/images/Constraint.png";
 
     public Block(Capability capability) {
 
         this.capability = capability;
         this.textField = null;
         name = new Label();
-        Block.this.setBlockText();
-        setShape(capability.getType(), capability.getImage());
+        Block.this.setBlockText();       
 
-        super.setPrefSize(capability.getImage().getWidth(), capability.getImage().getHeight());
-        super.setBackground(new Background(new BackgroundImage(capability.getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+        Image bckgndImg = setBackgroundImage(capability.getType());
+        setShape(capability.getType(), bckgndImg);
+        
+        blockIcon = new ImageView();
+        placeIcon(capability.getType());
+        setIcon(capability.getStaticImage());        
+        
+        super.getChildren().add(blockIcon);
 
         setEventHandlers();
+        super.setCursor(Cursor.OPEN_HAND);
         this.setId(capability.getType() + Integer.toString(this.hashCode()));
     }
 
@@ -66,6 +78,7 @@ public final class Block extends Pane {
 
         this.capability = null;
         this.textField = null;
+        this.blockIcon = null;
 
         super.setPrefSize(image.getWidth(), image.getHeight());
         super.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
@@ -74,7 +87,7 @@ public final class Block extends Pane {
         name.setFont(new Font(14));
         name.setPrefSize(image.getWidth() * 0.8, 30);
         name.setMaxWidth(image.getWidth() * 0.8);
-        name.relocate((image.getWidth() * 0.1), 30);        
+        name.relocate((image.getWidth() * 0.1), 30);
         name.setAlignment(Pos.CENTER);
         super.getChildren().add(name);
     }
@@ -86,13 +99,62 @@ public final class Block extends Pane {
     public TextField getTextField() {
         return textField;
     }
+    
+    private void placeIcon(String type){
+        switch (type) {
+            case "actionC":
+            case "action":
+                blockIcon.relocate(15, 2);
+                break;
+            case "sense":
+                blockIcon.relocate(25, 2);
+                break;
+            case "condition":
+                blockIcon.relocate(25, 2);
+                break;
+        }
+    }
 
-    public void setEventHandlers() {
+    private Image setBackgroundImage(String type) {
+        Image bckImage;
+        switch (type) {
+            case "actionC":
+            case "action":
+                bckImage = new Image(getClass().getResourceAsStream(Block.ACTION_BCK_IMG));
+                break;
+            case "sense":
+                bckImage = new Image(getClass().getResourceAsStream(Block.SENSE_BCK_IMG));
+                break;
+            case "condition":
+                bckImage = new Image(getClass().getResourceAsStream(Block.CONST_BCK_IMG));
+                break;
+            default:
+                bckImage = new Image(getClass().getResourceAsStream(Block.ACTION_BCK_IMG));
+                break;
+        }
+        super.setPrefSize(bckImage.getWidth(), bckImage.getHeight());
+        super.setBackground(new Background(new BackgroundImage(bckImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+        return bckImage;
+    }
+
+    private void setIcon(Image img) {
+        blockIcon.setImage(img);
+    }
+
+    private void setEventHandlers() {
         this.setOnMouseEntered((MouseEvent event) -> {
-            this.setEffect(new Bloom(0.3));
+//            this.setEffect(new Bloom(0.3));
+            setIcon(capability.getDynamicImage());
         });
         this.setOnMouseExited((MouseEvent event) -> {
-            this.setEffect(null);
+//            this.setEffect(null);
+            setIcon(capability.getStaticImage());
+        });
+        this.setOnMousePressed((MouseEvent event) -> {
+            super.setCursor(Cursor.CLOSED_HAND);
+        });
+        this.setOnMouseReleased((MouseEvent event) -> {
+            super.setCursor(Cursor.OPEN_HAND);
         });
         this.setOnDragDetected((MouseEvent event) -> {
             if (!this.getParent().getClass().getName().contains("ActionBlock")) {
@@ -100,8 +162,7 @@ public final class Block extends Pane {
             }
 
             Dragboard db = this.startDragAndDrop(TransferMode.COPY_OR_MOVE);
-            db.setDragView(capability.getImage());
-            
+            db.setDragView(capability.getStaticImage());
             ClipboardContent content = new ClipboardContent();
             content.putString(this.getId());
             db.setContent(content);
@@ -137,12 +198,13 @@ public final class Block extends Pane {
             }
         });
     }
-    
-    public void setBlockText(){
+
+    public void setBlockText() {
         name.setText(this.capability.getCapName());
+        name.setTooltip(new Tooltip(name.getText()));
     }
-    
-    public void setBlockText(String text){
+
+    public void setBlockText(String text) {
         name.setText(text);
     }
 
@@ -153,9 +215,9 @@ public final class Block extends Pane {
             case "action":
             case "actionC":
                 name.setFont(new Font(12));
-                name.setPrefSize(img.getWidth() * 0.9, 30);
+                name.setPrefSize(img.getWidth() * 0.9, 12);
                 name.setMaxWidth(img.getWidth() * 0.9);
-                name.relocate((img.getWidth() * 0.05), 30);
+                name.relocate((img.getWidth() * 0.05), 45);
                 break;
             case "sense":
                 name.setFont(new Font(12));
@@ -178,7 +240,7 @@ public final class Block extends Pane {
 
                 break;
         }
-        
+
         name.setAlignment(Pos.CENTER);
         super.getChildren().add(name);
     }
