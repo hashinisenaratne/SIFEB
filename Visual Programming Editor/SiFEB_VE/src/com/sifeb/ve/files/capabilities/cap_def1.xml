@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><Sifeb><Capability><Id>cap_def1</Id><Names><en_US>Time is</en_US><si_LK>කාල‍ය</si_LK></Names><Type>condition</Type><Command>z</Command><HasTestButton>false</HasTestButton><Image>Constraint1</Image></Capability></Sifeb>

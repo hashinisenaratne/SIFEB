@@ -9,71 +9,162 @@ package com.sifeb.ve.controller;
  *
  * @author Hashini Senaratne
  */
+import com.sifeb.ve.handle.BlockCreator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jssc.*;
 
 public class ComPortController {
 
-    public static String port = "COM16";
-    
-    public static void listComPorts(){
+    public static String port = "COM15";
+    public static SerialPort serialPort = new SerialPort(port);
+    public static BlockCreator blkCreator;
+
+    public static void setBlockCreator(BlockCreator blkCreator) {
+        ComPortController.blkCreator = blkCreator;
+    }
+
+    public static void listComPorts() {
         String[] portNames = SerialPortList.getPortNames();
-        for(int i = 0; i < portNames.length; i++){
+        for (int i = 0; i < portNames.length; i++) {
             System.out.println(portNames[i]);
         }
     }
 
-    public static String read(String port, int bytes){
-        SerialPort serialPort = new SerialPort(port);
-    try {
-        //Open port
-        serialPort.openPort();
-        //We expose the settings. You can also use this line - serialPort.setParams(9600, 8, 1, 0);
-        serialPort.setParams(SerialPort.BAUDRATE_9600, 
-                             SerialPort.DATABITS_8,
-                             SerialPort.STOPBITS_1,
-                             SerialPort.PARITY_NONE);
-        //Read the data of 10 bytes. Be careful with the method readBytes(), if the number of bytes in the input buffer
-        //is less than you need, then the method will wait for the right amount. Better to use it in conjunction with the
-        //interface SerialPortEventListener.
-        byte[] buffer = serialPort.readBytes(bytes);
-        //Closing the port
-        serialPort.closePort();
-        return buffer.toString();
-    }
-    catch (SerialPortException ex) {
-        System.out.println(ex);
-    }
-    return null;
+    public static void openPort() {
+        try {
+            serialPort.openPort();
+            serialPort.setParams(SerialPort.BAUDRATE_9600,
+                    SerialPort.DATABITS_8,
+                    SerialPort.STOPBITS_1,
+                    SerialPort.PARITY_NONE);
+        } catch (SerialPortException ex) {
+            Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    public static void writeComPort(String port, int address, String msg){
+    public static void closePort() {
+        try {
+            serialPort.closePort();
+        } catch (SerialPortException ex) {
+            Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void setEventListener() {
+        try {
+            if (!serialPort.isOpened()) {
+                serialPort.openPort();
+            }
+            int mask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR;//Prepare mask
+            serialPort.setEventsMask(mask);//Set mask
+            // ComPortEventListener listener=new ComPortEventListener();
+
+            serialPort.addEventListener(new ComPortController.SerialPortReader(blkCreator));//Add SerialPortEventListener
+        } catch (SerialPortException ex) {
+            Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static String read(String port, int bytes) {
+        //  SerialPort serialPort = new SerialPort(port);
+        try {
+            //Open port
+            if (!serialPort.isOpened()) {
+                serialPort.openPort();
+            }
+
+            //We expose the settings. You can also use this line - serialPort.setParams(9600, 8, 1, 0);
+            serialPort.setParams(SerialPort.BAUDRATE_9600,
+                    SerialPort.DATABITS_8,
+                    SerialPort.STOPBITS_1,
+                    SerialPort.PARITY_NONE);
+            //Read the data of 10 bytes. Be careful with the method readBytes(), if the number of bytes in the input buffer
+            //is less than you need, then the method will wait for the right amount. Better to use it in conjunction with the
+            //interface SerialPortEventListener.
+            byte[] buffer = serialPort.readBytes(bytes);
+            //Closing the port
+            // serialPort.closePort();
+            return buffer.toString();
+        } catch (SerialPortException ex) {
+            System.out.println(ex);
+        }
+        return null;
+    }
+
+    public static void writeComPort(String port, int address, String msg) {
         SerialPort serialPort = new SerialPort(port);
         try {
             //Open port
-            serialPort.openPort();
+            if (!serialPort.isOpened()) {
+                serialPort.openPort();
+            }
             //We expose the settings. You can also use this line - serialPort.setParams(9600, 8, 1, 0);
-            serialPort.setParams(SerialPort.BAUDRATE_9600, 
-                                 SerialPort.DATABITS_8,
-                                 SerialPort.STOPBITS_1,
-                                 SerialPort.PARITY_NONE);
+//            serialPort.setParams(SerialPort.BAUDRATE_9600,
+//                    SerialPort.DATABITS_8,
+//                    SerialPort.STOPBITS_1,
+//                    SerialPort.PARITY_NONE);
             //Writes data to port
             serialPort.writeBytes(msg.getBytes());
             //serialPort.writeBytes((address + ":" + msg).getBytes());  // write to the port
             //(10 + ":" + "t,1\n")
 
             //Closing the port
-            serialPort.closePort();
+            // serialPort.closePort();
             System.out.print("wrote to the port");
-        }
-        catch (SerialPortException ex) {
+        } catch (SerialPortException ex) {
             System.out.println(ex);
         }
     }
+
+    static class SerialPortReader implements SerialPortEventListener {
+
+        public BlockCreator blkC;
+
+        public SerialPortReader(BlockCreator blkC) {
+            this.blkC = blkC;
+        }
+
+        @Override
+        public void serialEvent(SerialPortEvent event) {
+
+            //  System.out.println(event);
+            if (event.isRXCHAR()) {//If data is available
+                // System.out.println("lll");
+                if (event.getEventValue() == 1) {//Check bytes count in the input buffer
+                    //Read data, if 10 bytes available 
+                    try {
+                        //byte buffer[] = serialPort.readBytes(1);
+
+                        String readValue = serialPort.readString(13);
+
+                        System.out.println(readValue);
+                        //   blkC.createBlock(buffer.toString());
+                    } catch (SerialPortException ex) {
+                        System.out.println(ex);
+                    }
+                }
+            } else if (event.isCTS()) {//If CTS line has changed state
+                if (event.getEventValue() == 1) {//If line is ON
+                    System.out.println("CTS - ON");
+                } else {
+                    System.out.println("CTS - OFF");
+                }
+            } else if (event.isDSR()) {///If DSR line has changed state
+                if (event.getEventValue() == 1) {//If line is ON
+                    System.out.println("DSR - ON");
+                } else {
+                    System.out.println("DSR - OFF");
+                }
+            }
+        }
+    }
+
     // Test
     /*public static void main(String[] args) {
-        //Method getPortNames() returns an array of strings. Elements of the array is already sorted.
-        listComPorts();
-        write("COM44", "C");
-        //System.out.println(read("COM4",1));
-    }*/
+     //Method getPortNames() returns an array of strings. Elements of the array is already sorted.
+     listComPorts();
+     write("COM44", "C");
+     //System.out.println(read("COM4",1));
+     }*/
 }

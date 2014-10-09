@@ -97,8 +97,8 @@ public class MainEditorController implements Initializable {
         editorBox.setAlignment(Pos.TOP_LEFT);
         addStartEndBlocks();
         addBlockHolder(0, false);
-        addBlock(devicesBox);
-        addBlock(capabilityBox);
+        //addBlock(devicesBox);
+        //  addBlock(capabilityBox);
 
         setEventHandlers();
         FeedBackLogger.setControls(this.fbFace, this.fbText);
@@ -125,19 +125,27 @@ public class MainEditorController implements Initializable {
         img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Stop_V.png"));
         editorBox.getChildren().add(new Block(img));
     }
-    
-    public void setTextStrings(){
+
+    public void setTextStrings() {
         runBtn.setText(Strings.getString("btn.run"));
         haveLabel.setText(Strings.getString("label.have"));
         doLabel.setText(Strings.getString("label.do"));
-        
-        ((Block)editorBox.getChildren().get(0)).setBlockText(Strings.getString("block.start"));
-        ((Block)editorBox.getChildren().get(editorBox.getChildren().size()-1)).setBlockText(Strings.getString("block.end"));
-        
-        for(Capability c:capabilities){
-            c.getBlock().setBlockText();
+
+        ((Block) editorBox.getChildren().get(0)).setBlockText(Strings.getString("block.start"));
+        ((Block) editorBox.getChildren().get(editorBox.getChildren().size() - 1)).setBlockText(Strings.getString("block.end"));
+
+        for(Device d:devices){
+            d.getDeviceBlock().setBlockText();
+            ArrayList<Capability> caps = d.getCapabilities();
+            for(int i=0;i<caps.size();i++){
+                caps.get(i).getBlock().setBlockText();
+            }
         }
-   }
+        
+//        for (Capability c : capabilities) {
+//            c.getBlock().setBlockText();
+//        }
+    }
 
     //use -1 as index to add a holder to the end
     private void addBlockHolder(int index, boolean withCondition) {
@@ -189,15 +197,15 @@ public class MainEditorController implements Initializable {
     }
 
     private void setEventHandlers() {
-        addDeviceBtn.setOnAction((ActionEvent event) -> {
-            addBlock(devicesBox);
-        });
-        addCapBtn.setOnAction((ActionEvent event) -> {
-            FeedBackLogger.sendGoodMessage("This is a happy message!");
-        });
-        addHolderBtn.setOnAction((ActionEvent event) -> {
-            FeedBackLogger.sendBadMessage("This is a sad message!");
-        });
+//        addDeviceBtn.setOnAction((ActionEvent event) -> {
+//            addBlock(devicesBox);
+//        });
+//        addCapBtn.setOnAction((ActionEvent event) -> {
+//            FeedBackLogger.sendGoodMessage("This is a happy message!");
+//        });
+//        addHolderBtn.setOnAction((ActionEvent event) -> {
+//            FeedBackLogger.sendBadMessage("This is a sad message!");
+//        });
 
         runBtn.setOnAction((ActionEvent event) -> {
             FeedBackLogger.sendGoodMessage("Program is running!");
@@ -251,98 +259,132 @@ public class MainEditorController implements Initializable {
         });
     }
 
-    //for testing only
-    private void addBlock(VBox parent) {
-
-        System.out.println(parent.getId());
+    public void addDeviceBlock(VBox parent, Device dev) {
         String parentId = parent.getId();
 
         if (parentId.equals("devicesBox")) {
-
-            Device device = new Device("00001", "Wheels", 10, "actuator", "Mwheels.png");
-            device.addToPane(devicesBox);
-            devices.add(device);
-
-            device = new Device("00002", "Object Detector", 11, "sensor", "Msonar.png");
-            device.addToPane(devicesBox);
-            devices.add(device);
-
-            device = new Device("00003", "Lights", 12, "actuator", "Mlight.png");
-            device.addToPane(devicesBox);
-            devices.add(device);
-
-        } else if (parentId.equals("capabilityBox")) {
-
-            //adding actions
-            String[] actionNames_en = {"Go Forward", "Reverse", "Turn Left", "Turn Right", "Stop", "Light ON", "Light OFF"};
-            String[] actionNames_si = {"ඉදිරියට යන්න", "පසුපසට යන්න", "වමට හැරෙන්න", "දකුණට හැරෙන්න", "නවතින්න", "Light ON", "Light OFF"};
-            String[] actionCmd = {"b", "c", "e", "d", "", "l", ""};
-            for (int i = 1; i < 8; i++) {
-                Device d;
-                String type;
-                if (i <= 5) {
-                    d = devices.get(0);
-                } else {
-                    d = devices.get(2);
-                }
-                if (i < 3 || i > 5) {
-                    type = "actionC";
-                } else {
-                    type = "action";
-                }
-//                Capability cap = new Capability("1000" + i, actionNames[i - 1], d, type, actionCmd[i - 1], "ActionA" + i + ".png");
-                Map<Locale,String> actNames = new HashMap<>();
-                actNames.put(new Locale("en", "US"), actionNames_en[i-1]);
-                actNames.put(new Locale("si", "LK"), actionNames_si[i-1]);
-                
-                Capability cap = new Capability("1000" + i, actNames, d, type, actionCmd[i - 1], "Action.png");
-                capabilities.add(cap);
-                d.addCapability(cap);
-                if (i == 5 || i == 7) {
-                    ActionBlock action = new ActionBlock(cap.getBlock(), false);
-                    action.addToPane(capabilityBox);
-                } else {
-                    ActionBlock action = new ActionBlock(cap.getBlock(), true);
-                    action.addToPane(capabilityBox);
-                }
-
-            }
-
-            //adding senses
-            String[] senseNames_en = {"No Object", "See Object"};
-            String[] senseNames_si = {"No Object", "See Object"};
-            String[] senseCmd = {"s1", "s2"};
-            for (int i = 1; i <= 2; i++) {
-                Map<Locale,String> senseNames = new HashMap<>();
-                senseNames.put(new Locale("en", "US"), senseNames_en[i-1]);
-                senseNames.put(new Locale("si", "LK"), senseNames_si[i-1]);
-//                Capability cap = new Capability("2000" + i, senseNames[i - 1], devices.get(1), "sense", senseCmd[i - 1], "Sense" + i + ".png");
-                Capability cap = new Capability("2000" + i, senseNames, devices.get(1), "sense", senseCmd[i - 1], "Sense.png");
-                capabilities.add(cap);
-                devices.get(1).addCapability(cap);
-
-                ActionBlock action = new ActionBlock(cap.getBlock(), true);
-                action.addToPane(capabilityBox);
-
-            }
-
-            //adding conditions
-            for (int i = 1; i <= 3; i++) {
-                Map<Locale,String> condNames = new HashMap<>();
-                condNames.put(new Locale("en", "US"), "Time is");
-                condNames.put(new Locale("si", "LK"), "කාලය");
-                Capability cap = new Capability("3000" + i, condNames, null, "condition", "", "Constraint" + i + ".png");
-                if (i == 3) {
-                    cap = new Capability("3000" + i, condNames, null, "sense", "", "Constraint" + i + ".png");
-                }
-                capabilities.add(cap);
-                ActionBlock action = new ActionBlock(cap.getBlock(), false);
-                action.addToPane(capabilityBox);
-
-            }
+            dev.addToPane(devicesBox);
+            devices.add(dev);
         }
 
     }
+
+    public void addCapabilityBlock(VBox parent, Capability cap, Device dev, boolean hasTestButton) {
+
+        String parentId = parent.getId();
+
+        if (parentId.equals("capabilityBox")) {
+            capabilities.add(cap);
+            if(dev!=null)
+                dev.addCapability(cap);
+            ActionBlock action = new ActionBlock(cap.getBlock(), hasTestButton);
+            action.addToPane(capabilityBox);
+        }
+
+    }
+
+    public VBox getDeviceVbox() {
+
+        return devicesBox;
+    }
+    
+    public VBox getCapabilityVbox() {
+
+        return capabilityBox;
+    }
+
+//    //for testing only
+//    private void addBlock(VBox parent) {
+//
+//        System.out.println(parent.getId());
+//        String parentId = parent.getId();
+//
+//        if (parentId.equals("devicesBox")) {
+//
+//            Device device = new Device("00001", "Wheels", 10, "actuator", "Mwheels.png");
+//            device.addToPane(devicesBox);
+//            devices.add(device);
+//
+//            device = new Device("00002", "Object Detector", 11, "sensor", "Msonar.png");
+//            device.addToPane(devicesBox);
+//            devices.add(device);
+//
+//            device = new Device("00003", "Lights", 12, "actuator", "Mlight.png");
+//            device.addToPane(devicesBox);
+//            devices.add(device);
+//
+//        } else if (parentId.equals("capabilityBox")) {
+//
+//            //adding actions
+//            String[] actionNames_en = {"Go Forward", "Reverse", "Turn Left", "Turn Right", "Stop", "Light ON", "Light OFF"};
+//            String[] actionNames_si = {"ඉදිරියට යන්න", "පසුපසට යන්න", "වමට හැරෙන්න", "දකුණට හැරෙන්න", "නවතින්න", "Light ON", "Light OFF"};
+//            String[] actionCmd = {"b", "c", "e", "d", "", "l", ""};
+//            for (int i = 1; i < 8; i++) {
+//                Device d;
+//                String type;
+//                if (i <= 5) {
+//                    d = devices.get(0);
+//                } else {
+//                    d = devices.get(2);
+//                }
+//                if (i < 3 || i > 5) {
+//                    type = "actionC";
+//                } else {
+//                    type = "action";
+//                }
+////                Capability cap = new Capability("1000" + i, actionNames[i - 1], d, type, actionCmd[i - 1], "ActionA" + i + ".png");
+//                Map<Locale, String> actNames = new HashMap<>();
+//                actNames.put(new Locale("en", "US"), actionNames_en[i - 1]);
+//                actNames.put(new Locale("si", "LK"), actionNames_si[i - 1]);
+//
+//                Capability cap = new Capability("1000" + i, actNames, d, type, actionCmd[i - 1], "right");
+//                capabilities.add(cap);
+//                d.addCapability(cap);
+//                if (i == 5 || i == 7) {
+//                    ActionBlock action = new ActionBlock(cap.getBlock(), false);
+//                    action.addToPane(capabilityBox);
+//                } else {
+//                    ActionBlock action = new ActionBlock(cap.getBlock(), true);
+//                    action.addToPane(capabilityBox);
+//                }
+//
+//            }
+//
+//            //adding senses
+//            String[] senseNames_en = {"No Object", "See Object"};
+//            String[] senseNames_si = {"No Object", "See Object"};
+//            String[] senseCmd = {"s1", "s2"};
+//            for (int i = 1; i <= 2; i++) {
+//                Map<Locale, String> senseNames = new HashMap<>();
+//                senseNames.put(new Locale("en", "US"), senseNames_en[i - 1]);
+//                senseNames.put(new Locale("si", "LK"), senseNames_si[i - 1]);
+////                Capability cap = new Capability("2000" + i, senseNames[i - 1], devices.get(1), "sense", senseCmd[i - 1], "Sense" + i + ".png");
+//                Capability cap = new Capability("2000" + i, senseNames, devices.get(1), "sense", senseCmd[i - 1], "Sense"+i);
+//                capabilities.add(cap);
+//                devices.get(1).addCapability(cap);
+//
+//                ActionBlock action = new ActionBlock(cap.getBlock(), true);
+//                action.addToPane(capabilityBox);
+//
+//            }
+//
+//            //adding conditions
+//            for (int i = 1; i <= 3; i++) {
+//                Map<Locale, String> condNames = new HashMap<>();
+//                condNames.put(new Locale("en", "US"), "Time is");
+//                condNames.put(new Locale("si", "LK"), "කාලය");
+//                Capability cap = new Capability("3000" + i, condNames, null, "condition", "", "Constraint" + i);
+//                if (i == 3) {
+//                    cap = new Capability("3000" + i, condNames, null, "condition", "", "Constraint" + i);
+//                }
+//                capabilities.add(cap);
+//                ActionBlock action = new ActionBlock(cap.getBlock(), false);
+//                action.addToPane(capabilityBox);
+//
+//            }
+//        }
+//
+//    }
 
     public ImageView getFbFace() {
         return fbFace;

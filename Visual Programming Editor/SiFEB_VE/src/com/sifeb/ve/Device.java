@@ -5,7 +5,10 @@
  */
 package com.sifeb.ve;
 
+import com.sifeb.ve.resources.Strings;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Map;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
@@ -16,19 +19,19 @@ import javafx.scene.layout.Pane;
 public class Device {
 
     private final String deviceID;
-    private final String deviceName;
+    private final Map<Locale,String> deviceNames;
     private final int address;
     private final String type;
     private final Image image;
     private final ArrayList<Capability> capabilities;
     private final DeviceBlock deviceBlock;
 
-    public Device(String deviceID, String deviceName, int address, String type, String imageName) {
+    public Device(String deviceID, Map<Locale,String> deviceNames, int address, String type, String imageName) {
         this.deviceID = deviceID;
-        this.deviceName = deviceName;
+        this.deviceNames = deviceNames;
         this.address = address;
         this.type = type;
-        this.image = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/" + imageName));
+        this.image = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/devices/" + imageName));
         this.deviceBlock = new DeviceBlock(this);        
         this.capabilities = new ArrayList<>();
     }
@@ -54,7 +57,8 @@ public class Device {
     }
 
     public String getDeviceName() {
-        return deviceName;
+        Locale currentLocale = Strings.getLocale();
+        return deviceNames.get(currentLocale);
     }
 
     public DeviceBlock getDeviceBlock() {

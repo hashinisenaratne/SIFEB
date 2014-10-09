@@ -107,7 +107,7 @@ public class ActionBlock extends HBox {
             Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
             dlg.setResizable(false);
             dlg.setIconifiable(false);
-            dlg.setGraphic(new ImageView(cp.getImage()));
+            dlg.setGraphic(new ImageView(cp.getStaticImage()));
             dlg.setMasthead(Strings.getString("message.liketocheck"));
             Dialog.Actions.YES.textProperty().set(Strings.getString("btn.yes"));
             Dialog.Actions.NO.textProperty().set(Strings.getString("btn.no"));

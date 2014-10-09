@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><Sifeb><Capability><Id>cap_def2</Id><Names><en_US>Distance is</en_US><si_LK>දුර</si_LK></Names><Type>condition</Type><Command>z</Command><HasTestButton>false</HasTestButton><Image>Constraint2</Image></Capability></Sifeb>

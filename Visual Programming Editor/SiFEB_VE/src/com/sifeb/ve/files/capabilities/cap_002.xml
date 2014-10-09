@@ -1,0 +1,1 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?><Sifeb><Capability><Id>cap_002</Id><Names><en_US>Reverse</en_US><si_LK>පසුපසට යන්න</si_LK></Names><Type>actionC</Type><Command>c</Command><HasTestButton>true</HasTestButton><Image>reverse</Image></Capability></Sifeb>
