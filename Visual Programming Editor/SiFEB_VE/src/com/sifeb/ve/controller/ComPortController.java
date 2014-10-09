@@ -21,6 +21,13 @@ public class ComPortController {
     public static String port = "COM18";
     public static SerialPort serialPort = new SerialPort(port);
     public static BlockCreator blkCreator;
+    public static Timer timer = new Timer();
+    public static TimerTask statusQuery = new TimerTask() {
+        @Override
+        public void run() {
+            writeComPort(port, 10, "z");
+        }
+    };
 
     public static void setBlockCreator(BlockCreator blkCreator) {
         ComPortController.blkCreator = blkCreator;
@@ -43,13 +50,7 @@ public class ComPortController {
         } catch (SerialPortException ex) {
             Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                writeComPort(port, 10, "z");
-            }
-        }, 2000, 5000);
+        timer.schedule(statusQuery, 2000, 5000);
     }
 
     public static void closePort() {
@@ -145,7 +146,6 @@ public class ComPortController {
                     try {
                         //byte buffer[] = serialPort.readBytes(1);
 
-                        
 //                        String readValue = serialPort.readString(4);
 //                        System.out.println("MMMMMMM - "+readValue);
 //
@@ -155,15 +155,12 @@ public class ComPortController {
 //                        String address = Integer.toString((int) readValue.charAt(1));
 //
 //                        System.out.println("command - " + command + " add - " + address);
-                        
-                        
                         String readValue = serialPort.readString(4);
-                        
-                        while(!readValue.contains("##"))
-                        {
+
+                        while (!readValue.contains("##")) {
                             blkC.addMessagetoQueue(readValue);
                             readValue = serialPort.readString(4);
-                            System.out.println("llll - "+readValue);
+                            System.out.println("llll - " + readValue);
                         }
                       //  System.out.println("MMMMMMM - "+readValue);
 
@@ -182,7 +179,6 @@ public class ComPortController {
 //                                blkC.removeBlock(address);
 //                                break;
 //                        }
-
                         System.out.println(readValue);
                         //  blkC.createBlock(address);
                     } catch (SerialPortException ex) {
