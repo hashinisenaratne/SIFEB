@@ -71,11 +71,11 @@ void notifySingleChange(int addressIndex)
 void loop() {
   
   
-  if(millis()-lastSec >= 5000)
+  /*if(millis()-lastSec >= 5000)
   {
     lastSec = millis();
     notifyAllChanges();
-  }
+  }*/
   
   // send data only when you receive data:
   if (Serial.available() > 0) {
@@ -86,6 +86,10 @@ void loop() {
     //Serial.print("I received: ");
     //Serial.println(incomingByte, DEC);
 
+    if(incomingByte == 'z'){  
+      notifyAllChanges();
+    }
+    
     if(incomingByte == 'a'){  
       Wire.beginTransmission(10); // transmit to device #11
       Wire.write('s'); 
