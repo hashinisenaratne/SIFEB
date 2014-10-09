@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><Sifeb><Capability><Id>cap_001</Id><Names><en_US>Go Forward</en_US><si_LK>ඉදිරියට යන්න</si_LK></Names><Type>actionC</Type><Command>b</Command><HasTestButton>true</HasTestButton><Image>right</Image></Capability></Sifeb>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?><Sifeb><Capability><Id>cap_001</Id><Names><en_US>Go Forward</en_US><si_LK>ඉදිරියට යන්න</si_LK></Names><Type>actionC</Type><Command>b</Command><HasTestButton>true</HasTestButton><Image>forward</Image></Capability></Sifeb>

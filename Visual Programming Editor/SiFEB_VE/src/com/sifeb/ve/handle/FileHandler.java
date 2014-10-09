@@ -165,6 +165,7 @@ public class FileHandler {
         String[] actionNames_si = {"ඉදිරියට යන්න", "පසුපසට යන්න", "වමට හැරෙන්න", "දකුණට හැරෙන්න", "නවතින්න", "Light ON", "Light OFF"};
         String[] actionCmd = {"b", "c", "e", "d", "", "l", ""};
         String[] buttonList = {"true", "true", "true", "true", "false", "true", "false"};
+        //String[] imageList = {"forward", "reverse", "left", "right", "stop", "true", "false"};
 
         for (int i = 0; i < 7; i++) {
 

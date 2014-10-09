@@ -226,8 +226,8 @@ public final class Block extends Pane {
                 name.relocate((img.getWidth() * 0.05), 23);
                 break;
             case "condition":
-                name.setFont(new Font(13));
-                name.setPrefSize(img.getWidth() * 0.9, 30);
+                name.setFont(new Font(12));
+                name.setPrefSize(img.getWidth() * 0.9, 12);
                 name.setMaxWidth(img.getWidth() * 0.9);
                 name.relocate((img.getWidth() * 0.05), 24);
 

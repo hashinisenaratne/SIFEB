@@ -136,11 +136,15 @@ public class MainEditorController implements Initializable {
 
         for(Device d:devices){
             d.getDeviceBlock().setBlockText();
+            ArrayList<Capability> caps = d.getCapabilities();
+            for(int i=0;i<caps.size();i++){
+                caps.get(i).getBlock().setBlockText();
+            }
         }
         
-        for (Capability c : capabilities) {
-            c.getBlock().setBlockText();
-        }
+//        for (Capability c : capabilities) {
+//            c.getBlock().setBlockText();
+//        }
     }
 
     //use -1 as index to add a holder to the end
