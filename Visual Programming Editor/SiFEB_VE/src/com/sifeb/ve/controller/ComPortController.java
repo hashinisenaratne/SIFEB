@@ -10,13 +10,15 @@ package com.sifeb.ve.controller;
  * @author Hashini Senaratne
  */
 import com.sifeb.ve.handle.BlockCreator;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jssc.*;
 
 public class ComPortController {
 
-    public static String port = "COM15";
+    public static String port = "COM18";
     public static SerialPort serialPort = new SerialPort(port);
     public static BlockCreator blkCreator;
 
@@ -41,6 +43,13 @@ public class ComPortController {
         } catch (SerialPortException ex) {
             Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                writeComPort(port, 10, "z");
+            }
+        }, 2000, 5000);
     }
 
     public static void closePort() {
@@ -93,7 +102,7 @@ public class ComPortController {
     }
 
     public static void writeComPort(String port, int address, String msg) {
-        SerialPort serialPort = new SerialPort(port);
+        // serialPort = new SerialPort(port);
         try {
             //Open port
             if (!serialPort.isOpened()) {
@@ -111,7 +120,7 @@ public class ComPortController {
 
             //Closing the port
             // serialPort.closePort();
-            System.out.print("wrote to the port");
+            System.out.println("wrote to the port");
         } catch (SerialPortException ex) {
             System.out.println(ex);
         }
@@ -136,10 +145,46 @@ public class ComPortController {
                     try {
                         //byte buffer[] = serialPort.readBytes(1);
 
-                        String readValue = serialPort.readString(13);
+                        
+//                        String readValue = serialPort.readString(4);
+//                        System.out.println("MMMMMMM - "+readValue);
+//
+//                        blkC.addMessagetoQueue(readValue);
+//                        char command = readValue.charAt(0);
+//
+//                        String address = Integer.toString((int) readValue.charAt(1));
+//
+//                        System.out.println("command - " + command + " add - " + address);
+                        
+                        
+                        String readValue = serialPort.readString(4);
+                        
+                        while(!readValue.contains("##"))
+                        {
+                            blkC.addMessagetoQueue(readValue);
+                            readValue = serialPort.readString(4);
+                            System.out.println("llll - "+readValue);
+                        }
+                      //  System.out.println("MMMMMMM - "+readValue);
+
+//                        blkC.addMessagetoQueue(readValue);
+//                        char command = readValue.charAt(0);
+//
+//                        String address = Integer.toString((int) readValue.charAt(1));
+//
+//                        System.out.println("command - " + command + " add - " + address);
+//
+//                        switch (command) {
+//                            case 'c':
+//                                blkC.createBlock(address);
+//                                break;
+//                            case 'd':
+//                                blkC.removeBlock(address);
+//                                break;
+//                        }
 
                         System.out.println(readValue);
-                        //   blkC.createBlock(buffer.toString());
+                        //  blkC.createBlock(address);
                     } catch (SerialPortException ex) {
                         System.out.println(ex);
                     }
@@ -158,13 +203,19 @@ public class ComPortController {
                 }
             }
         }
+
     }
 
     // Test
-    /*public static void main(String[] args) {
-     //Method getPortNames() returns an array of strings. Elements of the array is already sorted.
-     listComPorts();
-     write("COM44", "C");
-     //System.out.println(read("COM4",1));
-     }*/
+//    public static void main(String[] args) {
+//     //Method getPortNames() returns an array of strings. Elements of the array is already sorted.
+//        //listComPorts();
+//
+//        openPort();
+//        setEventListener();
+//        writeComPort("Com", 10, "h");
+//
+//    // write("COM44", "C");
+//        //System.out.println(read("COM4",1));
+//    }
 }
