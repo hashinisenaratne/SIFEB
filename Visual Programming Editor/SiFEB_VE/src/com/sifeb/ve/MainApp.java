@@ -5,6 +5,7 @@
  */
 package com.sifeb.ve;
 
+import com.sifeb.ve.controller.ComPortController;
 import com.sifeb.ve.resources.Strings;
 import java.io.IOException;
 import java.util.Locale;
@@ -37,9 +38,10 @@ public class MainApp extends Application {
         Scene scene = new Scene(rootLayout);
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
-//        primaryStage.setOnCloseRequest((WindowEvent event)->{
-//            FeedBackLogger.timer.cancel();
-//        });
+        primaryStage.setOnCloseRequest((WindowEvent event)->{
+            ComPortController.statusQuery.cancel();
+            ComPortController.timer.cancel();
+        });
         primaryStage.show();
     }
 

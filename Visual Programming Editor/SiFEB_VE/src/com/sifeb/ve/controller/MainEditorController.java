@@ -18,7 +18,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Queue;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -82,6 +86,8 @@ public class MainEditorController implements Initializable {
     //temp
     ArrayList<Device> devices;
     ArrayList<Capability> capabilities;
+   
+//    VBox messageBox;
     //
 
     @Override
@@ -90,6 +96,8 @@ public class MainEditorController implements Initializable {
         //temp        
         devices = new ArrayList<>();
         capabilities = new ArrayList<>();
+       
+        //  messageBox = new VBox();
 
         holders = new ArrayList<>();
         editorBox.setFillWidth(false);
@@ -106,6 +114,8 @@ public class MainEditorController implements Initializable {
 
         setTextStrings();
     }
+
+    
 
     private void setFeedbackPanel() {
         Image img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/bubbleLeft.png"));
@@ -134,14 +144,14 @@ public class MainEditorController implements Initializable {
         ((Block) editorBox.getChildren().get(0)).setBlockText(Strings.getString("block.start"));
         ((Block) editorBox.getChildren().get(editorBox.getChildren().size() - 1)).setBlockText(Strings.getString("block.end"));
 
-        for(Device d:devices){
+        for (Device d : devices) {
             d.getDeviceBlock().setBlockText();
             ArrayList<Capability> caps = d.getCapabilities();
-            for(int i=0;i<caps.size();i++){
+            for (int i = 0; i < caps.size(); i++) {
                 caps.get(i).getBlock().setBlockText();
             }
         }
-        
+
 //        for (Capability c : capabilities) {
 //            c.getBlock().setBlockText();
 //        }
@@ -257,40 +267,53 @@ public class MainEditorController implements Initializable {
             }
             event.consume();
         });
+
+        
+//        super.getActions().getChildren().addListener(new AbstractNotifyListener() {
+//
+//            @Override
+//            public void invalidated(Observable observable) {
+//                changeBackToHolder();
+//            }
+//        });
+
     }
 
-    public void addDeviceBlock(VBox parent, Device dev) {
-        String parentId = parent.getId();
+   
 
-        if (parentId.equals("devicesBox")) {
-            dev.addToPane(devicesBox);
-            devices.add(dev);
+    public void addDeviceBlock(Device dev) {
+
+        dev.addToPane(devicesBox);
+        devices.add(dev);
+
+        FeedBackLogger.sendGoodMessage(dev.getDeviceName() + " is connected!");
+
+    }
+
+    public void removeBlocks(int address) {
+        for (Device d : devices) {
+            if (address == d.getAddress()) {
+                d.getDeviceBlock().removeMe();
+                for (Capability cap : d.getCapabilities()) {
+                    cap.getBlock().removeMe();
+                }
+                devices.remove(d);
+                FeedBackLogger.sendBadMessage(d.getDeviceName() + " is disconnected!");
+                break;
+            }
         }
 
     }
 
-    public void addCapabilityBlock(VBox parent, Capability cap, Device dev, boolean hasTestButton) {
+    public void addCapabilityBlock(Capability cap, Device dev, boolean hasTestButton) {
 
-        String parentId = parent.getId();
-
-        if (parentId.equals("capabilityBox")) {
-            capabilities.add(cap);
-            if(dev!=null)
-                dev.addCapability(cap);
-            ActionBlock action = new ActionBlock(cap.getBlock(), hasTestButton);
-            action.addToPane(capabilityBox);
+        capabilities.add(cap);
+        if (dev != null) {
+            dev.addCapability(cap);
         }
+        ActionBlock action = new ActionBlock(cap.getBlock(), hasTestButton);
+        action.addToPane(capabilityBox);
 
-    }
-
-    public VBox getDeviceVbox() {
-
-        return devicesBox;
-    }
-    
-    public VBox getCapabilityVbox() {
-
-        return capabilityBox;
     }
 
 //    //for testing only
@@ -385,7 +408,6 @@ public class MainEditorController implements Initializable {
 //        }
 //
 //    }
-
     public ImageView getFbFace() {
         return fbFace;
     }

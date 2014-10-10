@@ -55,15 +55,15 @@ public final class Block extends Pane {
         this.capability = capability;
         this.textField = null;
         name = new Label();
-        Block.this.setBlockText();       
+        Block.this.setBlockText();
 
         Image bckgndImg = setBackgroundImage(capability.getType());
         setShape(capability.getType(), bckgndImg);
-        
+
         blockIcon = new ImageView();
         placeIcon(capability.getType());
-        setIcon(capability.getStaticImage());        
-        
+        setIcon(capability.getStaticImage());
+
         super.getChildren().add(blockIcon);
 
         setEventHandlers();
@@ -99,8 +99,8 @@ public final class Block extends Pane {
     public TextField getTextField() {
         return textField;
     }
-    
-    private void placeIcon(String type){
+
+    private void placeIcon(String type) {
         switch (type) {
             case "actionC":
             case "action":
@@ -266,5 +266,15 @@ public final class Block extends Pane {
                 this.setEffect(null);
             }
         }
+    }
+
+    public void removeMe() {
+        Pane node = (Pane) this.getParent();
+        node.getChildren().remove(this);
+
+        if (node.getClass().getName().contains("ActionBlock")) {
+            ((ActionBlock) node).removeMe();
+        }
+
     }
 }

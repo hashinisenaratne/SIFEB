@@ -8,9 +8,14 @@ package com.sifeb.ve.handle;
 import com.sifeb.ve.Capability;
 import com.sifeb.ve.Device;
 import com.sifeb.ve.controller.MainEditorController;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.scene.layout.VBox;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -23,14 +28,35 @@ public class BlockCreator {
 
     FileHandler fileHandler;
     MainEditorController mainEditor;
-    VBox deviceVbox;
-    VBox capabilityVbox;
+    ArrayList<String> messageQueue;
+    ObservableList<String> observableList;
 
     public BlockCreator(MainEditorController mainEditor) {
         fileHandler = new FileHandler();
         this.mainEditor = mainEditor;
-        this.deviceVbox = this.mainEditor.getDeviceVbox();
-        this.capabilityVbox = this.mainEditor.getCapabilityVbox();
+        messageQueue = new ArrayList<String>();
+        observableList = FXCollections.observableList(messageQueue);
+
+        observableList.addListener(new ListChangeListener() {
+
+            @Override
+            public void onChanged(ListChangeListener.Change c) {
+                Platform.runLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        processMessage();
+                        System.out.println("event changed");
+                    }
+                });
+
+            }
+        });
+
+    }
+
+    public void addMessagetoQueue(String message) {
+        observableList.add(message);
     }
 
     // sends an integer value
@@ -46,14 +72,14 @@ public class BlockCreator {
         for (int i = 0; i < nameList.getLength(); i++) {
             devNames.put(localeList[i], nameList.item(i).getTextContent());
         }
-        
+
         String address = devElement.getElementsByTagName("Address").item(0).getTextContent();
         String type = devElement.getElementsByTagName("Type").item(0).getTextContent();
         String image = devElement.getElementsByTagName("Image").item(0).getTextContent();
 
         // create device
         Device device = new Device(devId, devNames, Integer.parseInt(address), type, image);
-        mainEditor.addDeviceBlock(deviceVbox, device);
+        mainEditor.addDeviceBlock(device);
 
         //Device device = new Device("00001", "Wheels", 10, "actuator", "Mwheels.png");
         NodeList capList = devElement.getElementsByTagName("Capabilities").item(0).getChildNodes();
@@ -83,9 +109,41 @@ public class BlockCreator {
         String image = devElement.getElementsByTagName("Image").item(0).getTextContent();
         boolean hasTestButton = Boolean.parseBoolean(devElement.getElementsByTagName("HasTestButton").item(0).getTextContent());
         Capability cap = new Capability(capId, actNames, device, type, command, image);
-        mainEditor.addCapabilityBlock(capabilityVbox, cap, device, hasTestButton);
+        mainEditor.addCapabilityBlock(cap, device, hasTestButton);
 
         System.out.println("capability added");
+
+    }
+
+    public void removeBlock(String address) {
+        int addr = Integer.parseInt(address);
+        mainEditor.removeBlocks(addr);
+
+    }
+
+    public void processMessage() {
+
+        while (messageQueue.size() > 0) {
+
+            String readValue = messageQueue.get(0);
+            System.out.println(readValue);
+            char command = readValue.charAt(0);
+
+            String address = Integer.toString((int) readValue.charAt(1));
+
+            System.out.println("command - " + command + " add - " + address);
+
+            switch (command) {
+                case 'c':
+                    this.createBlock(address);
+                    break;
+                case 'd':
+                    this.removeBlock(address);
+                    break;
+            }
+
+            messageQueue.remove(0);
+        }
 
     }
 

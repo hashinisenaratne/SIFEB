@@ -129,4 +129,10 @@ public class ActionBlock extends HBox {
     public void addToPane(Pane parent) {
         parent.getChildren().add(this);
     }
+    
+    public void removeMe() {
+        Pane node = (Pane) this.getParent();
+        node.getChildren().remove(this);
+
+    }
 }

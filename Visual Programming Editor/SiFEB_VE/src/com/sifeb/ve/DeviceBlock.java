@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -53,7 +54,7 @@ public final class DeviceBlock extends Pane {
 
         this.btn = setButton(device.getType(), device.getImage().getWidth(), device.getImage().getHeight());
         super.getChildren().add(this.btn);
-        
+
         name = new Label();
         setBlockText();
         setBlockLabel();
@@ -65,17 +66,17 @@ public final class DeviceBlock extends Pane {
             toggleHighlight();
         });
     }
-    
-    public void setBlockText(){
-        name.setText(this.device.getDeviceName());        
+
+    public void setBlockText() {
+        name.setText(this.device.getDeviceName());
         name.setTooltip(new Tooltip(name.getText()));
     }
-    
-    private void setBlockLabel(){
+
+    private void setBlockLabel() {
         name.setFont(new Font(14));
         name.setPrefSize(device.getImage().getWidth() * 0.6, 30);
         name.setMaxWidth(device.getImage().getWidth() * 0.6);
-        name.relocate((device.getImage().getWidth() * 0.3), 30);        
+        name.relocate((device.getImage().getWidth() * 0.3), 30);
         name.setAlignment(Pos.CENTER_RIGHT);
         super.getChildren().add(name);
     }
@@ -148,6 +149,12 @@ public final class DeviceBlock extends Pane {
                 cap.getBlock().toggleHighlight(false);
             }
         }
+
+    }
+
+    public void removeMe() {
+        Pane node = (Pane) this.getParent();
+        node.getChildren().remove(this);
 
     }
 }
