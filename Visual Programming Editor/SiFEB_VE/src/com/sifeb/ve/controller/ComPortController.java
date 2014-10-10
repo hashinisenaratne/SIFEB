@@ -12,6 +12,7 @@ package com.sifeb.ve.controller;
 import com.sifeb.ve.handle.BlockCreator;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jssc.*;
@@ -28,6 +29,7 @@ public class ComPortController {
             writeComPort(port, 10, "z");
         }
     };
+    private static Semaphore writeLock = new Semaphore(1);
 
     public static void setBlockCreator(BlockCreator blkCreator) {
         ComPortController.blkCreator = blkCreator;
@@ -50,7 +52,8 @@ public class ComPortController {
         } catch (SerialPortException ex) {
             Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        timer.schedule(statusQuery, 2000, 5000);
+//        timer.schedule(statusQuery, 2000, 5000);
+        writeComPort(port, 10, "z");
     }
 
     public static void closePort() {
@@ -103,7 +106,12 @@ public class ComPortController {
     }
 
     public static void writeComPort(String port, int address, String msg) {
-        // serialPort = new SerialPort(port);
+        try {
+            // serialPort = new SerialPort(port);
+            writeLock.acquire();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         try {
             //Open port
             if (!serialPort.isOpened()) {
@@ -124,7 +132,10 @@ public class ComPortController {
             System.out.println("wrote to the port");
         } catch (SerialPortException ex) {
             System.out.println(ex);
+        }finally{
+            writeLock.release();
         }
+        
     }
 
     static class SerialPortReader implements SerialPortEventListener {

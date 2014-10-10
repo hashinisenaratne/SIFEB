@@ -69,11 +69,8 @@ public class RootController implements Initializable {
             ComPortController.setEventListener();
             blkCreator.createCapability("cap_def1", null);
             blkCreator.createCapability("cap_def2", null);
-            
+
             //for test only
-        //    blkCreator.createBlock("11");
-          //  blkCreator.createBlock("10");
-            
             rootPane.setCenter(mainEditor);
         } catch (IOException e) {
             e.printStackTrace();

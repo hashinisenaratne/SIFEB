@@ -33,20 +33,25 @@ import javafx.scene.layout.VBox;
  */
 public class Holder extends Pane {
 
-    private Image blockImg, crossImg;
+    private Image blockImg, crossImg, addImg;
     private VBox actions;
     MainEditorController mainCtrl;
-    private Button button;
+    private Button exitBtn;
+    private Button addBtn;
 
     public Holder(MainEditorController mainCtrl) {
 
         this.setBlockImg(new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Holder_V.png")));
         this.crossImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/cross.png"));
-        this.button = new Button();
+        this.addImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/add.png"));
+        this.exitBtn = new Button();
+        this.addBtn=new Button();
 
-        setButtonProperties(this.button);
-        changeBackgroundOnHoverUsingEvents(this.button);
-        super.getChildren().add(this.button);
+        setExitButtonProperties(this.exitBtn);
+        setAddButtonProperties(addBtn);
+        changeBackgroundOnHoverUsingEvents(this.exitBtn);
+        super.getChildren().add(this.exitBtn);
+        super.getChildren().add(this.addBtn);
 
         this.mainCtrl = mainCtrl;
         this.actions = new VBox();
@@ -120,7 +125,7 @@ public class Holder extends Pane {
         super.setBackground(new Background(new BackgroundImage(this.blockImg, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
     }
 
-    private void setButtonProperties(Button button) {
+    private void setExitButtonProperties(Button button) {
 
         button.relocate(0, 0);
         button.setGraphic(new ImageView(this.crossImg));
@@ -133,6 +138,23 @@ public class Holder extends Pane {
 
         button.setOnAction((ActionEvent event) -> {
             this.mainCtrl.deleteHolder(this);
+        });
+
+    }
+    
+    private void setAddButtonProperties(Button button) {
+
+        button.relocate(0, 20);
+        button.setGraphic(new ImageView(this.addImg));
+        button.setMaxHeight(this.addImg.getHeight());
+        button.setMaxWidth(this.addImg.getWidth());
+        button.setMinHeight(this.addImg.getHeight());
+        button.setMinWidth(this.addImg.getWidth());
+        button.setCursor(Cursor.HAND);
+        button.setStyle("-fx-background-color: transparent");
+
+        button.setOnAction((ActionEvent event) -> {
+            this.mainCtrl.addHolderAfterMe(this);
         });
 
     }
