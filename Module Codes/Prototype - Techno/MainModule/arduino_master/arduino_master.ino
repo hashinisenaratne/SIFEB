@@ -41,6 +41,7 @@ void notifyAllChanges(void)
   {
     notifySingleChange(i);
   }
+  Serial.println("##");
 }
 
 //print two bytes, c or d & address as a byte followed by a new line.
