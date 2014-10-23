@@ -53,7 +53,7 @@ public class ComPortController {
             Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
         }
 //        timer.schedule(statusQuery, 2000, 5000);
-        writeComPort(port, 10, "z");
+     //   writeComPort(port, 10, "z");
     }
 
     public static void closePort() {
@@ -149,10 +149,14 @@ public class ComPortController {
         @Override
         public void serialEvent(SerialPortEvent event) {
 
-            //  System.out.println(event);
+         //   System.out.println("%%%%%%%%%%%%% - event is - ");
+         //     System.out.println("RXChar - "+event.isRXCHAR());
+          //    System.out.println("event value - "+event.getEventValue());
+           //   System.out.println("event type - "+event.getEventType());
+              
             if (event.isRXCHAR()) {//If data is available
                 // System.out.println("lll");
-                if (event.getEventValue() == 1) {//Check bytes count in the input buffer
+               // if (event.getEventValue() == 1) {//Check bytes count in the input buffer
                     //Read data, if 10 bytes available 
                     try {
                         //byte buffer[] = serialPort.readBytes(1);
@@ -167,11 +171,12 @@ public class ComPortController {
 //
 //                        System.out.println("command - " + command + " add - " + address);
                         String readValue = serialPort.readString(4);
+                        System.out.println("read val - "+readValue);
 
-                        while (!readValue.contains("##")) {
+                        while (!readValue.contains("#")) {
                             blkC.addMessagetoQueue(readValue);
                             readValue = serialPort.readString(4);
-                            System.out.println("llll - " + readValue);
+                         //   System.out.println("read val#2 %%%% - " + readValue);
                         }
                       //  System.out.println("MMMMMMM - "+readValue);
 
@@ -190,12 +195,12 @@ public class ComPortController {
 //                                blkC.removeBlock(address);
 //                                break;
 //                        }
-                        System.out.println(readValue);
+                      //  System.out.println("read value ###3### - "+readValue);
                         //  blkC.createBlock(address);
                     } catch (SerialPortException ex) {
                         System.out.println(ex);
                     }
-                }
+              //  }
             } else if (event.isCTS()) {//If CTS line has changed state
                 if (event.getEventValue() == 1) {//If line is ON
                     System.out.println("CTS - ON");

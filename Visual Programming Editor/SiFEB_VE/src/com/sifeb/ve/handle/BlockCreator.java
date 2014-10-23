@@ -126,12 +126,12 @@ public class BlockCreator {
         while (messageQueue.size() > 0) {
 
             String readValue = messageQueue.get(0);
-            System.out.println(readValue);
+          //  System.out.println(readValue);
             char command = readValue.charAt(0);
 
             String address = Integer.toString((int) readValue.charAt(1));
 
-            System.out.println("command - " + command + " add - " + address);
+     //       System.out.println("command - " + command + " add - " + address);
 
             switch (command) {
                 case 'c':
