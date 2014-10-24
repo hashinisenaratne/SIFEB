@@ -149,7 +149,7 @@ public class ComPortController {
         @Override
         public void serialEvent(SerialPortEvent event) {
 
-         //   System.out.println("%%%%%%%%%%%%% - event is - ");
+            System.out.println("%%%%%%%%%%%%% - event is - "+event);
          //     System.out.println("RXChar - "+event.isRXCHAR());
           //    System.out.println("event value - "+event.getEventValue());
            //   System.out.println("event type - "+event.getEventType());

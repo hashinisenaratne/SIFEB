@@ -219,7 +219,7 @@ public class MainEditorController implements Initializable {
 
         runBtn.setOnAction((ActionEvent event) -> {
             FeedBackLogger.sendGoodMessage("Program is running!");
-//            ComPortController.writeComPort(ComPortController.port, 10, "r");
+            ComPortController.writeComPort(ComPortController.port, 10, "r");
         });
 
         editorPane.setOnDragDropped((DragEvent event) -> {

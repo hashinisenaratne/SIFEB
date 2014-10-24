@@ -90,6 +90,7 @@ void loop() {
   {
     lastSec = millis();
     notifyAllChanges();
+    Serial.println("12");
   }
 
   // send data only when you receive data:
@@ -209,10 +210,16 @@ void loop() {
 
       Wire.endTransmission();
 
+      delay(500);
+
       Wire.beginTransmission(10); // turn right
       Wire.write('a'); 
       Wire.write(3); 
       Wire.endTransmission();
+
+      delay(500);
+
+      // Serial.println("15");
 
     }
 
@@ -222,6 +229,10 @@ void loop() {
 
   }
 }
+
+
+
+
 
 
 

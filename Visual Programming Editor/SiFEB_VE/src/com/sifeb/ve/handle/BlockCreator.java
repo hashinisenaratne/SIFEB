@@ -47,6 +47,7 @@ public class BlockCreator {
                     public void run() {
                         processMessage();
                         System.out.println("event changed");
+                        System.out.println(messageQueue.size());
                     }
                 });
 
