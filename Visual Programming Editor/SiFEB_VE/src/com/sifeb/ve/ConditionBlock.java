@@ -71,7 +71,7 @@ public class ConditionBlock extends Holder {
                 Block draggedBlock = (Block) p.lookup("#" + nodeId);
 
                 if (draggedBlock != null) {
-                    this.mainCtrl.addHolderAfterMe(this);
+                    this.mainCtrl.addHolderAfterMe(this,false);
                     if (p.getClass().getName().contains("ActionBlock")) {
                         Capability cap = draggedBlock.getCapability().cloneCapability();
                         draggedBlock = cap.getBlock();
@@ -82,7 +82,7 @@ public class ConditionBlock extends Holder {
                     if (blockType.equals("actionC")) {
                         this.addElementToVbox(draggedBlock);
                         success = true;
-                        this.mainCtrl.addHolderAfterMe(this);
+                        this.mainCtrl.addHolderAfterMe(this,false);
                     } else if (blockType.equals("action")) {
                         super.mainCtrl.changeHolderType(this, draggedBlock);
                         success = true;

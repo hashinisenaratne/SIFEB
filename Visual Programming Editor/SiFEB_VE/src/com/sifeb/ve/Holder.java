@@ -72,7 +72,7 @@ public class Holder extends Pane {
                 Block draggedBlock = (Block) p.lookup("#" + nodeId);
 
                 if (draggedBlock != null) {
-                    this.mainCtrl.addHolderAfterMe(this);
+                    this.mainCtrl.addHolderAfterMe(this,false);
                     if (p.getClass().getName().contains("ActionBlock")) {
                         Capability cap = draggedBlock.getCapability().cloneCapability();
                         draggedBlock = cap.getBlock();
@@ -154,7 +154,7 @@ public class Holder extends Pane {
         button.setStyle("-fx-background-color: transparent");
 
         button.setOnAction((ActionEvent event) -> {
-            this.mainCtrl.addHolderAfterMe(this);
+            this.mainCtrl.addHolderAfterMe(this,true);
         });
 
     }
