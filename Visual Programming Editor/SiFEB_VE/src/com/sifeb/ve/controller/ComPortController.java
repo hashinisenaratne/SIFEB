@@ -178,6 +178,9 @@ public class ComPortController {
                             readValue = serialPort.readString(4);
                          //   System.out.println("read val#2 %%%% - " + readValue);
                         }
+                        if(readValue.contains("#") && (!readValue.equals("##"))){
+                            blkC.addMessagetoQueue(readValue);
+                        }
                       //  System.out.println("MMMMMMM - "+readValue);
 
 //                        blkC.addMessagetoQueue(readValue);

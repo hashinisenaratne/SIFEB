@@ -8,6 +8,7 @@ package com.sifeb.ve.handle;
 import com.sifeb.ve.Capability;
 import com.sifeb.ve.Device;
 import com.sifeb.ve.controller.MainEditorController;
+import com.sifeb.ve.resources.Strings;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -16,7 +17,9 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import org.controlsfx.dialog.Dialog;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -127,22 +130,38 @@ public class BlockCreator {
         while (messageQueue.size() > 0) {
 
             String readValue = messageQueue.get(0);
-          //  System.out.println(readValue);
-            char command = readValue.charAt(0);
-
-            String address = Integer.toString((int) readValue.charAt(1));
+            if (readValue.contains("#")) {
+                char r = readValue.charAt(0);
+                if(r=='0'){
+                    mainEditor.ackReceived = true;
+                }else{
+                    Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
+                    dlg.setResizable(false);
+                    dlg.setIconifiable(false);
+                    dlg.setMasthead("Something went wrong!!!");
+                    dlg.setContent("I2C returned status "+r);
+                    dlg.getActions().add(Dialog.Actions.CLOSE);
+                }
+            } else {
+                //  System.out.println(readValue);
+                char command = readValue.charAt(0);
+                String address = Integer.toString((int) readValue.charAt(1));
 
      //       System.out.println("command - " + command + " add - " + address);
+                switch (command) {
+                    case 'c':
+                        this.createBlock(address);
+                        break;
+                    case 'd':
+                        this.removeBlock(address);
+                        break;
+                    case 'h':
+                        this.mainEditor.hValue = Integer.parseInt(address);
+                        break;
+                }
 
-            switch (command) {
-                case 'c':
-                    this.createBlock(address);
-                    break;
-                case 'd':
-                    this.removeBlock(address);
-                    break;
+                
             }
-
             messageQueue.remove(0);
         }
 

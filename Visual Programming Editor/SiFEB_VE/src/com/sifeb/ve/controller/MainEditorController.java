@@ -15,16 +15,10 @@ import com.sifeb.ve.Holder;
 import com.sifeb.ve.resources.Strings;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Queue;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -86,19 +80,20 @@ public class MainEditorController implements Initializable {
     //temp
     ArrayList<Device> devices;
     ArrayList<Capability> capabilities;
-   
-//    VBox messageBox;
-    //
 
+//    VBox messageBox;
+    public int hValue;
+    public boolean ackReceived;
+    
+    //
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         //temp        
         devices = new ArrayList<>();
         capabilities = new ArrayList<>();
-       
-        //  messageBox = new VBox();
 
+        //  messageBox = new VBox();
         holders = new ArrayList<>();
         editorBox.setFillWidth(false);
         editorBox.setSpacing(-15);
@@ -114,8 +109,6 @@ public class MainEditorController implements Initializable {
 
         setTextStrings();
     }
-
-    
 
     private void setFeedbackPanel() {
         Image img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/bubbleLeft.png"));
@@ -188,13 +181,12 @@ public class MainEditorController implements Initializable {
 
     public void addHolderAfterMe(Holder holder, boolean fromBtn) {
         int index = holders.indexOf(holder);
-        
+
         //if it's the last holder
         if (index == (holders.size() - 1)) {
             addBlockHolder(-1, false);
-        }
-        else if(fromBtn){
-            addBlockHolder(index+1, false);
+        } else if (fromBtn) {
+            addBlockHolder(index + 1, false);
         }
     }
 
@@ -271,7 +263,6 @@ public class MainEditorController implements Initializable {
             event.consume();
         });
 
-        
 //        super.getActions().getChildren().addListener(new AbstractNotifyListener() {
 //
 //            @Override
@@ -279,10 +270,7 @@ public class MainEditorController implements Initializable {
 //                changeBackToHolder();
 //            }
 //        });
-
     }
-
-   
 
     public void addDeviceBlock(Device dev) {
 
@@ -319,39 +307,100 @@ public class MainEditorController implements Initializable {
 
     }
 
-    public void runProgram(){
+    public void runProgram() {
         FeedBackLogger.sendGoodMessage("Program is running!");
         devicesBox.setDisable(true);
         capabilityBox.setDisable(true);
         editorBox.setDisable(true);
-        
+
         int numSteps = holders.size();
         for (int i = 0; i < numSteps; i++) {
             Holder h = holders.get(i);
-            if(h.getClass().getName().contains("ConditionBlock")){
-                h = (ConditionBlock)h;
-            }else{
-                if(h.getActions().getChildren().size() == 0){
+            h.toggleHighlight(true);
+            if (h.getClass().getName().contains("ConditionBlock")) {
+                ConditionBlock cb = (ConditionBlock) holders.get(i);
+                if ((cb.getActions().getChildren().size() == 0) || (cb.getCondition().getChildren().size() == 0)) {
+                    h.toggleHighlight(false);
                     continue;
                 }
-                Block ab = (Block)h.getActions().getChildren().get(0);
-                int address = ab.getCapability().getDevice().getAddress();
-                String cmd = ab.getCapability().getCommand();
-                ComPortController.writeComPort(ComPortController.port, address, cmd);
+                Block acBlock = (Block) cb.getActions().getChildren().get(0);
+                int address = acBlock.getCapability().getDevice().getAddress();
+                String cmd = acBlock.getCapability().getCommand();
+                sendCmd(address, cmd.toUpperCase());
+
+                Block conBlock = (Block) cb.getCondition().getChildren().get(0);
+                executeConstraint(conBlock);
+
+                sendCmd(10, "f");
+            } else {
+                if (h.getActions().getChildren().size() == 0) {
+                    h.toggleHighlight(false);
+                    continue;
+                }
+                Block acBlock = (Block) h.getActions().getChildren().get(0);
+                int address = acBlock.getCapability().getDevice().getAddress();
+                String cmd = acBlock.getCapability().getCommand();
+                sendCmd(address, cmd);
             }
+            h.toggleHighlight(false);
         }
-        
-//        try {
-//            Thread.sleep(2000);
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
         devicesBox.setDisable(false);
         capabilityBox.setDisable(false);
         editorBox.setDisable(false);
         FeedBackLogger.sendGoodMessage("Program Finished!");
     }
-    
+
+    public void sendCmd(int address, String message) {
+        ackReceived = false;
+        ComPortController.writeComPort(ComPortController.port, address, message);
+        while(!ackReceived){}
+//        try {
+//            Thread.sleep(1500);
+//        } catch (InterruptedException ex) {
+//            Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+    }
+
+    public void executeConstraint(Block constBlock) {
+        String constID = constBlock.getCapability().getCapID();
+        switch (constID) {
+            case "cap_def1": {   //time
+                int v = Integer.parseInt(constBlock.getTextField().getText());
+                try {
+                    Thread.sleep(v * 1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
+            case "cap_def2": {   //distance
+                int v = Integer.parseInt(constBlock.getTextField().getText());
+                try {
+                    Thread.sleep(v * 1000); //should be changed to distance
+                    
+//                    Thread.sleep((v/speed) * 1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
+            case "cap_008": {    //no object
+                hValue = 0;
+                while(hValue<100){
+                    sendCmd(10, "h");
+                }
+                break;
+            }
+            case "cap_009": {    //see object
+                hValue = 1000;
+                while(hValue>100){
+                    sendCmd(10, "h");
+                }
+                break;
+            }
+        }
+    }
+
     public ImageView getFbFace() {
         return fbFace;
     }

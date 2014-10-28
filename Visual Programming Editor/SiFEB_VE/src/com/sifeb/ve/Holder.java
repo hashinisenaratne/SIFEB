@@ -12,6 +12,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,6 +27,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -45,7 +47,7 @@ public class Holder extends Pane {
         this.crossImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/cross.png"));
         this.addImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/add.png"));
         this.exitBtn = new Button();
-        this.addBtn=new Button();
+        this.addBtn = new Button();
 
         setExitButtonProperties(this.exitBtn);
         setAddButtonProperties(addBtn);
@@ -72,7 +74,7 @@ public class Holder extends Pane {
                 Block draggedBlock = (Block) p.lookup("#" + nodeId);
 
                 if (draggedBlock != null) {
-                    this.mainCtrl.addHolderAfterMe(this,false);
+                    this.mainCtrl.addHolderAfterMe(this, false);
                     if (p.getClass().getName().contains("ActionBlock")) {
                         Capability cap = draggedBlock.getCapability().cloneCapability();
                         draggedBlock = cap.getBlock();
@@ -141,7 +143,7 @@ public class Holder extends Pane {
         });
 
     }
-    
+
     private void setAddButtonProperties(Button button) {
 
         button.relocate(0, 20);
@@ -154,7 +156,7 @@ public class Holder extends Pane {
         button.setStyle("-fx-background-color: transparent");
 
         button.setOnAction((ActionEvent event) -> {
-            this.mainCtrl.addHolderAfterMe(this,true);
+            this.mainCtrl.addHolderAfterMe(this, true);
         });
 
     }
@@ -173,6 +175,15 @@ public class Holder extends Pane {
                 node.setEffect(null);
             }
         });
+    }
+
+    public void toggleHighlight(boolean on) {
+        if (on) {
+            this.setEffect(new DropShadow(BlurType.GAUSSIAN, Color.CRIMSON, 20, 0.5, 0, 0));
+
+        } else {
+            this.setEffect(null);
+        }
     }
 
 }
