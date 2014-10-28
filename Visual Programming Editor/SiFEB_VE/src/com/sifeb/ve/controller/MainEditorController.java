@@ -353,30 +353,31 @@ public class MainEditorController implements Initializable {
     public void sendCmd(int address, String message) {
         ackReceived = false;
         ComPortController.writeComPort(ComPortController.port, address, message);
-        while(!ackReceived){}
-//        try {
-//            Thread.sleep(1500);
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+    //    while(!ackReceived){}
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void executeConstraint(Block constBlock) {
         String constID = constBlock.getCapability().getCapID();
         switch (constID) {
             case "cap_def1": {   //time
-                int v = Integer.parseInt(constBlock.getTextField().getText());
+                double v = Double.parseDouble(constBlock.getTextField().getText());
                 try {
-                    Thread.sleep(v * 1000);
+                    
+                    Thread.sleep((long)((v==0)?0:(v-1) * 1000));
                 } catch (InterruptedException ex) {
                     Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
             }
             case "cap_def2": {   //distance
-                int v = Integer.parseInt(constBlock.getTextField().getText());
+                double v = Double.parseDouble(constBlock.getTextField().getText());
                 try {
-                    Thread.sleep(v * 1000); //should be changed to distance
+                   Thread.sleep((long)((v==0)?0:(v-1) * 1000)); //should be changed to distance
                     
 //                    Thread.sleep((v/speed) * 1000);
                 } catch (InterruptedException ex) {

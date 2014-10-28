@@ -19,7 +19,7 @@ import jssc.*;
 
 public class ComPortController {
 
-    public static String port = "COM18";
+    public static String port = "COM17";
     public static SerialPort serialPort = new SerialPort(port);
     public static BlockCreator blkCreator;
     public static Timer timer = new Timer();
@@ -170,6 +170,7 @@ public class ComPortController {
 //
 //                        System.out.println("command - " + command + " add - " + address);
                     String readValue = serialPort.readString(4);
+                   
                     System.out.println("read val - " + readValue);
 
                     while (!readValue.contains("#")) {
