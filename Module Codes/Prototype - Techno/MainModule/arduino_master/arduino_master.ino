@@ -90,7 +90,7 @@ void loop() {
   {
     lastSec = millis();
     notifyAllChanges();
-    Serial.println("12");
+   // Serial.println("12");
   }
 
   // send data only when you receive data:
@@ -124,6 +124,22 @@ void loop() {
     else if(incomingByte == 'c'){
       Wire.beginTransmission(10); // transmit to device #10
       Wire.write('t'); 
+      Wire.write(2); 
+      Serial.print(Wire.endTransmission());    // stop transmitting
+      Serial.println("#");
+    }
+    
+    else if(incomingByte == 'B'){
+      Wire.beginTransmission(10); // transmit to device #10
+      Wire.write('a'); 
+      Wire.write(1); 
+      Serial.print(Wire.endTransmission());    // stop transmitting
+      Serial.println("#");
+    }
+
+    else if(incomingByte == 'C'){
+      Wire.beginTransmission(10); // transmit to device #10
+      Wire.write('a'); 
       Wire.write(2); 
       Serial.print(Wire.endTransmission());    // stop transmitting
       Serial.println("#");
