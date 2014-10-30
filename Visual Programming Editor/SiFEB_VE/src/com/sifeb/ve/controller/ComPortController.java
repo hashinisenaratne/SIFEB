@@ -19,7 +19,7 @@ import jssc.*;
 
 public class ComPortController {
 
-    public static String port = "COM17";
+    public static String port = "COM18";
     public static SerialPort serialPort = new SerialPort(port);
     public static BlockCreator blkCreator;
     public static Timer timer = new Timer();
@@ -47,6 +47,8 @@ public class ComPortController {
         try {
             if (!serialPort.isOpened()) {
                 serialPort.openPort();
+                setEventListener();
+                System.out.println("opened the port");
                 serialPort.setParams(SerialPort.BAUDRATE_9600,
                         SerialPort.DATABITS_8,
                         SerialPort.STOPBITS_1,
@@ -62,7 +64,13 @@ public class ComPortController {
 
     public static void closePort() {
         try {
-            serialPort.closePort();
+            if (serialPort.isOpened()) {
+                serialPort.removeEventListener();
+                serialPort.purgePort(0);
+                serialPort.closePort();
+                System.out.println("closed the port");
+            }
+
         } catch (SerialPortException ex) {
             Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -70,8 +78,8 @@ public class ComPortController {
 
     public static void setEventListener() {
         try {
-            openPort();
-            
+           // openPort();
+
             int mask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR;//Prepare mask
             serialPort.setEventsMask(mask);//Set mask
             // ComPortEventListener listener=new ComPortEventListener();
@@ -86,7 +94,7 @@ public class ComPortController {
         //  SerialPort serialPort = new SerialPort(port);
         try {
             //Open port
-           openPort();
+            openPort();
 
             //We expose the settings. You can also use this line - serialPort.setParams(9600, 8, 1, 0);
             serialPort.setParams(SerialPort.BAUDRATE_9600,
@@ -115,7 +123,7 @@ public class ComPortController {
         }
         try {
             //Open port
-           openPort();
+            openPort();
             //We expose the settings. You can also use this line - serialPort.setParams(9600, 8, 1, 0);
 //            serialPort.setParams(SerialPort.BAUDRATE_9600,
 //                    SerialPort.DATABITS_8,
@@ -149,7 +157,7 @@ public class ComPortController {
         public void serialEvent(SerialPortEvent event) {
 
             System.out.println("%%%%%%%%%%%%% - event is - " + event);
-         //     System.out.println("RXChar - "+event.isRXCHAR());
+            //     System.out.println("RXChar - "+event.isRXCHAR());
             //    System.out.println("event value - "+event.getEventValue());
             //   System.out.println("event type - "+event.getEventType());
 
@@ -169,19 +177,31 @@ public class ComPortController {
 //                        String address = Integer.toString((int) readValue.charAt(1));
 //
 //                        System.out.println("command - " + command + " add - " + address);
-                    String readValue = serialPort.readString(4);
-                   
+                    byte[] readByte = serialPort.readBytes(4);
+                    String readValue = new String(readByte);
+
+//                    byte[] readByte = serialPort.readBytes();
+//                    String readValue = new String(readByte);
                     System.out.println("read val - " + readValue);
 
                     while (!readValue.contains("#")) {
-                        blkC.addMessagetoQueue(readValue);
+
+                        if (readValue.charAt(0) == 'h') {
+                            int gh = readByte[1] & 0xFF;
+                            blkC.mainEditor.hValue = gh;
+                            System.out.println("gggggg- " + gh);
+                        } else {
+                            blkC.addMessagetoQueue(readValue);
+                        }
+
+                        System.out.println("added to queue");
                         readValue = serialPort.readString(4);
                         //   System.out.println("read val#2 %%%% - " + readValue);
                     }
-                    if (readValue.contains("#") && (!readValue.equals("##"))) {
-                        blkC.addMessagetoQueue(readValue);
-                    }
-                      //  System.out.println("MMMMMMM - "+readValue);
+//                    if (readValue.contains("#") && (!readValue.equals("##"))) {
+//                        blkC.addMessagetoQueue(readValue);
+//                    }
+                    //  System.out.println("MMMMMMM - "+readValue);
 
 //                        blkC.addMessagetoQueue(readValue);
 //                        char command = readValue.charAt(0);
@@ -228,9 +248,18 @@ public class ComPortController {
 //
 //        openPort();
 //        setEventListener();
-//        writeComPort("Com", 10, "h");
-//
-//    // write("COM44", "C");
-//        //System.out.println(read("COM4",1));
+//        
+//        for (int i = 0; i < 10; i++) {
+//            try {
+//                writeComPort("Com15", 10, "h");
+//                Thread.sleep(1500);
+//            }
+//            //writeComPort("Com15", 10, "h");
+//            // write("COM44", "C");
+//            //System.out.println(read("COM4",1));
+//            catch (InterruptedException ex) {
+//                Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
 //    }
 }

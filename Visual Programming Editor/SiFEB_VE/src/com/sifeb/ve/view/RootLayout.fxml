@@ -27,6 +27,7 @@
                         <RadioMenuItem fx:id="langMenuSin" mnemonicParsing="false" text="සිංහල (Sinhala)" toggleGroup="$langMenuGroup" />
                     </items>
                   </Menu>
+                  <MenuItem fx:id="connectMenu" mnemonicParsing="false" text="Connect" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

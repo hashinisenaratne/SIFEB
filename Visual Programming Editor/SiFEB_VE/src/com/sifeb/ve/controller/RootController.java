@@ -12,10 +12,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -32,6 +35,8 @@ public class RootController implements Initializable {
     RadioMenuItem langMenuEng;
     @FXML
     RadioMenuItem langMenuSin;
+    @FXML
+    MenuItem connectMenu;
 
     MainEditorController meCtrl;
 
@@ -49,6 +54,17 @@ public class RootController implements Initializable {
         langMenuSin.setOnAction((ActionEvent event) -> {
             changeLanguage(new Locale("si", "LK"));
         });
+        connectMenu.setOnAction((ActionEvent event) -> {
+            try {
+                ComPortController.closePort();
+
+                Thread.sleep(2000);
+
+                ComPortController.openPort();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(RootController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
     }
 
     private void changeLanguage(Locale l) {
@@ -64,13 +80,15 @@ public class RootController implements Initializable {
             meCtrl = loader.getController();
             BlockCreator blkCreator = new BlockCreator(meCtrl);
 
-            ComPortController.openPort();
             ComPortController.setBlockCreator(blkCreator);
-            ComPortController.setEventListener();
+            ComPortController.openPort();
+            // ComPortController.setEventListener();
             blkCreator.createCapability("cap_def1", null);
             blkCreator.createCapability("cap_def2", null);
 
             //for test only
+//            blkCreator.createBlock("10");
+//            blkCreator.createBlock("11");
             rootPane.setCenter(mainEditor);
         } catch (IOException e) {
             e.printStackTrace();

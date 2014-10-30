@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -38,6 +39,8 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.Dialog;
 
 /**
  *
@@ -76,7 +79,7 @@ public class MainEditorController implements Initializable {
 
     ArrayList<Holder> holders;
     Holder lastHolder;
-
+    Image playImg;
     //temp
     ArrayList<Device> devices;
     ArrayList<Capability> capabilities;
@@ -84,7 +87,7 @@ public class MainEditorController implements Initializable {
 //    VBox messageBox;
     public int hValue;
     public boolean ackReceived;
-    
+
     //
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -117,7 +120,7 @@ public class MainEditorController implements Initializable {
         fbRight.setImage(img);
         img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/bubbleMid.png"));
         fbText.setBackground(new Background(new BackgroundImage(img, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-
+        playImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/play.png"));
         FeedBackLogger.sendWelcomeMessage();
     }
 
@@ -214,7 +217,14 @@ public class MainEditorController implements Initializable {
 //        });
 
         runBtn.setOnAction((ActionEvent event) -> {
-            runProgram();
+
+            Platform.runLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    runProgram();
+                }
+            });
         });
 
         editorPane.setOnDragDropped((DragEvent event) -> {
@@ -308,57 +318,99 @@ public class MainEditorController implements Initializable {
     }
 
     public void runProgram() {
-        FeedBackLogger.sendGoodMessage("Program is running!");
-        devicesBox.setDisable(true);
-        capabilityBox.setDisable(true);
-        editorBox.setDisable(true);
 
-        int numSteps = holders.size();
-        for (int i = 0; i < numSteps; i++) {
-            Holder h = holders.get(i);
-            h.toggleHighlight(true);
-            if (h.getClass().getName().contains("ConditionBlock")) {
-                ConditionBlock cb = (ConditionBlock) holders.get(i);
-                if ((cb.getActions().getChildren().size() == 0) || (cb.getCondition().getChildren().size() == 0)) {
-                    h.toggleHighlight(false);
-                    continue;
+//        while (true) {
+//            
+//            try {
+//                ComPortController.writeComPort(ComPortController.port, 10,"h");
+//                Thread.sleep(500);
+//            } catch (InterruptedException ex) {
+//                Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//            
+//        }
+        Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
+        dlg.setResizable(false);
+        dlg.setIconifiable(false);
+        dlg.setGraphic(new ImageView(playImg));
+        dlg.setMasthead(Strings.getString("message.runtheprogram"));
+        Dialog.Actions.YES.textProperty().set(Strings.getString("btn.yes"));
+        Dialog.Actions.NO.textProperty().set(Strings.getString("btn.no"));
+        dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
+
+        Action response = dlg.show();
+        System.out.println("response" + response);
+
+        if (response == Dialog.Actions.YES) {
+            // FeedBackLogger.sendGoodMessage(Strings.getString("message.testing") + " \'" + cp.getCapName() + "\' " + Strings.getString("message.capability") + "...");
+            // ComPortController.writeComPort(ComPortController.port, cp.getDevice().getAddress(), cp.getCommand());
+            FeedBackLogger.sendGoodMessage("Program is running!");
+            devicesBox.setDisable(true);
+            capabilityBox.setDisable(true);
+            editorBox.setDisable(true);
+
+            int numSteps = holders.size();
+            for (int i = 0; i < numSteps; i++) {
+                Holder h = holders.get(i);
+                h.toggleHighlight(true);
+                if (h.getClass().getName().contains("ConditionBlock")) {
+                    ConditionBlock cb = (ConditionBlock) holders.get(i);
+                    if ((cb.getActions().getChildren().size() == 0) || (cb.getCondition().getChildren().size() == 0)) {
+                        h.toggleHighlight(false);
+                        continue;
+                    }
+                    Block acBlock = (Block) cb.getActions().getChildren().get(0);
+                    int address = acBlock.getCapability().getDevice().getAddress();
+                    String cmd = acBlock.getCapability().getCommand();
+                    sendCmd(address, cmd.toUpperCase());
+
+                    Block conBlock = (Block) cb.getCondition().getChildren().get(0);
+                    executeConstraint(conBlock);
+
+                    sendCmd(10, "f");
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    if (h.getActions().getChildren().size() == 0) {
+                        h.toggleHighlight(false);
+                        continue;
+                    }
+                    Block acBlock = (Block) h.getActions().getChildren().get(0);
+                    int address = acBlock.getCapability().getDevice().getAddress();
+                    String cmd = acBlock.getCapability().getCommand();
+                    sendCmd(address, cmd);
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-                Block acBlock = (Block) cb.getActions().getChildren().get(0);
-                int address = acBlock.getCapability().getDevice().getAddress();
-                String cmd = acBlock.getCapability().getCommand();
-                sendCmd(address, cmd.toUpperCase());
-
-                Block conBlock = (Block) cb.getCondition().getChildren().get(0);
-                executeConstraint(conBlock);
-
-                sendCmd(10, "f");
-            } else {
-                if (h.getActions().getChildren().size() == 0) {
-                    h.toggleHighlight(false);
-                    continue;
-                }
-                Block acBlock = (Block) h.getActions().getChildren().get(0);
-                int address = acBlock.getCapability().getDevice().getAddress();
-                String cmd = acBlock.getCapability().getCommand();
-                sendCmd(address, cmd);
+                h.toggleHighlight(false);
             }
-            h.toggleHighlight(false);
+            devicesBox.setDisable(false);
+            capabilityBox.setDisable(false);
+            editorBox.setDisable(false);
+            FeedBackLogger.sendGoodMessage("Program Finished!");
+
+        } else {
+            FeedBackLogger.sendBadMessage(Strings.getString("message.testlater") + "...");
+            // ... user cancelled, reset form to default
         }
-        devicesBox.setDisable(false);
-        capabilityBox.setDisable(false);
-        editorBox.setDisable(false);
-        FeedBackLogger.sendGoodMessage("Program Finished!");
+
     }
 
     public void sendCmd(int address, String message) {
         ackReceived = false;
         ComPortController.writeComPort(ComPortController.port, address, message);
-    //    while(!ackReceived){}
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        //    while(!ackReceived){}
+//        try {
+//            Thread.sleep(1500);
+//        } catch (InterruptedException ex) {
+//            Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
     public void executeConstraint(Block constBlock) {
@@ -367,8 +419,8 @@ public class MainEditorController implements Initializable {
             case "cap_def1": {   //time
                 double v = Double.parseDouble(constBlock.getTextField().getText());
                 try {
-                    
-                    Thread.sleep((long)((v==0)?0:(v-1) * 1000));
+
+                    Thread.sleep((long) ((v == 0) ? 0 : (v) * 1000));
                 } catch (InterruptedException ex) {
                     Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -377,8 +429,8 @@ public class MainEditorController implements Initializable {
             case "cap_def2": {   //distance
                 double v = Double.parseDouble(constBlock.getTextField().getText());
                 try {
-                   Thread.sleep((long)((v==0)?0:(v-1) * 1000)); //should be changed to distance
-                    
+                    Thread.sleep((long) ((v == 0) ? 0 : (v/30) * 1000)); //should be changed to distance
+
 //                    Thread.sleep((v/speed) * 1000);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
@@ -387,15 +439,26 @@ public class MainEditorController implements Initializable {
             }
             case "cap_008": {    //no object
                 hValue = 0;
-                while(hValue<100){
+                while (hValue < 20) {
                     sendCmd(10, "h");
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 break;
             }
             case "cap_009": {    //see object
                 hValue = 1000;
-                while(hValue>100){
+                while (hValue > 20) {
+                    System.out.println("h value is - " + hValue);
                     sendCmd(10, "h");
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 break;
             }

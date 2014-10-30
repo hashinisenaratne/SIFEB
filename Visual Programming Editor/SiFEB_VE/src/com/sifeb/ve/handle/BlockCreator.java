@@ -30,7 +30,7 @@ import org.w3c.dom.NodeList;
 public class BlockCreator {
 
     FileHandler fileHandler;
-    MainEditorController mainEditor;
+    public MainEditorController mainEditor;
     ArrayList<String> messageQueue;
     ObservableList<String> observableList;
 
@@ -130,24 +130,28 @@ public class BlockCreator {
         while (messageQueue.size() > 0) {
 
             String readValue = messageQueue.get(0);
+
+            System.out.println("process Msg - " + readValue);
             if (readValue.contains("#")) {
                 char r = readValue.charAt(0);
-                if(r=='0'){
-                    mainEditor.ackReceived = true;
-                }else{
-                    Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
-                    dlg.setResizable(false);
-                    dlg.setIconifiable(false);
-                    dlg.setMasthead("Something went wrong!!!");
-                    dlg.setContent("I2C returned status "+r);
-                    dlg.getActions().add(Dialog.Actions.CLOSE);
-                }
+//                if (r == '0') {
+//                    mainEditor.ackReceived = true;
+//                } else {
+//                    Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
+//                    dlg.setResizable(false);
+//                    dlg.setIconifiable(false);
+//                    dlg.setMasthead("Something went wrong!!!");
+//                    dlg.setContent("I2C returned status " + r);
+//                    dlg.getActions().add(Dialog.Actions.CLOSE);
+//                }
             } else {
                 //  System.out.println(readValue);
                 char command = readValue.charAt(0);
-                String address = Integer.toString((int) readValue.charAt(1));
 
-     //       System.out.println("command - " + command + " add - " + address);
+                String address = Integer.toString((int) readValue.charAt(1));
+                System.out.println("address is - "+address);
+
+                //       System.out.println("command - " + command + " add - " + address);
                 switch (command) {
                     case 'c':
                         this.createBlock(address);
@@ -156,11 +160,13 @@ public class BlockCreator {
                         this.removeBlock(address);
                         break;
                     case 'h':
-                        this.mainEditor.hValue = Integer.parseInt(address);
+                        int tmpVl = Integer.parseInt(address);
+                        System.out.println("tmpVl - " + tmpVl);
+                        this.mainEditor.hValue = tmpVl;
+
                         break;
                 }
 
-                
             }
             messageQueue.remove(0);
         }
