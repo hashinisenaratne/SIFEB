@@ -1,0 +1,59 @@
+[PROJECT]
+Target=main.hex
+Processor_Text=PIC16F877A
+CCSVerions=5.008
+Compiler=PCM
+CCSVersion=5.008
+Development_Mode=
+ToolSuite=CCS
+[Target Data]
+FileList=main.c
+BuildTool=C-COMPILER
+OptionString=+FM
+AdditionalOptionString=
+BuildRequired=1
+[Directories]
+Include=C:\Program Files (x86)\PICC\Devices\;C:\Program Files (x86)\PICC\Drivers\;D:\sem 7\FYP\code\SIFEB\Module Codes\Prototype - Techno\Base PIC16f877A\
+Library=
+LinkerScript=
+[G:\sem7\Final Year Project\Programs\PICC\slave16f877a\main]
+Type=4
+[mru-list]
+1=main.c
+[Opened Files]
+1=main.c
+2=main.h
+3=
+4=
+[main.c]
+Type=4
+Path=
+FileList=
+BuildTool=
+OptionString=
+AdditionalOptionString=
+[defines]
+enabled=0
+chip=1
+D1=
+V1=
+[fileformats]
+forcecoff=1
+debug=4
+error=2
+object=0
+list=0
+scratch=0
+sta=1
+tre=1
+allerrors=1
+allwarnings=1
+stayupne=3
+stayupoe=0
+[Windows]
+0=0000 %S 0 0 796 451 3 0
+[CompilerVersion]
+Fixed=
+[Units]
+Count=1
+1=main (main)
