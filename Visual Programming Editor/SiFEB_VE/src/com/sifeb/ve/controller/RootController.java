@@ -87,8 +87,8 @@ public class RootController implements Initializable {
             blkCreator.createCapability("cap_def2", null);
 
             //for test only
-//            blkCreator.createBlock("10");
-//            blkCreator.createBlock("11");
+            blkCreator.createBlock("10");
+            blkCreator.createBlock("11");
             rootPane.setCenter(mainEditor);
         } catch (IOException e) {
             e.printStackTrace();
