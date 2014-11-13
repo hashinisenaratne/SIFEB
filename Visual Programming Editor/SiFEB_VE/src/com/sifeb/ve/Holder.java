@@ -8,6 +8,8 @@ package com.sifeb.ve;
 import com.sifeb.ve.controller.MainEditorController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -35,32 +37,33 @@ import javafx.scene.paint.Color;
  */
 public class Holder extends Pane {
 
-    private Image blockImg, crossImg, addImg;
-    private VBox actions;
+    private static final String CROSS_IMG = "/com/sifeb/ve/images/cross.png";
+    private static final String ADD_IMG = "/com/sifeb/ve/images/add.png";
+    private static final String BG_TOP_IMG = "/com/sifeb/ve/images/Holder_V_top.png";
+    private static final String BG_BOTTOM_IMG = "/com/sifeb/ve/images/Holder_V_bottom.png";
+    private static final String BG_MID_IMG = "/com/sifeb/ve/images/Holder_V_middle.png";
+
+    protected VBox actions;
     MainEditorController mainCtrl;
-    private Button exitBtn;
-    private Button addBtn;
+    protected final Button exitBtn;
+    protected final Button addBtn;
 
     public Holder(MainEditorController mainCtrl) {
 
-        this.setBlockImg(new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Holder_V.png")));
-        this.crossImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/cross.png"));
-        this.addImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/add.png"));
+        Image topImage = new Image(getClass().getResourceAsStream(Holder.BG_TOP_IMG));        
+        Image middleImge = new Image(getClass().getResourceAsStream(Holder.BG_MID_IMG));
+        Image bottomImage = new Image(getClass().getResourceAsStream(Holder.BG_BOTTOM_IMG));
+        this.setBackImage(topImage, bottomImage);
+
         this.exitBtn = new Button();
         this.addBtn = new Button();
-
         setExitButtonProperties(this.exitBtn);
-        setAddButtonProperties(addBtn);
-        changeBackgroundOnHoverUsingEvents(this.exitBtn);
+        setAddButtonProperties(this.addBtn);
+        
+        this.mainCtrl = mainCtrl;
+        setActions(middleImge);
         super.getChildren().add(this.exitBtn);
         super.getChildren().add(this.addBtn);
-
-        this.mainCtrl = mainCtrl;
-        this.actions = new VBox();
-        this.actions.relocate(16, 19);
-
-        super.getChildren().add(this.actions);
-
         setEventHandlers();
     }
 
@@ -109,70 +112,79 @@ public class Holder extends Pane {
 
     public void addElementToVbox(Node node) {
         actions.getChildren().add(node);
-
     }
 
     public VBox getActions() {
         return actions;
     }
 
-    public void setActions(VBox actions) {
-        this.actions = actions;
+    public void setActions(Image img) {
+        this.actions = new VBox();
+        BackgroundImage bckImg = new BackgroundImage(img, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        actions.setMinWidth(122);
+        actions.setMinHeight(60);
+        actions.setPadding(new Insets(0, 0, 0, 16));
+        this.actions.setBackground(new Background(bckImg));
+        this.actions.relocate(0, 19);
+        super.getChildren().add(this.actions);
     }
 
-    public void setBlockImg(Image blockImg) {
-        this.blockImg = blockImg;
-        super.setPrefWidth(this.blockImg.getWidth());
-        super.setMinHeight(this.blockImg.getHeight());
-        super.setBackground(new Background(new BackgroundImage(this.blockImg, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+    public final void setBackImage(Image topImage, Image bottomImage) {
+        super.setPrefWidth(topImage.getWidth());
+        super.setPadding(new Insets(20, 0, 8, 0));
+
+        BackgroundImage top = new BackgroundImage(topImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        BackgroundImage bottom = new BackgroundImage(bottomImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, new BackgroundPosition(Side.LEFT, 0, true, Side.BOTTOM, 0, true), BackgroundSize.DEFAULT);
+        super.setBackground(new Background(bottom,top));
     }
 
     private void setExitButtonProperties(Button button) {
-
+        Image crossImg = new Image(getClass().getResourceAsStream(Holder.CROSS_IMG));
         button.relocate(0, 0);
-        button.setGraphic(new ImageView(this.crossImg));
-        button.setMaxHeight(this.crossImg.getHeight());
-        button.setMaxWidth(this.crossImg.getWidth());
-        button.setMinHeight(this.crossImg.getHeight());
-        button.setMinWidth(this.crossImg.getWidth());
+        button.setGraphic(new ImageView(crossImg));
+        button.setMaxHeight(crossImg.getHeight());
+        button.setMaxWidth(crossImg.getWidth());
+        button.setMinHeight(crossImg.getHeight());
+        button.setMinWidth(crossImg.getWidth());
         button.setCursor(Cursor.HAND);
         button.setStyle("-fx-background-color: transparent");
 
         button.setOnAction((ActionEvent event) -> {
             this.mainCtrl.deleteHolder(this);
         });
-
+        setBtnHoverEffects(this.exitBtn);
     }
 
     private void setAddButtonProperties(Button button) {
 
+        Image addImg = new Image(getClass().getResourceAsStream(Holder.ADD_IMG));
         button.relocate(0, 20);
-        button.setGraphic(new ImageView(this.addImg));
-        button.setMaxHeight(this.addImg.getHeight());
-        button.setMaxWidth(this.addImg.getWidth());
-        button.setMinHeight(this.addImg.getHeight());
-        button.setMinWidth(this.addImg.getWidth());
+        button.setGraphic(new ImageView(addImg));
+        button.setMaxHeight(addImg.getHeight());
+        button.setMaxWidth(addImg.getWidth());
+        button.setMinHeight(addImg.getHeight());
+        button.setMinWidth(addImg.getWidth());
         button.setCursor(Cursor.HAND);
         button.setStyle("-fx-background-color: transparent");
 
         button.setOnAction((ActionEvent event) -> {
             this.mainCtrl.addHolderAfterMe(this, true);
         });
-
+        setBtnHoverEffects(this.addBtn);
     }
 
-    public void changeBackgroundOnHoverUsingEvents(final Node node) {
+    public void setBtnHoverEffects(final Button btn) {
 
-        node.setOnMouseEntered(new EventHandler<MouseEvent>() {
+        btn.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                node.setEffect(new DropShadow());
+                btn.setEffect(new DropShadow());
             }
         });
-        node.setOnMouseExited(new EventHandler<MouseEvent>() {
+        btn.setOnMouseExited(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                node.setEffect(null);
+                btn.setEffect(null);
             }
         });
     }

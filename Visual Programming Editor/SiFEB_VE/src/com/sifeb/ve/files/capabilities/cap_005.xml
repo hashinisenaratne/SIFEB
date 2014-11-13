@@ -1,1 +1,1 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?><Sifeb><Capability><Id>cap_005</Id><Names><en_US>Stop</en_US><si_LK>නවතින්න</si_LK></Names><Type>action</Type><Command/><HasTestButton>false</HasTestButton><Image>stop</Image></Capability></Sifeb>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?><Sifeb><Capability><Id>cap_005</Id><Names><en_US>Stop</en_US><si_LK>නවතින්න</si_LK></Names><Type>action</Type><Command>f</Command><HasTestButton>false</HasTestButton><Image>stop</Image></Capability></Sifeb>
