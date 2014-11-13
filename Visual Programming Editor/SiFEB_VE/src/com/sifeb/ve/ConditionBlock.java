@@ -8,12 +8,18 @@ package com.sifeb.ve;
 import com.sifeb.ve.controller.MainEditorController;
 import com.sun.javafx.beans.event.AbstractNotifyListener;
 import javafx.beans.Observable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -23,19 +29,30 @@ import javafx.scene.layout.VBox;
  */
 public class ConditionBlock extends Holder {
 
+    private static final String BG_TOP_IMG = "/com/sifeb/ve/images/Conditional_V_top.png";
+    private static final String BG_BOTTOM_IMG = "/com/sifeb/ve/images/Conditional_V_bottom.png";
+    private static final String BG_MID_IMG1 = "/com/sifeb/ve/images/Conditional_V_middle1.png";
+     private static final String BG_MID_IMG2 = "/com/sifeb/ve/images/Conditional_V_middle2.png";
+    
     private VBox condition;
 
     public ConditionBlock(MainEditorController mainCtrl) {
 
         super(mainCtrl);
-        super.setBlockImg(new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Conditional_V.png")));
-        super.getActions().relocate(16, 19);
-        
-        this.condition = new VBox();
-        this.condition.setPrefSize(90, 60);
-        this.condition.relocate(157, 19);
+        Image topImage = new Image(getClass().getResourceAsStream(ConditionBlock.BG_TOP_IMG));        
+        Image middleImage1 = new Image(getClass().getResourceAsStream(ConditionBlock.BG_MID_IMG1));
+        Image middleImage2 = new Image(getClass().getResourceAsStream(ConditionBlock.BG_MID_IMG2));
+        Image bottomImage = new Image(getClass().getResourceAsStream(ConditionBlock.BG_BOTTOM_IMG));
+        this.setBackImage(topImage, bottomImage);
+        setActions(middleImage1,middleImage2);
+        setCondition();
         super.getChildren().add(this.condition);
-
+        
+        super.getChildren().remove(super.exitBtn);
+        super.getChildren().remove(super.addBtn);
+        super.getChildren().add(super.exitBtn);
+        super.getChildren().add(super.addBtn);
+        
         addListeners();
     }
 
@@ -50,13 +67,27 @@ public class ConditionBlock extends Holder {
     public void removeCurrentCondition() {
         condition.getChildren().remove(0);
     }
+    
+    public void setActions(Image img1, Image img2) {
+        this.actions = new VBox();
+        BackgroundImage bckImg1 = new BackgroundImage(img1, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        BackgroundImage bckImg2 = new BackgroundImage(img2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        actions.setMinWidth(122);
+        actions.setMinHeight(60);
+        actions.setPadding(new Insets(0, 0, 0, 16));
+        this.actions.setBackground(new Background(bckImg2,bckImg1));
+        this.actions.relocate(0, 19);
+        super.getChildren().add(this.actions);
+    }
 
     public VBox getCondition() {
         return condition;
     }
 
-    public void setCondition(VBox condition) {
-        this.condition = condition;
+    public void setCondition() {
+        this.condition = new VBox();
+        this.condition.setPrefSize(90, 60);
+        this.condition.relocate(157, 19);
     }
 
     @Override
