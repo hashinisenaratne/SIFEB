@@ -9,6 +9,7 @@ import com.sifeb.ve.ActionBlock;
 import com.sifeb.ve.Block;
 import com.sifeb.ve.Capability;
 import com.sifeb.ve.ConditionBlock;
+import com.sifeb.ve.RepeatBlock;
 import com.sifeb.ve.Device;
 import com.sifeb.ve.FeedBackLogger;
 import com.sifeb.ve.Holder;
@@ -102,7 +103,7 @@ public class MainEditorController implements Initializable {
         editorBox.setSpacing(-15);
         editorBox.setAlignment(Pos.TOP_LEFT);
         addStartEndBlocks();
-        addBlockHolder(0, false);
+        addBlockHolder(0, false, false);
         //addBlock(devicesBox);
         //  addBlock(capabilityBox);
 
@@ -154,10 +155,13 @@ public class MainEditorController implements Initializable {
     }
 
     //use -1 as index to add a holder to the end
-    private void addBlockHolder(int index, boolean withCondition) {
+    private void addBlockHolder(int index, boolean withCondition, boolean repeat) {
         Holder holder = new Holder(this);
         if (withCondition) {
             holder = new ConditionBlock(this);
+        }
+        if (repeat){
+            holder = new RepeatBlock(this);
         }
         if (index >= 0) {
             holders.add(index, holder);
@@ -172,10 +176,32 @@ public class MainEditorController implements Initializable {
         String holderType = holder.getClass().getName();
         int index = holders.indexOf(holder);
         holders.remove(index);
-        if (holderType.contains("Holder")) {
-            addBlockHolder(index, true);
-        } else {
-            addBlockHolder(index, false);
+        if(node == null){
+            addBlockHolder(index, false, false);
+        } else if(holderType.contains("Holder")) {
+            if(node.getId().contains("control")){
+                addBlockHolder(index, false, true);
+            }
+            else if(node.getId().contains("actionC")){
+                addBlockHolder(index, true, false);
+            }
+        } else if(holderType.contains("ConditionBlock")) {
+            if(node.getId().contains("control")){
+                addBlockHolder(index, false, true);
+            }
+            else if(node.getId().contains("action")){
+                addBlockHolder(index, false, false);
+            }
+        } else if(holderType.contains("RepeatBlock")){
+            if(node.getId().contains("actionC")){
+                addBlockHolder(index, true, false);
+            }
+            else if(node.getId().contains("action")){
+                addBlockHolder(index, false, false);
+            }
+            else if(node.getId().contains("control")){
+                addBlockHolder(index, false, true);
+            }
         }
         if (node != null) {
             holders.get(index).addElementToVbox(node);
@@ -187,9 +213,9 @@ public class MainEditorController implements Initializable {
 
         //if it's the last holder
         if (index == (holders.size() - 1)) {
-            addBlockHolder(-1, false);
+            addBlockHolder(-1, false, false);
         } else if (fromBtn) {
-            addBlockHolder(index + 1, false);
+            addBlockHolder(index + 1, false, false);
         }
     }
 
