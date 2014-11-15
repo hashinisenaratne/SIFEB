@@ -87,7 +87,8 @@ public class Holder extends Pane {
                     if (draggedBlock.getCapability().getType().equals("action")) {
                         this.addElementToVbox(draggedBlock);
                         success = true;
-                    } else if (draggedBlock.getCapability().getType().equals("actionC")) {
+                    } else if (draggedBlock.getCapability().getType().equals("actionC")
+                             || draggedBlock.getCapability().getType().equals("control")) {
                         this.mainCtrl.changeHolderType(this, draggedBlock);
                         success = true;
                     }
@@ -100,7 +101,7 @@ public class Holder extends Pane {
         this.setOnDragOver((DragEvent event) -> {
             if (event.getDragboard().hasString()) {
                 String dbStr = event.getDragboard().getString();
-                if (dbStr.contains("action")) {
+                if (dbStr.contains("action") || dbStr.contains("control")) {
                     event.acceptTransferModes(TransferMode.COPY);
                 } else {
                     System.out.println("not allowed");

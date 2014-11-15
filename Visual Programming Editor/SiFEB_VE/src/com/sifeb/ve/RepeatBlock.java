@@ -25,26 +25,27 @@ import javafx.scene.layout.VBox;
 
 /**
  *
- * @author Pubudu
+ * @author Hashini
  */
-public class ConditionBlock extends Holder {
+public class RepeatBlock extends Holder {
 
-    private static final String BG_TOP_IMG = "/com/sifeb/ve/images/Conditional_V_top.png";
-    private static final String BG_BOTTOM_IMG = "/com/sifeb/ve/images/Conditional_V_bottom.png";
-    private static final String BG_MID_IMG1 = "/com/sifeb/ve/images/Conditional_V_middle1.png";
-     private static final String BG_MID_IMG2 = "/com/sifeb/ve/images/Conditional_V_middle2.png";
+    private static final String BG_TOP_IMG = "/com/sifeb/ve/images/Repeat_V_top.png";
+    private static final String BG_BOTTOM_IMG = "/com/sifeb/ve/images/Repeat_V_bottom.png";
+    private static final String BG_MID_IMG1 = "/com/sifeb/ve/images/Repeat_V_middle_1.png";
+    private static final String BG_MID_IMG2 = "/com/sifeb/ve/images/Repeat_V_middle_2.png";
     
     private VBox condition;
+    protected VBox holders;
 
-    public ConditionBlock(MainEditorController mainCtrl) {
+    public RepeatBlock(MainEditorController mainCtrl) {
 
         super(mainCtrl);
-        Image topImage = new Image(getClass().getResourceAsStream(ConditionBlock.BG_TOP_IMG));        
-        Image middleImage1 = new Image(getClass().getResourceAsStream(ConditionBlock.BG_MID_IMG1));
-        Image middleImage2 = new Image(getClass().getResourceAsStream(ConditionBlock.BG_MID_IMG2));
-        Image bottomImage = new Image(getClass().getResourceAsStream(ConditionBlock.BG_BOTTOM_IMG));
+        Image topImage = new Image(getClass().getResourceAsStream(RepeatBlock.BG_TOP_IMG));        
+        Image middleImage1 = new Image(getClass().getResourceAsStream(RepeatBlock.BG_MID_IMG1));
+        Image middleImage2 = new Image(getClass().getResourceAsStream(RepeatBlock.BG_MID_IMG2));
+        Image bottomImage = new Image(getClass().getResourceAsStream(RepeatBlock.BG_BOTTOM_IMG));
         this.setBackImage(topImage, bottomImage);
-        setActions(middleImage1,middleImage2);
+        setActions(middleImage1);
         setCondition();
         super.getChildren().add(this.condition);
         
@@ -53,9 +54,26 @@ public class ConditionBlock extends Holder {
         super.getChildren().add(super.exitBtn);
         super.getChildren().add(super.addBtn);
         
+        //super.setMinHeight(224);
+        
         addListeners();
+        
+        addRepeatContent(middleImage2);
     }
 
+    public void addRepeatContent(Image img){
+        this.holders = new VBox();
+        BackgroundImage bckImg = new BackgroundImage(img, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        holders.setMinWidth(122);
+        holders.setMinHeight(101);
+        //holders.setPadding(new Insets(1, 0, 0, 27));
+        this.holders.setBackground(new Background(bckImg));
+        this.holders.relocate(0, 95);        
+        //this.addElementToVbox(new Holder(mainCtrl));
+        //this.mainCtrl.addHolderAfterMe(this,false);
+        super.getChildren().add(this.holders);
+    }
+    
     public void addCondition(Node node) {
         condition.getChildren().add(node);
     }
@@ -68,14 +86,13 @@ public class ConditionBlock extends Holder {
         condition.getChildren().remove(0);
     }
     
-    public void setActions(Image img1, Image img2) {
+    public void setActions(Image img) {
         this.actions = new VBox();
-        BackgroundImage bckImg1 = new BackgroundImage(img1, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-        BackgroundImage bckImg2 = new BackgroundImage(img2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        BackgroundImage bckImg = new BackgroundImage(img, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         actions.setMinWidth(122);
         actions.setMinHeight(60);
-        actions.setPadding(new Insets(0, 0, 0, 16));
-        this.actions.setBackground(new Background(bckImg2,bckImg1));
+        actions.setPadding(new Insets(1, 0, 0, 27));
+        this.actions.setBackground(new Background(bckImg));
         this.actions.relocate(0, 19);
         super.getChildren().add(this.actions);
     }
@@ -87,7 +104,8 @@ public class ConditionBlock extends Holder {
     public void setCondition() {
         this.condition = new VBox();
         this.condition.setPrefSize(90, 60);
-        this.condition.relocate(157, 19);
+        this.condition.relocate(168, 19);
+        condition.setPadding(new Insets(1, 0, 0, 0));
     }
 
     @Override
@@ -102,7 +120,6 @@ public class ConditionBlock extends Holder {
                 Block draggedBlock = (Block) p.lookup("#" + nodeId);
 
                 if (draggedBlock != null) {
-                    this.mainCtrl.addHolderAfterMe(this,false);
                     if (p.getClass().getName().contains("ActionBlock")) {
                         Capability cap = draggedBlock.getCapability().cloneCapability();
                         draggedBlock = cap.getBlock();
@@ -110,11 +127,8 @@ public class ConditionBlock extends Holder {
                         ((Pane) p).getChildren().remove(draggedBlock);
                     }
                     String blockType = draggedBlock.getCapability().getType();
-                    if (blockType.equals("actionC")) {
-                        this.addElementToVbox(draggedBlock);
-                        success = true;
-                        this.mainCtrl.addHolderAfterMe(this,false);
-                    } else if (blockType.equals("action") || blockType.equals("control")) {
+                    if (blockType.equals("actionC") || blockType.equals("action")
+                            || blockType.equals("control")) {                        
                         super.mainCtrl.changeHolderType(this, draggedBlock);
                         success = true;
                     } else if (blockType.equals("sense") || blockType.equals("condition")) {

@@ -49,6 +49,7 @@ public final class Block extends Pane {
     private static final String ACTION_BCK_IMG = "/com/sifeb/ve/images/Action.png";
     private static final String SENSE_BCK_IMG = "/com/sifeb/ve/images/Sense.png";
     private static final String CONST_BCK_IMG = "/com/sifeb/ve/images/Constraint.png";
+    private static final String CONTROL_BCK_IMG = "/com/sifeb/ve/images/Control.png";
 
     public Block(Capability capability) {
 
@@ -104,6 +105,7 @@ public final class Block extends Pane {
         switch (type) {
             case "actionC":
             case "action":
+            case "control":
                 blockIcon.relocate(15, 2);
                 break;
             case "sense":
@@ -127,6 +129,9 @@ public final class Block extends Pane {
                 break;
             case "condition":
                 bckImage = new Image(getClass().getResourceAsStream(Block.CONST_BCK_IMG));
+                break;
+            case "control":
+                bckImage = new Image(getClass().getResourceAsStream(Block.CONTROL_BCK_IMG));
                 break;
             default:
                 bckImage = new Image(getClass().getResourceAsStream(Block.ACTION_BCK_IMG));
@@ -214,6 +219,7 @@ public final class Block extends Pane {
                 break;
             case "action":
             case "actionC":
+            case "control":
                 name.setFont(new Font(12));
                 name.setPrefSize(img.getWidth() * 0.9, 12);
                 name.setMaxWidth(img.getWidth() * 0.9);
