@@ -9,8 +9,6 @@ import com.sifeb.ve.controller.ComPortController;
 import com.sifeb.ve.resources.Strings;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.InnerShadow;
@@ -108,39 +106,39 @@ public class ActionBlock extends HBox {
         });
         btn.setOnAction((ActionEvent event) -> {
             Capability cp = this.block.getCapability();
-            Window owner = this.getScene().getWindow();
-            Alert dlg = new Alert(AlertType.CONFIRMATION, "");
-            dlg.initModality(Modality.APPLICATION_MODAL);
-            dlg.initOwner(owner); 
-            
-            dlg.setTitle("You do want dialogs right?");
-            dlg.setResizable(false);
-//            dlg.setIconifiable(false);
-            dlg.setGraphic(new ImageView(cp.getStaticImage()));
-            String optionalMasthead = "Just Checkin'";
-            dlg.getDialogPane().setContentText("I was a bit worried that you might not want them, so I wanted to double check.");
-            dlg.show();
-            dlg.resultProperty().addListener(o -> System.out.println("Result is: " + dlg.getResult()));
-            
-//            Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
+//            Window owner = this.getScene().getWindow();
+//            Alert dlg = new Alert(AlertType.CONFIRMATION, "");
+//            dlg.initModality(Modality.APPLICATION_MODAL);
+//            dlg.initOwner(owner); 
+//            
+//            dlg.setTitle("You do want dialogs right?");
 //            dlg.setResizable(false);
-//            dlg.setIconifiable(false);
+////            dlg.setIconifiable(false);
 //            dlg.setGraphic(new ImageView(cp.getStaticImage()));
-//            dlg.setMasthead(Strings.getString("message.liketocheck")+" \'"+cp.getCapName()+"\'?");
-//            Dialog.Actions.YES.textProperty().set(Strings.getString("btn.yes"));
-//            Dialog.Actions.NO.textProperty().set(Strings.getString("btn.no"));
-//            dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
-//
-//            Action response = dlg.show();
-//            System.out.println("response" + response);
-//
-//            if (response == Dialog.Actions.YES) {
-//                FeedBackLogger.sendGoodMessage(Strings.getString("message.testing") + " \'" + cp.getCapName() + "\' " + Strings.getString("message.capability") + "...");
-//                ComPortController.writeComPort(ComPortController.port, cp.getDevice().getAddress(), cp.getCommand());
-//            } else {
-//                FeedBackLogger.sendBadMessage(Strings.getString("message.testlater") + "...");
-//                // ... user cancelled, reset form to default
-//            }
+//            String optionalMasthead = "Just Checkin'";
+//            dlg.getDialogPane().setContentText("I was a bit worried that you might not want them, so I wanted to double check.");
+//            dlg.show();
+//            dlg.resultProperty().addListener(o -> System.out.println("Result is: " + dlg.getResult()));
+            
+            Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
+            dlg.setResizable(false);
+            dlg.setIconifiable(false);
+            dlg.setGraphic(new ImageView(cp.getStaticImage()));
+            dlg.setMasthead(Strings.getString("message.liketocheck")+" \'"+cp.getCapName()+"\'?");
+            Dialog.Actions.YES.textProperty().set(Strings.getString("btn.yes"));
+            Dialog.Actions.NO.textProperty().set(Strings.getString("btn.no"));
+            dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
+
+            Action response = dlg.show();
+            System.out.println("response" + response);
+
+            if (response == Dialog.Actions.YES) {
+                FeedBackLogger.sendGoodMessage(Strings.getString("message.testing") + " \'" + cp.getCapName() + "\' " + Strings.getString("message.capability") + "...");
+                ComPortController.writeComPort(ComPortController.port, cp.getDevice().getAddress(), cp.getCommand());
+            } else {
+                FeedBackLogger.sendBadMessage(Strings.getString("message.testlater") + "...");
+                // ... user cancelled, reset form to default
+            }
         });
     }
 
