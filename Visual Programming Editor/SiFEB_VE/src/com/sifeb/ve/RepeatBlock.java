@@ -9,6 +9,7 @@ import com.sifeb.ve.controller.MainEditorController;
 import com.sun.javafx.beans.event.AbstractNotifyListener;
 import javafx.beans.Observable;
 import javafx.geometry.Insets;
+import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
@@ -53,7 +54,7 @@ public class RepeatBlock extends Holder {
         addBtn.toFront();
         addListeners();
 
-        addRepeatContent(middleImage2,middleImage2);
+        addRepeatContent(middleImage1,middleImage2);
     }
 
     public final void setActions() {
@@ -64,16 +65,16 @@ public class RepeatBlock extends Holder {
         this.actions.relocate(11, 19.5);
     }
 
-    public void addRepeatContent(Image img1, Image img2) {
+    private void addRepeatContent(Image img1, Image img2) {
         this.holders = new VBox();
         this.holders.setSpacing(-15);
-        BackgroundImage bckImg1 = new BackgroundImage(img1, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        BackgroundImage bckImg1 = new BackgroundImage(img1, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, new BackgroundPosition(Side.LEFT, 0, false, Side.TOP, 1, false), BackgroundSize.DEFAULT);
         BackgroundImage bckImg2 = new BackgroundImage(img2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         holders.setMinWidth(122);
         holders.setMinHeight(101);
         holders.setPadding(new Insets(0, 0, 0, 10));
-        this.holders.setBackground(new Background(bckImg1,bckImg2));
-        this.holders.relocate(0, 90);
+        this.holders.setBackground(new Background(bckImg2,bckImg1));
+        this.holders.relocate(0, 94);
         ((Pane)this.holders).getChildren().add(new Holder(mainCtrl));
         //this.mainCtrl.addHolderAfterMe(this,false);
         super.getChildren().add(this.holders);
