@@ -28,6 +28,7 @@
                     </items>
                   </Menu>
                   <MenuItem fx:id="connectMenu" mnemonicParsing="false" text="Connect" />
+                  <MenuItem fx:id="libEditMenu" mnemonicParsing="false" text="Library Editor" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

@@ -33,47 +33,52 @@ public class RepeatBlock extends Holder {
     private static final String BG_BOTTOM_IMG = "/com/sifeb/ve/images/Repeat_V_bottom.png";
     private static final String BG_MID_IMG1 = "/com/sifeb/ve/images/Repeat_V_middle_1.png";
     private static final String BG_MID_IMG2 = "/com/sifeb/ve/images/Repeat_V_middle_2.png";
-    
+
     private VBox condition;
     protected VBox holders;
 
     public RepeatBlock(MainEditorController mainCtrl) {
 
         super(mainCtrl);
-        Image topImage = new Image(getClass().getResourceAsStream(RepeatBlock.BG_TOP_IMG));        
-        Image middleImage1 = new Image(getClass().getResourceAsStream(RepeatBlock.BG_MID_IMG1));
-        Image middleImage2 = new Image(getClass().getResourceAsStream(RepeatBlock.BG_MID_IMG2));
-        Image bottomImage = new Image(getClass().getResourceAsStream(RepeatBlock.BG_BOTTOM_IMG));
-        this.setBackImage(topImage, bottomImage);
-        setActions(middleImage1);
+        topImage = new Image(getClass().getResourceAsStream(RepeatBlock.BG_TOP_IMG));
+        middleImage1 = new Image(getClass().getResourceAsStream(RepeatBlock.BG_MID_IMG1));
+        middleImage2 = new Image(getClass().getResourceAsStream(RepeatBlock.BG_MID_IMG2));
+        bottomImage = new Image(getClass().getResourceAsStream(RepeatBlock.BG_BOTTOM_IMG));
+        setBackImage(topImage, bottomImage);
+        setActions();
         setCondition();
         super.getChildren().add(this.condition);
-        
-        super.getChildren().remove(super.exitBtn);
-        super.getChildren().remove(super.addBtn);
-        super.getChildren().add(super.exitBtn);
-        super.getChildren().add(super.addBtn);
-        
-        //super.setMinHeight(224);
-        
+
+        exitBtn.toFront();
+        addBtn.toFront();
         addListeners();
-        
-        addRepeatContent(middleImage2);
+
+        addRepeatContent(middleImage2,middleImage2);
     }
 
-    public void addRepeatContent(Image img){
+    public final void setActions() {
+        actions.setMinWidth(122);
+        actions.setMinHeight(60);
+        actions.setPadding(new Insets(0, 0, 0, 16));
+        this.actions.setBackground(Background.EMPTY);
+        this.actions.relocate(11, 19.5);
+    }
+
+    public void addRepeatContent(Image img1, Image img2) {
         this.holders = new VBox();
-        BackgroundImage bckImg = new BackgroundImage(img, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        this.holders.setSpacing(-15);
+        BackgroundImage bckImg1 = new BackgroundImage(img1, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        BackgroundImage bckImg2 = new BackgroundImage(img2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         holders.setMinWidth(122);
         holders.setMinHeight(101);
-        //holders.setPadding(new Insets(1, 0, 0, 27));
-        this.holders.setBackground(new Background(bckImg));
-        this.holders.relocate(0, 95);        
-        //this.addElementToVbox(new Holder(mainCtrl));
+        holders.setPadding(new Insets(0, 0, 0, 10));
+        this.holders.setBackground(new Background(bckImg1,bckImg2));
+        this.holders.relocate(0, 90);
+        ((Pane)this.holders).getChildren().add(new Holder(mainCtrl));
         //this.mainCtrl.addHolderAfterMe(this,false);
         super.getChildren().add(this.holders);
     }
-    
+
     public void addCondition(Node node) {
         condition.getChildren().add(node);
     }
@@ -85,23 +90,12 @@ public class RepeatBlock extends Holder {
     public void removeCurrentCondition() {
         condition.getChildren().remove(0);
     }
-    
-    public void setActions(Image img) {
-        this.actions = new VBox();
-        BackgroundImage bckImg = new BackgroundImage(img, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-        actions.setMinWidth(122);
-        actions.setMinHeight(60);
-        actions.setPadding(new Insets(1, 0, 0, 27));
-        this.actions.setBackground(new Background(bckImg));
-        this.actions.relocate(0, 19);
-        super.getChildren().add(this.actions);
-    }
 
     public VBox getCondition() {
         return condition;
     }
 
-    public void setCondition() {
+    public final void setCondition() {
         this.condition = new VBox();
         this.condition.setPrefSize(90, 60);
         this.condition.relocate(168, 19);
@@ -127,9 +121,15 @@ public class RepeatBlock extends Holder {
                         ((Pane) p).getChildren().remove(draggedBlock);
                     }
                     String blockType = draggedBlock.getCapability().getType();
-                    if (blockType.equals("actionC") || blockType.equals("action")
-                            || blockType.equals("control")) {                        
-                        super.mainCtrl.changeHolderType(this, draggedBlock);
+                    if (blockType.equals("control")) {
+                        this.addElementToVbox(draggedBlock);
+                        if (this.getActions().getChildren().size() > 1) {
+                            this.getActions().getChildren().remove(0);
+                        } 
+                        success = true;
+                        this.mainCtrl.addHolderAfterMe(this,(VBox) this.getParent(), false);
+                    } else if (blockType.equals("action") || blockType.equals("actionC")) {
+                        super.mainCtrl.changeHolderType(this,(VBox) this.getParent(), draggedBlock);
                         success = true;
                     } else if (blockType.equals("sense") || blockType.equals("condition")) {
                         if (this.hasCondition()) {
@@ -163,7 +163,7 @@ public class RepeatBlock extends Holder {
                 changeBackToHolder();
             }
         });
-        
+
         this.getCondition().getChildren().addListener(new AbstractNotifyListener() {
 
             @Override
@@ -177,7 +177,7 @@ public class RepeatBlock extends Holder {
         int numActions = super.getActions().getChildren().size();
         int numConditions = this.getCondition().getChildren().size();
         if ((numConditions == 0) && (numActions == 0)) {
-            super.mainCtrl.changeHolderType(this, null);
+            super.mainCtrl.changeHolderType(this,(VBox) this.getParent(), null);
         }
     }
 

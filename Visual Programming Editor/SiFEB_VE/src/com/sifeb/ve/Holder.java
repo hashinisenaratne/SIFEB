@@ -47,21 +47,27 @@ public class Holder extends Pane {
     MainEditorController mainCtrl;
     protected final Button exitBtn;
     protected final Button addBtn;
+    Image topImage;
+    Image middleImage1;
+    Image middleImage2;
+    Image bottomImage;
 
     public Holder(MainEditorController mainCtrl) {
 
-        Image topImage = new Image(getClass().getResourceAsStream(Holder.BG_TOP_IMG));        
-        Image middleImge = new Image(getClass().getResourceAsStream(Holder.BG_MID_IMG));
-        Image bottomImage = new Image(getClass().getResourceAsStream(Holder.BG_BOTTOM_IMG));
+        this.mainCtrl = mainCtrl;
+        topImage = new Image(getClass().getResourceAsStream(Holder.BG_TOP_IMG));
+        middleImage1 = new Image(getClass().getResourceAsStream(Holder.BG_MID_IMG));
+        middleImage2 = new Image(getClass().getResourceAsStream(Holder.BG_MID_IMG));
+        bottomImage = new Image(getClass().getResourceAsStream(Holder.BG_BOTTOM_IMG));
+
         this.setBackImage(topImage, bottomImage);
+        this.setActions(middleImage1, middleImage2);
 
         this.exitBtn = new Button();
         this.addBtn = new Button();
         setExitButtonProperties(this.exitBtn);
         setAddButtonProperties(this.addBtn);
-        
-        this.mainCtrl = mainCtrl;
-        setActions(middleImge);
+
         super.getChildren().add(this.exitBtn);
         super.getChildren().add(this.addBtn);
         setEventHandlers();
@@ -77,7 +83,7 @@ public class Holder extends Pane {
                 Block draggedBlock = (Block) p.lookup("#" + nodeId);
 
                 if (draggedBlock != null) {
-                    this.mainCtrl.addHolderAfterMe(this, false);
+                    this.mainCtrl.addHolderAfterMe(this, (VBox) this.getParent(), false);
                     if (p.getClass().getName().contains("ActionBlock")) {
                         Capability cap = draggedBlock.getCapability().cloneCapability();
                         draggedBlock = cap.getBlock();
@@ -88,8 +94,8 @@ public class Holder extends Pane {
                         this.addElementToVbox(draggedBlock);
                         success = true;
                     } else if (draggedBlock.getCapability().getType().equals("actionC")
-                             || draggedBlock.getCapability().getType().equals("control")) {
-                        this.mainCtrl.changeHolderType(this, draggedBlock);
+                            || draggedBlock.getCapability().getType().equals("control")) {
+                        this.mainCtrl.changeHolderType(this, (VBox) this.getParent(), draggedBlock);
                         success = true;
                     }
                 }
@@ -119,13 +125,14 @@ public class Holder extends Pane {
         return actions;
     }
 
-    public void setActions(Image img) {
+    public final void setActions(Image img1, Image img2) {
         this.actions = new VBox();
-        BackgroundImage bckImg = new BackgroundImage(img, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        BackgroundImage bckImg1 = new BackgroundImage(img1, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        BackgroundImage bckImg2 = new BackgroundImage(img2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         actions.setMinWidth(122);
         actions.setMinHeight(60);
         actions.setPadding(new Insets(0, 0, 0, 16));
-        this.actions.setBackground(new Background(bckImg));
+        this.actions.setBackground(new Background(bckImg2, bckImg1));
         this.actions.relocate(0, 19);
         super.getChildren().add(this.actions);
     }
@@ -136,7 +143,7 @@ public class Holder extends Pane {
 
         BackgroundImage top = new BackgroundImage(topImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         BackgroundImage bottom = new BackgroundImage(bottomImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, new BackgroundPosition(Side.LEFT, 0, true, Side.BOTTOM, 0, true), BackgroundSize.DEFAULT);
-        super.setBackground(new Background(bottom,top));
+        super.setBackground(new Background(bottom, top));
     }
 
     private void setExitButtonProperties(Button button) {
@@ -151,7 +158,7 @@ public class Holder extends Pane {
         button.setStyle("-fx-background-color: transparent");
 
         button.setOnAction((ActionEvent event) -> {
-            this.mainCtrl.deleteHolder(this);
+            this.mainCtrl.deleteHolder(this,(VBox) this.getParent());
         });
         setBtnHoverEffects(this.exitBtn);
     }
@@ -169,7 +176,7 @@ public class Holder extends Pane {
         button.setStyle("-fx-background-color: transparent");
 
         button.setOnAction((ActionEvent event) -> {
-            this.mainCtrl.addHolderAfterMe(this, true);
+            this.mainCtrl.addHolderAfterMe(this,(VBox) this.getParent(), true);
         });
         setBtnHoverEffects(this.addBtn);
     }

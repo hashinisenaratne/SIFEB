@@ -32,27 +32,24 @@ public class ConditionBlock extends Holder {
     private static final String BG_TOP_IMG = "/com/sifeb/ve/images/Conditional_V_top.png";
     private static final String BG_BOTTOM_IMG = "/com/sifeb/ve/images/Conditional_V_bottom.png";
     private static final String BG_MID_IMG1 = "/com/sifeb/ve/images/Conditional_V_middle1.png";
-     private static final String BG_MID_IMG2 = "/com/sifeb/ve/images/Conditional_V_middle2.png";
-    
+    private static final String BG_MID_IMG2 = "/com/sifeb/ve/images/Conditional_V_middle2.png";
+
     private VBox condition;
 
     public ConditionBlock(MainEditorController mainCtrl) {
 
         super(mainCtrl);
-        Image topImage = new Image(getClass().getResourceAsStream(ConditionBlock.BG_TOP_IMG));        
-        Image middleImage1 = new Image(getClass().getResourceAsStream(ConditionBlock.BG_MID_IMG1));
-        Image middleImage2 = new Image(getClass().getResourceAsStream(ConditionBlock.BG_MID_IMG2));
-        Image bottomImage = new Image(getClass().getResourceAsStream(ConditionBlock.BG_BOTTOM_IMG));
-        this.setBackImage(topImage, bottomImage);
-        setActions(middleImage1,middleImage2);
+        topImage = new Image(getClass().getResourceAsStream(ConditionBlock.BG_TOP_IMG));
+        middleImage1 = new Image(getClass().getResourceAsStream(ConditionBlock.BG_MID_IMG1));
+        middleImage2 = new Image(getClass().getResourceAsStream(ConditionBlock.BG_MID_IMG2));
+        bottomImage = new Image(getClass().getResourceAsStream(ConditionBlock.BG_BOTTOM_IMG));
+        setBackImage(topImage, bottomImage);
+        setActions(middleImage1, middleImage2);
         setCondition();
         super.getChildren().add(this.condition);
-        
-        super.getChildren().remove(super.exitBtn);
-        super.getChildren().remove(super.addBtn);
-        super.getChildren().add(super.exitBtn);
-        super.getChildren().add(super.addBtn);
-        
+
+        exitBtn.toFront();
+        addBtn.toFront();
         addListeners();
     }
 
@@ -67,24 +64,12 @@ public class ConditionBlock extends Holder {
     public void removeCurrentCondition() {
         condition.getChildren().remove(0);
     }
-    
-    public void setActions(Image img1, Image img2) {
-        this.actions = new VBox();
-        BackgroundImage bckImg1 = new BackgroundImage(img1, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-        BackgroundImage bckImg2 = new BackgroundImage(img2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-        actions.setMinWidth(122);
-        actions.setMinHeight(60);
-        actions.setPadding(new Insets(0, 0, 0, 16));
-        this.actions.setBackground(new Background(bckImg2,bckImg1));
-        this.actions.relocate(0, 19);
-        super.getChildren().add(this.actions);
-    }
 
     public VBox getCondition() {
         return condition;
     }
 
-    public void setCondition() {
+    public final void setCondition() {
         this.condition = new VBox();
         this.condition.setPrefSize(90, 60);
         this.condition.relocate(157, 19);
@@ -102,7 +87,7 @@ public class ConditionBlock extends Holder {
                 Block draggedBlock = (Block) p.lookup("#" + nodeId);
 
                 if (draggedBlock != null) {
-                    this.mainCtrl.addHolderAfterMe(this,false);
+                    this.mainCtrl.addHolderAfterMe(this, (VBox) this.getParent(), false);
                     if (p.getClass().getName().contains("ActionBlock")) {
                         Capability cap = draggedBlock.getCapability().cloneCapability();
                         draggedBlock = cap.getBlock();
@@ -113,9 +98,9 @@ public class ConditionBlock extends Holder {
                     if (blockType.equals("actionC")) {
                         this.addElementToVbox(draggedBlock);
                         success = true;
-                        this.mainCtrl.addHolderAfterMe(this,false);
+                        this.mainCtrl.addHolderAfterMe(this, (VBox) this.getParent(), false);
                     } else if (blockType.equals("action") || blockType.equals("control")) {
-                        super.mainCtrl.changeHolderType(this, draggedBlock);
+                        super.mainCtrl.changeHolderType(this, (VBox) this.getParent(), draggedBlock);
                         success = true;
                     } else if (blockType.equals("sense") || blockType.equals("condition")) {
                         if (this.hasCondition()) {
@@ -149,7 +134,7 @@ public class ConditionBlock extends Holder {
                 changeBackToHolder();
             }
         });
-        
+
         this.getCondition().getChildren().addListener(new AbstractNotifyListener() {
 
             @Override
@@ -163,7 +148,7 @@ public class ConditionBlock extends Holder {
         int numActions = super.getActions().getChildren().size();
         int numConditions = this.getCondition().getChildren().size();
         if ((numConditions == 0) && (numActions == 0)) {
-            super.mainCtrl.changeHolderType(this, null);
+            super.mainCtrl.changeHolderType(this, (VBox) this.getParent(), null);
         }
     }
 

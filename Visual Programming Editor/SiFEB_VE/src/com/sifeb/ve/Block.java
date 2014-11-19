@@ -6,7 +6,6 @@
 package com.sifeb.ve;
 
 import javafx.event.ActionEvent;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
@@ -15,7 +14,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
-import javafx.scene.effect.Bloom;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -184,7 +182,9 @@ public final class Block extends Pane {
         item1.setOnAction((ActionEvent e) -> {
             ((Pane) this.getParent()).getChildren().remove(this);
             Capability cp = this.getCapability();
-            cp.getDevice().getCapabilities().remove(cp);
+            if (cp.getDevice() != null) {
+                cp.getDevice().getCapabilities().remove(cp);
+            }
         });
 
         contextMenu.getItems().add(item1);
@@ -195,7 +195,7 @@ public final class Block extends Pane {
 
                 if (this.getParent().getClass().getName().contains("ActionBlock") == false) {
 
-                    if (capability.getType().contains("action") || capability.getType().equals("sense") || capability.getType().equals("condition")) {
+                    if (capability.getType().contains("action") || capability.getType().equals("sense") || capability.getType().equals("condition") || capability.getType().equals("control")) {
                         contextMenu.show(this, event.getSceneX(), event.getSceneY());
                     }
 
