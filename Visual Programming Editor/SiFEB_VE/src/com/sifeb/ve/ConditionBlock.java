@@ -8,18 +8,12 @@ package com.sifeb.ve;
 import com.sifeb.ve.controller.MainEditorController;
 import com.sun.javafx.beans.event.AbstractNotifyListener;
 import javafx.beans.Observable;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -42,8 +36,8 @@ public class ConditionBlock extends Holder {
         topImage = new Image(getClass().getResourceAsStream(ConditionBlock.BG_TOP_IMG));
         middleImage1 = new Image(getClass().getResourceAsStream(ConditionBlock.BG_MID_IMG1));
         middleImage2 = new Image(getClass().getResourceAsStream(ConditionBlock.BG_MID_IMG2));
-        bottomImage = new Image(getClass().getResourceAsStream(ConditionBlock.BG_BOTTOM_IMG));
-        setBackImage(topImage, bottomImage);
+        bottomImage1 = new Image(getClass().getResourceAsStream(ConditionBlock.BG_BOTTOM_IMG));
+        setBackImage(topImage, bottomImage1);
         setActions(middleImage1, middleImage2);
         setCondition();
         super.getChildren().add(this.condition);
@@ -99,7 +93,7 @@ public class ConditionBlock extends Holder {
                         this.addElementToVbox(draggedBlock);
                         success = true;
                         this.mainCtrl.addHolderAfterMe(this, (VBox) this.getParent(), false);
-                    } else if (blockType.equals("action") || blockType.equals("control")) {
+                    } else if (blockType.equals("action") || blockType.equals("control") || blockType.equals("ifelse")) {
                         super.mainCtrl.changeHolderType(this, (VBox) this.getParent(), draggedBlock);
                         success = true;
                     } else if (blockType.equals("sense") || blockType.equals("condition")) {

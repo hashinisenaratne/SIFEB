@@ -87,6 +87,7 @@ public class RootController implements Initializable {
             blkCreator.createCapability("cap_def1", null);
             blkCreator.createCapability("cap_def2", null);
             blkCreator.createCapability("cap_def3", null);
+            blkCreator.createCapability("cap_def4", null);
 
             //for test only
             // blkCreator.createBlock("10");
