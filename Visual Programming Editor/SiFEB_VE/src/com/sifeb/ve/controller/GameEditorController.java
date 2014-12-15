@@ -42,4 +42,6 @@ public class GameEditorController extends MainEditorController  {
         gameText.setText("flasklfjkasl fksj fkladj klaj fkljasdklfj \nadklsfjkladjfkljd fkl alfkj afkla jfklajl \nadklsfjkladjfkljd fkl alfkj afkla jfklajl \nadklsfjkladjfkljd fkl alfkj afkla jfklajl \nadklsfjkladjfkljd fkl alfkj afkla jfklajl \nadklsfjkladjfkljd fkl alfkj afkla jfklajl \nadklsfjkladjfkljd fkl alfkj afkla jfklajl \nadklsfjkladjfkljd fkl alfkj afkla jfklajl \nadklsfjkladjfkljd fkl alfkj afkla jfklajl \nadklsfjkladjfkljd fkl alfkj afkla jfklajl \nadklsfjkladjfkljd fkl alfkj afkla jfklajl");
     }
     
+    ///public void add
+    
 }

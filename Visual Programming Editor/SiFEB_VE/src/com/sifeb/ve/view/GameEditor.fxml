@@ -67,7 +67,7 @@
                                         <ImageView fx:id="fbRight" fitHeight="100.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
                                     </children>
                                 </HBox>
-                        <SplitPane dividerPositions="0.8" layoutY="113.0" prefHeight="429.0" prefWidth="386.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+                        <SplitPane dividerPositions="0.2109375" layoutY="113.0" prefHeight="429.0" prefWidth="386.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
                            <items>
                               <ScrollPane fitToWidth="true" hbarPolicy="ALWAYS" pannable="true" prefHeight="439.0" prefWidth="216.0" vbarPolicy="ALWAYS">
                                 <content>
@@ -75,9 +75,16 @@
                                        <children>
                                           <Pane fx:id="editorPane" layoutY="-38.0" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <children>
-                                                <VBox fx:id="editorBox" fillWidth="false">
+                                                <VBox fx:id="mainBox">
+                                                   <children>
+                                                      <VBox fx:id="editorBox" fillWidth="false">
+                                                         <padding>
+                                                            <Insets left="40.0" right="40.0" />
+                                                         </padding>
+                                                      </VBox>
+                                                   </children>
                                                    <padding>
-                                                      <Insets bottom="20.0" left="40.0" right="40.0" top="20.0" />
+                                                      <Insets bottom="20.0" top="20.0" />
                                                    </padding>
                                                 </VBox>
                                              </children>
