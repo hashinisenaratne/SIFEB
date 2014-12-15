@@ -125,7 +125,14 @@ public class IfBlock extends Holder {
     public VBox getCondition() {
         return condition;
     }
+    
+    public VBox getIfHolders() {
+        return ifHolders;
+    }
 
+    public VBox getElseHolders() {
+        return elseHolders;
+    }
     public final void setCondition() {
         this.condition = new VBox();
         this.condition.setPrefSize(90, 60);

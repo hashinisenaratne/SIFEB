@@ -95,6 +95,10 @@ public class RepeatBlock extends Holder {
     public VBox getCondition() {
         return condition;
     }
+        
+    public VBox getHolders() {
+        return holders;
+    }
 
     public final void setCondition() {
         this.condition = new VBox();

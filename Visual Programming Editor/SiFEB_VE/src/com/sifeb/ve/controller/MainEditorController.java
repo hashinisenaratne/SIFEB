@@ -362,65 +362,135 @@ public class MainEditorController implements Initializable {
             // FeedBackLogger.sendGoodMessage(Strings.getString("message.testing") + " \'" + cp.getCapName() + "\' " + Strings.getString("message.capability") + "...");
             // ComPortController.writeComPort(ComPortController.port, cp.getDevice().getAddress(), cp.getCommand());
             FeedBackLogger.sendGoodMessage("Program is running!");
-//            devicesBox.setDisable(true);
-//            capabilityBox.setDisable(true);
-//            editorBox.setDisable(true);
-//
-//            int numSteps = holders.size();
-//            for (int i = 0; i < numSteps; i++) {
-//                Holder h = holders.get(i);
-//                h.toggleHighlight(true);
-//                if (h.getClass().getName().contains("ConditionBlock")) {
-//                    ConditionBlock cb = (ConditionBlock) holders.get(i);
-//                    if ((cb.getActions().getChildren().size() == 0) || (cb.getCondition().getChildren().size() == 0)) {
-//                        h.toggleHighlight(false);
-//                        continue;
-//                    }
-//                    Block acBlock = (Block) cb.getActions().getChildren().get(0);
-//                    int address = acBlock.getCapability().getDevice().getAddress();
-//                    String cmd = acBlock.getCapability().getCommand();
-//                    sendCmd(address, cmd.toUpperCase());
-//
-//                    Block conBlock = (Block) cb.getCondition().getChildren().get(0);
-//                    executeConstraint(conBlock);
-//
-//                    sendCmd(10, "f");
-//                    try {
-//                        Thread.sleep(500);
-//
-//                    } catch (InterruptedException ex) {
-//                        Logger.getLogger(MainEditorController.class
-//                                .getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                } else {
-//                    if (h.getActions().getChildren().size() == 0) {
-//                        h.toggleHighlight(false);
-//                        continue;
-//                    }
-//                    Block acBlock = (Block) h.getActions().getChildren().get(0);
-//                    int address = acBlock.getCapability().getDevice().getAddress();
-//                    String cmd = acBlock.getCapability().getCommand();
-//                    sendCmd(address, cmd);
-//                    try {
-//                        Thread.sleep(500);
-//
-//                    } catch (InterruptedException ex) {
-//                        Logger.getLogger(MainEditorController.class
-//                                .getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                }
-//                h.toggleHighlight(false);
-//            }
-//            devicesBox.setDisable(false);
-//            capabilityBox.setDisable(false);
-//            editorBox.setDisable(false);
-//            FeedBackLogger.sendGoodMessage("Program Finished!");
-//
+            devicesBox.setDisable(true);
+            capabilityBox.setDisable(true);
+            editorBox.setDisable(true);
+
+            int numSteps = editorBox.getChildren().size();
+            for (int i = 0; i < numSteps; i++) {
+                Holder h = (Holder)editorBox.getChildren().get(i);
+                h.toggleHighlight(true);
+                if (h.getClass().getName().contains("ConditionBlock")) {
+                    ConditionBlock cb = (ConditionBlock) editorBox.getChildren().get(i);
+                    runConditionBlock(cb);
+                } else if (h.getClass().getName().contains("RepeatBlock")) {
+                    RepeatBlock rb = (RepeatBlock) editorBox.getChildren().get(i);
+                    runRepeatBlock(rb);
+                } else if(h.getClass().getName().contains("IfBlock")){
+                    IfBlock ib = (IfBlock) editorBox.getChildren().get(i);
+                    runIfBlock(ib);
+                } else {
+                    runBlock(h);
+                }
+                h.toggleHighlight(false);
+            }
+            devicesBox.setDisable(false);
+            capabilityBox.setDisable(false);
+            editorBox.setDisable(false);
+            FeedBackLogger.sendGoodMessage("Program Finished!");
+
         } else {
             FeedBackLogger.sendBadMessage(Strings.getString("message.testlater") + "...");
             // ... user cancelled, reset form to default
         }
-
+    }
+    
+    public void runConditionBlock(ConditionBlock cb){
+        if ((cb.getActions().getChildren().size() == 0) || (cb.getCondition().getChildren().size() == 0)) {
+            cb.toggleHighlight(false);
+            return;
+        }
+        Block acBlock = (Block) cb.getActions().getChildren().get(0);
+        int address = acBlock.getCapability().getDevice().getAddress();
+        String cmd = acBlock.getCapability().getCommand();
+        sendCmd(address, cmd.toUpperCase());
+        Block conBlock = (Block) cb.getCondition().getChildren().get(0);
+        executeConstraint(conBlock);
+        sendCmd(10, "f");                                               // need to generalize to make neutral behaviours
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MainEditorController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void runBlock(Holder h){
+        if (h.getActions().getChildren().size() == 0) {
+            h.toggleHighlight(false);
+            return;
+        }
+        Block acBlock = (Block) h.getActions().getChildren().get(0);
+        int address = acBlock.getCapability().getDevice().getAddress();
+        String cmd = acBlock.getCapability().getCommand();
+        sendCmd(address, cmd);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MainEditorController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void runRepeatBlock(RepeatBlock rb){
+        if ((rb.getActions().getChildren().size() == 0) || (rb.getCondition().getChildren().size() == 0)
+                || rb.getHolders().getChildren().size() == 0) {
+            rb.toggleHighlight(false);
+            return;
+        }
+        int numRepeatSteps = rb.getHolders().getChildren().size();
+        for (int j = 0; j < numRepeatSteps; j++) {
+            Holder rh = (Holder)rb.getHolders().getChildren().get(j);
+            rh.toggleHighlight(true);
+            if (rh.getClass().getName().contains("ConditionBlock")) {
+                ConditionBlock cb = (ConditionBlock) rb.getHolders().getChildren().get(j);
+                runConditionBlock(cb);
+            } else if (rh.getClass().getName().contains("RepeatBlock")) {
+                RepeatBlock rb1 = (RepeatBlock) rb.getHolders().getChildren().get(j);
+                runRepeatBlock(rb1);
+            } else if(rh.getClass().getName().contains("IfBlock")){
+                IfBlock ib = (IfBlock) rb.getHolders().getChildren().get(j);
+                runIfBlock(ib);
+            } else {
+                runBlock(rh);
+            }
+        }
+    }
+    
+    public void runIfBlock(IfBlock ib){
+        if ((ib.getActions().getChildren().size() == 0) || (ib.getCondition().getChildren().size() == 0)
+                || ib.getIfHolders().getChildren().size() == 0) {
+            ib.toggleHighlight(false);
+            return;
+        }
+        Block conBlock = (Block) ib.getCondition().getChildren().get(0);
+        boolean condition = getConstraint(conBlock);
+        int numSteps;
+        VBox ieVbox;
+        if(condition){
+            numSteps = ib.getIfHolders().getChildren().size();
+            ieVbox = ib.getIfHolders();
+        }
+        else{
+            numSteps = ib.getElseHolders().getChildren().size();
+            ieVbox = ib.getElseHolders();
+        }
+        for (int j = 0; j < numSteps; j++) {
+            Holder ieh = (Holder)ieVbox.getChildren().get(j);
+            ieh.toggleHighlight(true);
+            if (ieh.getClass().getName().contains("ConditionBlock")) {
+                ConditionBlock cb = (ConditionBlock) ieVbox.getChildren().get(j);
+                runConditionBlock(cb);
+            } else if (ieh.getClass().getName().contains("RepeatBlock")) {
+                RepeatBlock rb = (RepeatBlock) ieVbox.getChildren().get(j);
+                runRepeatBlock(rb);
+            } else if(ieh.getClass().getName().contains("IfBlock")){
+                IfBlock ib1 = (IfBlock) ieVbox.getChildren().get(j);
+                runIfBlock(ib1);
+            } else {
+                runBlock(ieh);
+            }
+        }
     }
 
     public void sendCmd(int address, String message) {
@@ -491,6 +561,33 @@ public class MainEditorController implements Initializable {
                 break;
             }
         }
+    }
+    
+    public boolean getConstraint(Block constBlock) {    // need to generalize to test constraints
+        String constID = constBlock.getCapability().getCapID();
+        switch (constID) {
+            case "cap_008": {    //no object
+                hValue = 0;
+                sendCmd(10, "h");   //where does h get update?
+                if(hValue > 20){
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            case "cap_009": {    //see object
+                hValue = 1000;
+                sendCmd(10, "h");   //where does h get update?
+                if(hValue < 20) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 
     public ImageView getFbFace() {
