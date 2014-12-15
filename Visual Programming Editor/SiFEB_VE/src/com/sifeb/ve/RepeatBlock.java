@@ -44,8 +44,8 @@ public class RepeatBlock extends Holder {
         topImage = new Image(getClass().getResourceAsStream(RepeatBlock.BG_TOP_IMG));
         middleImage1 = new Image(getClass().getResourceAsStream(RepeatBlock.BG_MID_IMG1));
         middleImage2 = new Image(getClass().getResourceAsStream(RepeatBlock.BG_MID_IMG2));
-        bottomImage = new Image(getClass().getResourceAsStream(RepeatBlock.BG_BOTTOM_IMG));
-        setBackImage(topImage, bottomImage);
+        bottomImage1 = new Image(getClass().getResourceAsStream(RepeatBlock.BG_BOTTOM_IMG));
+        setBackImage(topImage, bottomImage1);
         setActions();
         setCondition();
         super.getChildren().add(this.condition);
@@ -129,7 +129,7 @@ public class RepeatBlock extends Holder {
                         } 
                         success = true;
                         this.mainCtrl.addHolderAfterMe(this,(VBox) this.getParent(), false);
-                    } else if (blockType.equals("action") || blockType.equals("actionC")) {
+                    } else if (blockType.equals("action") || blockType.equals("actionC") || blockType.equals("ifelse")) {
                         super.mainCtrl.changeHolderType(this,(VBox) this.getParent(), draggedBlock);
                         success = true;
                     } else if (blockType.equals("sense") || blockType.equals("condition")) {

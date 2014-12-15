@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.web.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sifeb.ve.controller.GameEditorController">
+    <children>
+        <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <center>
+                <SplitPane dividerPositions="0.14411027568922305, 0.40476190476190477" BorderPane.alignment="CENTER">
+                    <items>
+                        <AnchorPane maxWidth="200.0" minWidth="200.0">
+                            <children>
+                                <Label fx:id="haveLabel" alignment="CENTER" text="I Have" textAlignment="CENTER" textFill="#9e0f7a" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <font>
+                                        <Font name="Comic Sans MS" size="20.0" />
+                                    </font>
+                                </Label>
+                                <ScrollPane prefHeight="400.0" prefWidth="200.0" styleClass="blockPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+                                    <content>
+                                        <VBox fx:id="devicesBox" prefWidth="200.0" spacing="10.0">
+                                            <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </padding>
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
+                            </children>
+                        </AnchorPane>
+                        <AnchorPane maxWidth="200.0" minWidth="200.0">
+                            <children>
+                                <Label fx:id="doLabel" alignment="CENTER" text="I can Do" textAlignment="CENTER" textFill="#9e0f7a" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <font>
+                                        <Font name="Comic Sans MS" size="20.0" />
+                                    </font>
+                                </Label>
+                                <ScrollPane prefHeight="400.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+                                    <content>
+                                        <VBox fx:id="capabilityBox" prefWidth="200.0" spacing="10.0">
+                                            <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </padding>
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
+                            </children>
+                        </AnchorPane>
+                        <AnchorPane>
+                            <children>
+                                <HBox fx:id="hintBox" prefHeight="100.0" prefWidth="389.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <children>
+                                        <ImageView fx:id="fbFace" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                                        <ImageView fx:id="fbLeft" fitHeight="100.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                                        <Label fx:id="fbText" contentDisplay="CENTER" prefHeight="100.0" textFill="#000000" wrapText="true" HBox.hgrow="SOMETIMES">
+                                            <font>
+                                                <Font size="20.0" /> 
+                                            </font>
+                                        </Label>
+                                        <ImageView fx:id="fbRight" fitHeight="100.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
+                                    </children>
+                                </HBox>
+                        <SplitPane dividerPositions="0.2109375" layoutY="113.0" prefHeight="429.0" prefWidth="386.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+                           <items>
+                              <ScrollPane fitToWidth="true" hbarPolicy="ALWAYS" pannable="true" prefHeight="439.0" prefWidth="216.0" vbarPolicy="ALWAYS">
+                                <content>
+                                  <AnchorPane minHeight="800.0" minWidth="0.0" prefHeight="800.0" prefWidth="600.0">
+                                       <children>
+                                          <Pane fx:id="editorPane" layoutY="-38.0" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <VBox fx:id="mainBox">
+                                                   <children>
+                                                      <VBox fx:id="editorBox" fillWidth="false">
+                                                         <padding>
+                                                            <Insets left="40.0" right="40.0" />
+                                                         </padding>
+                                                      </VBox>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="20.0" top="20.0" />
+                                                   </padding>
+                                                </VBox>
+                                             </children>
+                                          </Pane>
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </ScrollPane>
+                              <Pane maxWidth="300.0" minWidth="300.0" prefHeight="439.0" prefWidth="177.0">
+                                 <children>
+                                    <Button fx:id="prevBtn" layoutX="49.0" layoutY="265.0" mnemonicParsing="false" text="Prev" />
+                                    <Button fx:id="nextBtn" layoutX="223.0" layoutY="265.0" mnemonicParsing="false" text="Next" />
+                                    <ProgressBar fx:id="progressBar" layoutX="49.0" layoutY="341.0" prefHeight="18.0" prefWidth="215.0" progress="0.0" />
+                                    <Label fx:id="progressLabel" layoutX="49.0" layoutY="310.0" text="Progress" />
+                                    <TextArea fx:id="gameText" layoutX="49.0" layoutY="146.0" prefHeight="95.0" prefWidth="216.0" />
+                                    <ImageView fx:id="gameImg" fitHeight="74.0" fitWidth="89.0" layoutX="106.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </Pane>
+                           </items>
+                        </SplitPane>
+                            </children>
+                        </AnchorPane>
+                    </items>
+                </SplitPane>
+            </center>
+            <top>
+                <HBox fx:id="btnPanel" alignment="CENTER" spacing="20.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Button fx:id="addDeviceBtn" mnemonicParsing="false" text="Add Device" visible="false" />
+                        <Button fx:id="addCapBtn" layoutX="425.0" layoutY="20.0" mnemonicParsing="false" text="Add Capability" visible="false" />
+                        <Button fx:id="addHolderBtn" layoutX="412.0" layoutY="20.0" mnemonicParsing="false" text="Add Holder" visible="false" />
+                  <Button fx:id="runBtn" minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="RUN">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Button>
+                    </children>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </padding>
+                </HBox>
+            </top>
+        </BorderPane>
+    </children>
+</AnchorPane>

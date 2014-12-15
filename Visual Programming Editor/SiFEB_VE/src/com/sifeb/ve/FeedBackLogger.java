@@ -91,7 +91,7 @@ public class FeedBackLogger {
 
     public static void sendWelcomeMessage() {
         fbFace.setImage(happyFace);
-        sendMessage("Hi, Welcome to SiFEB !!!");
+        sendMessage("Hi, Welcome to SiFEB!!!");
     }
 
 }

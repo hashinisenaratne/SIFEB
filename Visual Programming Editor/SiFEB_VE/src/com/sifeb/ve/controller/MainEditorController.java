@@ -13,6 +13,7 @@ import com.sifeb.ve.RepeatBlock;
 import com.sifeb.ve.Device;
 import com.sifeb.ve.FeedBackLogger;
 import com.sifeb.ve.Holder;
+import com.sifeb.ve.IfBlock;
 import com.sifeb.ve.resources.Strings;
 import java.net.URL;
 import java.util.ArrayList;
@@ -98,13 +99,13 @@ public class MainEditorController implements Initializable {
         //temp        
         devices = new ArrayList<>();
         capabilities = new ArrayList<>();
-        
+
         editorBox.setFillWidth(false);
         mainBox.setSpacing(-17);
         editorBox.setSpacing(-15);
         editorBox.setAlignment(Pos.TOP_LEFT);
         addStartEndBlocks();
-        addBlockHolder(0,editorBox, 0);
+        addBlockHolder(0, editorBox, 0);
 
         setEventHandlers();
         FeedBackLogger.setControls(this.fbFace, this.fbText);
@@ -126,7 +127,7 @@ public class MainEditorController implements Initializable {
 
     private void addStartEndBlocks() {
         Image img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Start_V.png"));
-        mainBox.getChildren().add(0,new Block(img));
+        mainBox.getChildren().add(0, new Block(img));
 
         img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Stop_V.png"));
         mainBox.getChildren().add(new Block(img));
@@ -152,7 +153,8 @@ public class MainEditorController implements Initializable {
     //use -1 as index to add a holder to the end
     //type 0 = normal holder
     //type 1 = condition block
-    //type 3 = repeat block
+    //type 2 = repeat block
+    //type 3 = if block
     private void addBlockHolder(int index, VBox parent, int type) {
         Holder holder;
         switch (type) {
@@ -161,6 +163,9 @@ public class MainEditorController implements Initializable {
                 break;
             case 2:
                 holder = new RepeatBlock(this);
+                break;
+            case 3:
+                holder = new IfBlock(this);
                 break;
             default:
                 holder = new Holder(this);
@@ -187,6 +192,9 @@ public class MainEditorController implements Initializable {
             addBlockHolder(index, parent, 2);
         } else if (node.getId().contains("action")) {
             addBlockHolder(index, parent, 0);
+        }
+        else if (node.getId().contains("ifelse")) {
+            addBlockHolder(index, parent, 3);
         }
         if (node != null) {
             ((Holder) parent.getChildren().get(index)).addElementToVbox(node);
@@ -338,22 +346,22 @@ public class MainEditorController implements Initializable {
 //            }
 //            
 //        }
-//        Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
-//        dlg.setResizable(false);
-//        dlg.setIconifiable(false);
-//        dlg.setGraphic(new ImageView(playImg));
-//        dlg.setMasthead(Strings.getString("message.runtheprogram"));
-//        Dialog.Actions.YES.textProperty().set(Strings.getString("btn.yes"));
-//        Dialog.Actions.NO.textProperty().set(Strings.getString("btn.no"));
-//        dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
-//
-//        Action response = dlg.show();
-//        System.out.println("response" + response);
-//
-//        if (response == Dialog.Actions.YES) {
-//            // FeedBackLogger.sendGoodMessage(Strings.getString("message.testing") + " \'" + cp.getCapName() + "\' " + Strings.getString("message.capability") + "...");
-//            // ComPortController.writeComPort(ComPortController.port, cp.getDevice().getAddress(), cp.getCommand());
-//            FeedBackLogger.sendGoodMessage("Program is running!");
+        Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
+        dlg.setResizable(false);
+        dlg.setIconifiable(false);
+        dlg.setGraphic(new ImageView(playImg));
+        dlg.setMasthead(Strings.getString("message.runtheprogram"));
+        Dialog.Actions.YES.textProperty().set(Strings.getString("btn.yes"));
+        Dialog.Actions.NO.textProperty().set(Strings.getString("btn.no"));
+        dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
+
+        Action response = dlg.show();
+        System.out.println("response" + response);
+
+        if (response == Dialog.Actions.YES) {
+            // FeedBackLogger.sendGoodMessage(Strings.getString("message.testing") + " \'" + cp.getCapName() + "\' " + Strings.getString("message.capability") + "...");
+            // ComPortController.writeComPort(ComPortController.port, cp.getDevice().getAddress(), cp.getCommand());
+            FeedBackLogger.sendGoodMessage("Program is running!");
 //            devicesBox.setDisable(true);
 //            capabilityBox.setDisable(true);
 //            editorBox.setDisable(true);
@@ -408,10 +416,10 @@ public class MainEditorController implements Initializable {
 //            editorBox.setDisable(false);
 //            FeedBackLogger.sendGoodMessage("Program Finished!");
 //
-//        } else {
-//            FeedBackLogger.sendBadMessage(Strings.getString("message.testlater") + "...");
-//            // ... user cancelled, reset form to default
-//        }
+        } else {
+            FeedBackLogger.sendBadMessage(Strings.getString("message.testlater") + "...");
+            // ... user cancelled, reset form to default
+        }
 
     }
 

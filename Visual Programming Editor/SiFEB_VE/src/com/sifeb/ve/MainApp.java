@@ -12,6 +12,7 @@ import java.util.Locale;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -42,6 +43,7 @@ public class MainApp extends Application {
             ComPortController.statusQuery.cancel();
             ComPortController.timer.cancel();
         });
+        primaryStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("/com/sifeb/ve/images/appIcon.png" ))); 
         primaryStage.show();
     }
 

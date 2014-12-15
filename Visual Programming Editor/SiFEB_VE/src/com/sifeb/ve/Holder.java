@@ -50,7 +50,7 @@ public class Holder extends Pane {
     Image topImage;
     Image middleImage1;
     Image middleImage2;
-    Image bottomImage;
+    Image bottomImage1;
 
     public Holder(MainEditorController mainCtrl) {
 
@@ -58,9 +58,9 @@ public class Holder extends Pane {
         topImage = new Image(getClass().getResourceAsStream(Holder.BG_TOP_IMG));
         middleImage1 = new Image(getClass().getResourceAsStream(Holder.BG_MID_IMG));
         middleImage2 = new Image(getClass().getResourceAsStream(Holder.BG_MID_IMG));
-        bottomImage = new Image(getClass().getResourceAsStream(Holder.BG_BOTTOM_IMG));
+        bottomImage1 = new Image(getClass().getResourceAsStream(Holder.BG_BOTTOM_IMG));
 
-        this.setBackImage(topImage, bottomImage);
+        this.setBackImage(topImage, bottomImage1);
         this.setActions(middleImage1, middleImage2);
 
         this.exitBtn = new Button();
@@ -93,11 +93,15 @@ public class Holder extends Pane {
                     if (draggedBlock.getCapability().getType().equals("action")) {
                         this.addElementToVbox(draggedBlock);
                         success = true;
-                    } else if (draggedBlock.getCapability().getType().equals("actionC")
-                            || draggedBlock.getCapability().getType().equals("control")) {
+                    } else  {
                         this.mainCtrl.changeHolderType(this, (VBox) this.getParent(), draggedBlock);
                         success = true;
                     }
+                    /*
+                    if (draggedBlock.getCapability().getType().equals("actionC")
+                            || draggedBlock.getCapability().getType().equals("control")
+                            || draggedBlock.getCapability().getType().equals("ifelse"))
+                    */
                 }
             }
             event.setDropCompleted(success);
@@ -107,7 +111,7 @@ public class Holder extends Pane {
         this.setOnDragOver((DragEvent event) -> {
             if (event.getDragboard().hasString()) {
                 String dbStr = event.getDragboard().getString();
-                if (dbStr.contains("action") || dbStr.contains("control")) {
+                if (dbStr.contains("action") || dbStr.contains("control") || dbStr.contains("ifelse")) {
                     event.acceptTransferModes(TransferMode.COPY);
                 } else {
                     System.out.println("not allowed");
@@ -138,12 +142,16 @@ public class Holder extends Pane {
     }
 
     public final void setBackImage(Image topImage, Image bottomImage) {
-        super.setPrefWidth(topImage.getWidth());
+        super.setMinWidth(topImage.getWidth());
         super.setPadding(new Insets(20, 0, 8, 0));
 
         BackgroundImage top = new BackgroundImage(topImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         BackgroundImage bottom = new BackgroundImage(bottomImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, new BackgroundPosition(Side.LEFT, 0, true, Side.BOTTOM, 0, true), BackgroundSize.DEFAULT);
         super.setBackground(new Background(bottom, top));
+    }
+    
+    public final void setEmptyBackImage(){
+        super.setBackground(Background.EMPTY);
     }
 
     private void setExitButtonProperties(Button button) {

@@ -104,6 +104,7 @@ public final class Block extends Pane {
             case "actionC":
             case "action":
             case "control":
+            case "ifelse":
                 blockIcon.relocate(15, 2);
                 break;
             case "sense":
@@ -129,6 +130,7 @@ public final class Block extends Pane {
                 bckImage = new Image(getClass().getResourceAsStream(Block.CONST_BCK_IMG));
                 break;
             case "control":
+            case "ifelse":
                 bckImage = new Image(getClass().getResourceAsStream(Block.CONTROL_BCK_IMG));
                 break;
             default:
@@ -195,7 +197,7 @@ public final class Block extends Pane {
 
                 if (this.getParent().getClass().getName().contains("ActionBlock") == false) {
 
-                    if (capability.getType().contains("action") || capability.getType().equals("sense") || capability.getType().equals("condition") || capability.getType().equals("control")) {
+                    if (capability.getType().contains("action") || capability.getType().equals("sense") || capability.getType().equals("condition") || capability.getType().equals("control")|| capability.getType().equals("ifelse")) {
                         contextMenu.show(this, event.getSceneX(), event.getSceneY());
                     }
 
@@ -220,6 +222,7 @@ public final class Block extends Pane {
             case "action":
             case "actionC":
             case "control":
+            case "ifelse":
                 name.setFont(new Font(12));
                 name.setPrefSize(img.getWidth() * 0.9, 12);
                 name.setMaxWidth(img.getWidth() * 0.9);

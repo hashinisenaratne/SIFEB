@@ -28,7 +28,11 @@ public class FileHandler {
     public static void main(String[] args) {
 
         FileHandler fh = new FileHandler();
-        fh.writeToDeviceFile("dev_12");
+        fh.writeToGameFile("game_001");
+        Element d=fh.readFromGameFile("game_001");
+        System.out.println(d.getElementsByTagName("Id").item(0).getTextContent());
+        
+        //fh.writeToDeviceFile("dev_12");
     }
 
     public void writeToDeviceFile(String fileName) {
@@ -48,7 +52,7 @@ public class FileHandler {
             Element id = doc.createElement("Id");
             id.appendChild(doc.createTextNode("1234"));
             device.appendChild(id);
-            
+
             Element name = doc.createElement("Names");
             device.appendChild(name);
 
@@ -59,7 +63,7 @@ public class FileHandler {
             Element lkName = doc.createElement("si_LK");
             lkName.appendChild(doc.createTextNode("go forward"));
             name.appendChild(lkName);
-            
+
             Element address = doc.createElement("Address");
             address.appendChild(doc.createTextNode("12"));
             device.appendChild(address);
@@ -274,4 +278,105 @@ public class FileHandler {
         return eElement;
     }
 
+    public void writeToGameFile(String fileName) {
+        try {
+
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+            // root elements
+            Document doc = docBuilder.newDocument();
+            Element rootElement = doc.createElement("Sifeb");
+            doc.appendChild(rootElement);
+
+            Element game = doc.createElement("Game");
+            rootElement.appendChild(game);
+
+            Element id = doc.createElement("Id");
+            id.appendChild(doc.createTextNode("001"));
+            game.appendChild(id);
+
+            Element stories = doc.createElement("Stories");
+            game.appendChild(stories);
+
+            for (int i = 1; i < 10; i++) {
+
+                Element cap1 = doc.createElement("story");
+                Element image = doc.createElement("Image");
+                image.appendChild(doc.createTextNode("Mwheels.png"));
+                Element text = doc.createElement("Text");
+                text.appendChild(doc.createTextNode("Mwheelspng"));
+                cap1.appendChild(image);
+                cap1.appendChild(text);
+                stories.appendChild(cap1);
+            }
+           
+            // write the content into xml file
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            File file = new File("src/com/sifeb/ve/files/game/" + fileName + ".xml");
+            StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
+
+            // Output to console for testing
+            // StreamResult result = new StreamResult(System.out);
+            transformer.transform(source, result);
+
+            System.out.println("File saved!");
+
+        } catch (ParserConfigurationException | TransformerException pce) {
+            pce.printStackTrace();
+        }
+
+    }
+    
+    public Element readFromGameFile(String fileName)
+    {
+        Element element = null;
+
+        File file = new File("src/com/sifeb/ve/files/game/" + fileName + ".xml");
+
+        //  Image img=new Image()
+        try {
+
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(file);
+
+            //optional, but recommended
+            doc.getDocumentElement().normalize();
+
+            System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+
+            NodeList nList = doc.getElementsByTagName("Game");
+            Node nNode = nList.item(0);
+            element = (Element) nNode;
+            System.out.println("----------------------------");
+
+//            for (int temp = 0; temp < nList.getLength(); temp++) {
+//
+//                System.out.println("list " + nList.getLength());
+//                Node nNode = nList.item(temp);
+//
+//                System.out.println("\nCurrent Element :" + nNode.getNodeName());
+//
+//                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+//
+//                    Element eElement = (Element) nNode;
+//
+////                    System.out.println("Staff id : " + eElement.getAttribute("id"));
+////                    System.out.println("First Name : " + eElement.getElementsByTagName("firstname").item(0).getTextContent());
+////                    System.out.println("Last Name : " + eElement.getElementsByTagName("lastname").item(0).getTextContent());
+////                    System.out.println("Nick Name : " + eElement.getElementsByTagName("nickname").item(0).getTextContent());
+////                    System.out.println("Salary : " + eElement.getElementsByTagName("salary").item(0).getTextContent());
+//                }
+//
+//                // return 
+//            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return element;
+    }
 }

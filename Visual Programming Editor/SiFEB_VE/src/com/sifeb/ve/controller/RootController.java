@@ -43,7 +43,8 @@ public class RootController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setEventHandlers();
-        loadMainEditor();
+       //loadMainEditor();
+        loadGameEditor();
     }
 
     private void setEventHandlers() {
@@ -86,13 +87,39 @@ public class RootController implements Initializable {
             blkCreator.createCapability("cap_def1", null);
             blkCreator.createCapability("cap_def2", null);
             blkCreator.createCapability("cap_def3", null);
+            blkCreator.createCapability("cap_def4", null);
 
             //for test only
-            blkCreator.createBlock("10");
-            blkCreator.createBlock("11");
+            // blkCreator.createBlock("10");
+            // blkCreator.createBlock("11");
             rootPane.setCenter(mainEditor);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void loadGameEditor() {
+
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("view/GameEditor.fxml"));
+            AnchorPane gameEditor = (AnchorPane) loader.load();
+            meCtrl = loader.getController();
+            BlockCreator blkCreator = new BlockCreator(meCtrl);
+
+            ComPortController.setBlockCreator(blkCreator);
+            ComPortController.openPort();
+            // ComPortController.setEventListener();
+            blkCreator.createCapability("cap_def1", null);
+            blkCreator.createCapability("cap_def2", null);
+
+            //for test only
+             blkCreator.createBlock("10");
+             blkCreator.createBlock("11");
+            rootPane.setCenter(gameEditor);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
