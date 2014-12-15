@@ -1,5 +1,4 @@
 #include <Wire.h>
-#include <TimerOne.h>
 
 /*
 
@@ -17,7 +16,6 @@
 char incomingByte = 0;   // for incoming serial data
 int dPin = 12;
 int cPin = 13;
-
 
 unsigned long lastSec=0;
 
@@ -69,7 +67,7 @@ boolean notifySingleChange(int addressIndex)
       return true;
     }
   }
-  else
+  else if(Wire.endTransmission()==2)
   {
     if(lastState[addressIndex])
     {
@@ -108,7 +106,8 @@ void loop() {
 
     if(incomingByte == 'a'){  
       Wire.beginTransmission(10); // transmit to device #11
-      Wire.write('s'); 
+      Wire.write('s');
+      Wire.write('\0'); 
       Serial.print(Wire.endTransmission());    // stop transmitting
       Serial.println("#");
     }
@@ -116,7 +115,8 @@ void loop() {
     else if(incomingByte == 'b'){
       Wire.beginTransmission(10); // transmit to device #10
       Wire.write('t'); 
-      Wire.write(1); 
+      Wire.write(1);
+      Wire.write('\0');  
       Serial.print(Wire.endTransmission());    // stop transmitting
       Serial.println("#");
     }
@@ -124,7 +124,8 @@ void loop() {
     else if(incomingByte == 'c'){
       Wire.beginTransmission(10); // transmit to device #10
       Wire.write('t'); 
-      Wire.write(2); 
+      Wire.write(2);
+      Wire.write('\0');  
       Serial.print(Wire.endTransmission());    // stop transmitting
       Serial.println("#");
     }
@@ -132,7 +133,8 @@ void loop() {
     else if(incomingByte == 'B'){
       Wire.beginTransmission(10); // transmit to device #10
       Wire.write('a'); 
-      Wire.write(1); 
+      Wire.write(1);
+      Wire.write('\0');   
       Serial.print(Wire.endTransmission());    // stop transmitting
       Serial.println("#");
     }
@@ -140,7 +142,8 @@ void loop() {
     else if(incomingByte == 'C'){
       Wire.beginTransmission(10); // transmit to device #10
       Wire.write('a'); 
-      Wire.write(2); 
+      Wire.write(2);
+      Wire.write('\0');  
       Serial.print(Wire.endTransmission());    // stop transmitting
       Serial.println("#");
     }
@@ -148,7 +151,8 @@ void loop() {
     else if(incomingByte == 'd'){
       Wire.beginTransmission(10); // transmit to device #10
       Wire.write('t'); 
-      Wire.write(3); 
+      Wire.write(3);
+      Wire.write('\0');  
       Serial.print(Wire.endTransmission());    // stop transmitting
       Serial.println("#");
     }
@@ -156,7 +160,8 @@ void loop() {
     else if(incomingByte == 'e'){
       Wire.beginTransmission(10); // transmit to device #10
       Wire.write('t'); 
-      Wire.write(4); 
+      Wire.write(4);
+      Wire.write('\0');  
       Serial.print(Wire.endTransmission());    // stop transmitting
       Serial.println("#");
     }
@@ -164,7 +169,8 @@ void loop() {
     else if(incomingByte == 'f'){
       Wire.beginTransmission(10); // transmit to device #10
       Wire.write('t'); 
-      Wire.write(5); 
+      Wire.write(5);
+      Wire.write('\0');  
       Serial.print(Wire.endTransmission());    // stop transmitting
       Serial.println("#");
     }
@@ -187,7 +193,12 @@ void loop() {
       while(Wire.available())    // slave may send less than requested
       { 
         int c = Wire.read();       // receive a byte
-        Serial.println(c);         // print the character (PC needs to read)
+        Serial.print("h");
+        Serial.println((char)c);         // print the character (PC needs to read)
+        Serial.println("##");
+        
+
+        
       }
     }
 
@@ -198,7 +209,8 @@ void loop() {
 
       Wire.beginTransmission(10); // go foward
       Wire.write('a'); 
-      Wire.write(1); 
+      Wire.write(1);
+      Wire.write('\0');  
       Wire.endTransmission(); 
 
       boolean close = false;
@@ -222,7 +234,8 @@ void loop() {
 
       Wire.beginTransmission(10); // stop
       Wire.write('a'); 
-      Wire.write(5); 
+      Wire.write(5);
+      Wire.write('\0');  
 
       Wire.endTransmission();
 
@@ -230,7 +243,8 @@ void loop() {
 
       Wire.beginTransmission(10); // turn right
       Wire.write('a'); 
-      Wire.write(3); 
+      Wire.write(3);
+      Wire.write('\0');  
       Wire.endTransmission();
 
       delay(500);
