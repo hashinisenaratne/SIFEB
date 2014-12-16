@@ -88,7 +88,7 @@ public class IfBlock extends Holder {
 
         BackgroundImage bckTopLeft = new BackgroundImage(topLeft, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, new BackgroundPosition(Side.LEFT, 0, false, Side.TOP, 0, false), BackgroundSize.DEFAULT);
         BackgroundImage bckTopMid = new BackgroundImage(topMiddle, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, new BackgroundPosition(Side.LEFT, 260, false, Side.TOP, 0, false), BackgroundSize.DEFAULT);
-        BackgroundImage bckTopRight = new BackgroundImage(topRight, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, new BackgroundPosition(Side.RIGHT, 0, false, Side.TOP, 0, false), BackgroundSize.DEFAULT);
+        BackgroundImage bckTopRight = new BackgroundImage(topRight, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, new BackgroundPosition(Side.LEFT, 0, false, Side.TOP, 0, false), BackgroundSize.DEFAULT);
         BackgroundImage bckBottom1 = new BackgroundImage(bottom1, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, new BackgroundPosition(Side.LEFT, 0, false, Side.BOTTOM, 0, false), BackgroundSize.DEFAULT);
         BackgroundImage bckBottom2 = new BackgroundImage(bottom2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, new BackgroundPosition(Side.LEFT, 0, false, Side.BOTTOM, 0, false), BackgroundSize.DEFAULT);
         BackgroundImage bckMid = new BackgroundImage(mid, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.REPEAT, new BackgroundPosition(Side.LEFT, 0, false, Side.TOP, 10, false), BackgroundSize.DEFAULT);
