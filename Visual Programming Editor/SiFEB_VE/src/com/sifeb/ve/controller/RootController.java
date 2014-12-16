@@ -15,13 +15,24 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.stage.Popup;
 
 /**
  *
@@ -37,14 +48,16 @@ public class RootController implements Initializable {
     RadioMenuItem langMenuSin;
     @FXML
     MenuItem connectMenu;
+    @FXML
+    MenuItem aboutMenuItem;
 
     MainEditorController meCtrl;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setEventHandlers();
-       //loadMainEditor();
-        loadGameEditor();
+        loadMainEditor();
+//        loadGameEditor();
     }
 
     private void setEventHandlers() {
@@ -65,6 +78,33 @@ public class RootController implements Initializable {
             } catch (InterruptedException ex) {
                 Logger.getLogger(RootController.class.getName()).log(Level.SEVERE, null, ex);
             }
+        });
+
+        aboutMenuItem.setOnAction((ActionEvent event) -> {
+            final Popup popup = new Popup();
+            popup.setAutoHide(true);
+            popup.setWidth(500);
+            popup.setHeight(300);
+            popup.centerOnScreen();
+            
+            ImageView iv = new ImageView(new Image(MainApp.class.getResourceAsStream("/com/sifeb/ve/images/about.png" )));
+            popup.getContent().add(iv);
+            
+            Label urlLabel = new Label("www.sifebplaymate.com");
+            urlLabel.setFont(new Font(24));
+            urlLabel.setTextFill(Color.ORANGE);
+            urlLabel.relocate(120, 210);
+            popup.getContent().add(urlLabel);
+            
+            Button closeBtn = new Button("Close");
+            closeBtn.setPrefWidth(80);
+            closeBtn.relocate(200, 260);
+            closeBtn.setOnAction((ActionEvent e)->{
+                popup.hide();
+            });
+            popup.getContent().add(closeBtn);
+                       
+            popup.show(rootPane.getScene().getWindow());
         });
     }
 
@@ -90,8 +130,8 @@ public class RootController implements Initializable {
             blkCreator.createCapability("cap_def4", null);
 
             //for test only
-            // blkCreator.createBlock("10");
-            // blkCreator.createBlock("11");
+            blkCreator.createBlock("10");
+            blkCreator.createBlock("11");
             rootPane.setCenter(mainEditor);
         } catch (IOException e) {
             e.printStackTrace();
@@ -114,8 +154,8 @@ public class RootController implements Initializable {
             blkCreator.createCapability("cap_def2", null);
 
             //for test only
-             blkCreator.createBlock("10");
-             blkCreator.createBlock("11");
+            blkCreator.createBlock("10");
+            blkCreator.createBlock("11");
             rootPane.setCenter(gameEditor);
         } catch (IOException e) {
             e.printStackTrace();
