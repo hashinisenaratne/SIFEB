@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sifeb.ve.controller.LibraryEditorController">
+   <children>
+      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" tabMinWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <tabs>
+          <Tab fx:id="deviceTab" text="Device">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <BorderPane layoutX="-1.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                           <top>
+                              <HBox nodeOrientation="RIGHT_TO_LEFT" prefHeight="35.0" prefWidth="580.0" spacing="10.0" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <Button fx:id="clrDevBtn" mnemonicParsing="false" text="Clear" />
+                                    <Button fx:id="openDevBtn" mnemonicParsing="false" text="Open Device" />
+                                 </children>
+                                 <padding>
+                                    <Insets left="10.0" right="10.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                           </top>
+                           <center>
+                              <GridPane BorderPane.alignment="CENTER">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                              </GridPane>
+                           </center>
+                           <bottom>
+                              <Button mnemonicParsing="false" text="Button" BorderPane.alignment="CENTER" />
+                           </bottom>
+                        </BorderPane>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab fx:id="capabilityTab" text="Capability">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <GridPane layoutX="100.0" layoutY="149.0" vgap="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="285.0" minWidth="10.0" prefWidth="156.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="425.0" minWidth="10.0" prefWidth="395.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Capability ID">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Capability Name(s)" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Capability Type" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Command" GridPane.rowIndex="4">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Has TEST Button?" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Static Image (.png)" GridPane.rowIndex="5">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="capCmdTextBox" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" promptText="Command to Test" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <TextField fx:id="capIdTextBox" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" promptText="Capability ID" GridPane.columnIndex="1">
+                                 <GridPane.margin>
+                                    <Insets left="25.0" />
+                                 </GridPane.margin></TextField>
+                              <CheckBox fx:id="capHasTest" mnemonicParsing="false" text="Yes" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <ChoiceBox fx:id="capTypeSelect" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label text="Dynamic Image (.gif)" GridPane.rowIndex="6">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="capNameTextBox" maxWidth="225.0" prefHeight="25.0" prefWidth="225.0" promptText="Capability Name (en_US)" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Button fx:id="staticOpenBtn" mnemonicParsing="false" text="Open Image ..." GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <Button fx:id="dynamicOpenBtn" layoutX="181.0" layoutY="218.0" mnemonicParsing="false" text="Open Image ..." GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                              <ImageView fx:id="capStaticImgView" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" translateX="100.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <ImageView fx:id="capDynamicImgView" fitHeight="30.0" fitWidth="30.0" layoutX="181.0" layoutY="215.0" pickOnBounds="true" preserveRatio="true" translateX="100.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                              <Label text="cap_" GridPane.columnIndex="1" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </GridPane>
+                        <Button fx:id="capClrBtn" layoutX="534.0" layoutY="14.0" mnemonicParsing="false" text="Clear" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <Button fx:id="capSaveBtn" layoutX="534.0" layoutY="332.0" mnemonicParsing="false" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="capDelBtn" disable="true" layoutX="14.0" layoutY="330.0" mnemonicParsing="false" text="Remove Capability" textFill="#ab0c0c" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+                        <ComboBox fx:id="capOpenBtn" disable="true" prefWidth="150.0" promptText="Open Capability" AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="10.0" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

@@ -15,24 +15,22 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Popup;
+import javafx.stage.Stage;
 
 /**
  *
@@ -50,14 +48,32 @@ public class RootController implements Initializable {
     MenuItem connectMenu;
     @FXML
     MenuItem aboutMenuItem;
+    @FXML
+    MenuItem libEditMenu;
 
     MainEditorController meCtrl;
+    Stage libEditStage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setEventHandlers();
         loadMainEditor();
 //        loadGameEditor();
+        //TEST
+//        FXMLLoader loader = new FXMLLoader();
+//        loader.setLocation(MainApp.class.getResource("view/LibraryEditor.fxml"));
+//        try {
+//            AnchorPane rootLayout = (AnchorPane) loader.load();
+//            Stage stage = new Stage();
+//            stage.setTitle("SiFEB Library Editor");
+//            stage.setScene(new Scene(rootLayout));
+//            stage.getIcons().add(new Image(MainApp.class.getResourceAsStream("/com/sifeb/ve/images/appIcon.png")));
+//                
+//            stage.show();
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+        //
     }
 
     private void setEventHandlers() {
@@ -86,25 +102,46 @@ public class RootController implements Initializable {
             popup.setWidth(500);
             popup.setHeight(300);
             popup.centerOnScreen();
-            
-            ImageView iv = new ImageView(new Image(MainApp.class.getResourceAsStream("/com/sifeb/ve/images/about.png" )));
+
+            ImageView iv = new ImageView(new Image(MainApp.class.getResourceAsStream("/com/sifeb/ve/images/about.png")));
             popup.getContent().add(iv);
-            
+
             Label urlLabel = new Label("www.sifebplaymate.com");
             urlLabel.setFont(new Font(24));
             urlLabel.setTextFill(Color.ORANGE);
             urlLabel.relocate(120, 210);
             popup.getContent().add(urlLabel);
-            
+
             Button closeBtn = new Button("Close");
             closeBtn.setPrefWidth(80);
             closeBtn.relocate(200, 260);
-            closeBtn.setOnAction((ActionEvent e)->{
+            closeBtn.setOnAction((ActionEvent e) -> {
                 popup.hide();
             });
             popup.getContent().add(closeBtn);
-                       
+
             popup.show(rootPane.getScene().getWindow());
+        });
+
+        libEditMenu.setOnAction((ActionEvent event) -> {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("view/LibraryEditor.fxml"));
+            try {
+                if (libEditStage == null) {
+                    AnchorPane rootLayout = (AnchorPane) loader.load();
+                    libEditStage = new Stage();
+                    libEditStage.setTitle("SiFEB Library Editor");
+                    libEditStage.setScene(new Scene(rootLayout));
+                    libEditStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("/com/sifeb/ve/images/appIcon.png")));
+                    libEditStage.show();
+                } else {
+                    libEditStage.toFront();
+                }
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
         });
     }
 

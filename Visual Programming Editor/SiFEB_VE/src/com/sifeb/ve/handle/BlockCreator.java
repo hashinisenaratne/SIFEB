@@ -92,24 +92,9 @@ public class BlockCreator {
     }
 
     public void createCapability(String id, Device device) {
-
-        Element devElement = fileHandler.readFromCapabilityFile(id);
-
-        String capId = devElement.getElementsByTagName("Id").item(0).getTextContent();
-        NodeList nodeList = devElement.getElementsByTagName("Names").item(0).getChildNodes();
-        Map<Locale, String> actNames = new HashMap<>();
-        Locale[] localeList = {new Locale("en", "US"), new Locale("si", "LK")};
-
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            actNames.put(localeList[i], nodeList.item(i).getTextContent());
-        }
-
-        String command = devElement.getElementsByTagName("Command").item(0).getTextContent();
-        String type = devElement.getElementsByTagName("Type").item(0).getTextContent();
-        String image = devElement.getElementsByTagName("Image").item(0).getTextContent();
-        boolean hasTestButton = Boolean.parseBoolean(devElement.getElementsByTagName("HasTestButton").item(0).getTextContent());
-        Capability cap = new Capability(capId, actNames, device, type, command, image);
-        mainEditor.addCapabilityBlock(cap, device, hasTestButton);
+        Capability cap = fileHandler.readFromCapabilityFile(id);
+        cap.setDevice(device);
+        mainEditor.addCapabilityBlock(cap, device);
 
         System.out.println("capability added");
 
