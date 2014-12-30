@@ -569,6 +569,13 @@ public class MainEditorController implements Initializable {
             case "cap_008": {    //no object
                 hValue = 0;
                 sendCmd(10, "h");   //where does h get update?
+                try {
+                    Thread.sleep(50);
+
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(MainEditorController.class
+                            .getName()).log(Level.SEVERE, null, ex);
+                }
                 if(hValue > 20){
                     return true;
                 }
@@ -578,6 +585,13 @@ public class MainEditorController implements Initializable {
             }
             case "cap_009": {    //see object
                 hValue = 1000;
+                try {
+                    Thread.sleep(50);
+
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(MainEditorController.class
+                            .getName()).log(Level.SEVERE, null, ex);
+                }
                 sendCmd(10, "h");   //where does h get update?
                 if(hValue < 20) {
                     return true;
