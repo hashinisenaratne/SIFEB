@@ -18,30 +18,32 @@ import javafx.scene.layout.Pane;
 public class Capability {
 
     private final String capID;
-    private final Map<Locale,String> capNames;
-    private final Device device;
+    private final Map<Locale, String> capNames;
+    private Device device;
     private final String type;
     private final String command;
     private final String imageName;
     private final Image staticImage;
     private Image dynamicImage;
     private final Block block;
+    private final boolean hasTest;
 
-    public Capability(String capID, Map<Locale,String> capNames, Device device, String type, String command,String imageName) {
+    public Capability(String capID, Map<Locale, String> capNames, Device device, String type, String command, String imageName, boolean hasTest) {
         this.capID = capID;
         this.capNames = capNames;
         this.device = device;
         this.type = type;
         this.command = command;
         this.imageName = imageName;
-        this.staticImage = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/static/" + imageName+".png"));
-        try{
-            this.dynamicImage = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/dynamic/" + imageName+".gif"));
-        } catch(NullPointerException ex){
-            this.dynamicImage = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/static/" + imageName+".png"));
+        this.staticImage = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/static/" + imageName + ".png"));
+        try {
+            this.dynamicImage = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/dynamic/" + imageName + ".gif"));
+        } catch (NullPointerException ex) {
+            this.dynamicImage = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/static/" + imageName + ".png"));
         }
-        
+
         this.block = new Block(this);
+        this.hasTest = hasTest;
     }
 
     public String getCapID() {
@@ -51,6 +53,10 @@ public class Capability {
     public String getCapName() {
         Locale currentLocale = Strings.getLocale();
         return capNames.get(currentLocale);
+    }
+    
+    public String getCapName(Locale locale){
+        return capNames.get(locale);
     }
 
     public Device getDevice() {
@@ -77,17 +83,32 @@ public class Capability {
         return command;
     }
 
-    public Capability cloneCapability(){
-        Capability cap = new Capability(this.capID, this.capNames, this.device, this.type, this.command,this.imageName);
-        System.out.println(this.block.getParent().getEffect());
-        if(this.device != null){
-            this.device.addCapability(cap);
-        }                
-        
-        return cap;
+    public boolean isHasTest() {
+        return hasTest;
+    }
+
+    public void setDevice(Device device) {
+        this.device = device;
     }
     
+
+    public Capability cloneCapability() {
+        Capability cap = new Capability(this.capID, this.capNames, this.device, this.type, this.command, this.imageName, true);
+        System.out.println(this.block.getParent().getEffect());
+        if (this.device != null) {
+            this.device.addCapability(cap);
+        }
+
+        return cap;
+    }
+
     public void addToPane(Pane parent) {
         parent.getChildren().add(this.block);
     }
+
+    @Override
+    public String toString() {
+        return this.getCapName() + " (" + this.getCapID() + ")";
+    }
+
 }

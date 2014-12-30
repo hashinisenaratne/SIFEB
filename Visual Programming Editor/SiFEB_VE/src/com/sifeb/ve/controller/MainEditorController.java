@@ -323,13 +323,13 @@ public class MainEditorController implements Initializable {
 
     }
 
-    public void addCapabilityBlock(Capability cap, Device dev, boolean hasTestButton) {
+    public void addCapabilityBlock(Capability cap, Device dev) {
 
         capabilities.add(cap);
         if (dev != null) {
             dev.addCapability(cap);
         }
-        ActionBlock action = new ActionBlock(cap.getBlock(), hasTestButton);
+        ActionBlock action = new ActionBlock(cap.getBlock(), cap.isHasTest());
         action.addToPane(capabilityBox);
 
     }

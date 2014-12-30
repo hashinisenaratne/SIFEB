@@ -9,6 +9,8 @@ package com.sifeb.ve.handle;
  *
  * @author Pubudu
  */
+import com.sifeb.ve.Capability;
+import com.sifeb.ve.Device;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -22,16 +24,24 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class FileHandler {
+
+    private final String CAPABILITY_FOLDER = "src/com/sifeb/ve/files/capabilities/";
 
     public static void main(String[] args) {
 
         FileHandler fh = new FileHandler();
-        fh.writeToGameFile("game_001");
-        Element d=fh.readFromGameFile("game_001");
-        System.out.println(d.getElementsByTagName("Id").item(0).getTextContent());
-        
+//        fh.generateTestCapabilityFiles();
+//        fh.readFromCapabilityFile("cap_001");
+//        fh.writeToGameFile("game_001");
+//        Element d=fh.readFromGameFile("game_001");
+//        System.out.println(d.getElementsByTagName("Id").item(0).getTextContent());
+
         //fh.writeToDeviceFile("dev_12");
     }
 
@@ -162,101 +172,77 @@ public class FileHandler {
         return eElement;
     }
 
-    public void writeToCapabilityFile() {
+    public boolean writeToCapabilityFile(String capID, Map<Locale, String> capNames, String capType, String command, String imageName, boolean hasTest) {
 
-        String[] ids = {"cap_001", "cap_002", "cap_003", "cap_004", "cap_005", "cap_006", "cap_007"};
-        String[] actionNames_en = {"Go Forward", "Reverse", "Turn Left", "Turn Right", "Stop", "Light ON", "Light OFF"};
-        String[] actionNames_si = {"ඉදිරියට යන්න", "පසුපසට යන්න", "වමට හැරෙන්න", "දකුණට හැරෙන්න", "නවතින්න", "Light ON", "Light OFF"};
-        String[] actionCmd = {"b", "c", "e", "d", "", "l", ""};
-        String[] buttonList = {"true", "true", "true", "true", "false", "true", "false"};
-        //String[] imageList = {"forward", "reverse", "left", "right", "stop", "true", "false"};
+        try {
 
-        for (int i = 0; i < 7; i++) {
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
-            String types;
+            // root elements
+            Document doc = docBuilder.newDocument();
+            Element rootElement = doc.createElement("Sifeb");
+            doc.appendChild(rootElement);
 
-            if (i < 3 || i > 5) {
-                types = "actionC";
-            } else {
-                types = "action";
+            Element capability = doc.createElement("Capability");
+            rootElement.appendChild(capability);
+
+            Element id = doc.createElement("Id");
+            id.appendChild(doc.createTextNode(capID));
+            capability.appendChild(id);
+
+            Element names = doc.createElement("Names");
+            capability.appendChild(names);
+
+            for (Map.Entry<Locale, String> entry : capNames.entrySet()) {
+                Element name = doc.createElement("Name");
+                Element locale = doc.createElement("Locale");
+                Element nameStr = doc.createElement("Value");
+
+                locale.appendChild(doc.createTextNode(entry.getKey().toString()));
+                nameStr.appendChild(doc.createTextNode(entry.getValue()));
+
+                name.appendChild(locale);
+                name.appendChild(nameStr);
+                names.appendChild(name);
             }
 
-            try {
+            Element type = doc.createElement("Type");
+            type.appendChild(doc.createTextNode(capType));
+            capability.appendChild(type);
 
-                DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            Element cmd = doc.createElement("Command");
+            cmd.appendChild(doc.createTextNode(command));
+            capability.appendChild(cmd);
 
-                // root elements
-                Document doc = docBuilder.newDocument();
-                Element rootElement = doc.createElement("Sifeb");
-                doc.appendChild(rootElement);
+            Element button = doc.createElement("HasTestButton");
+            button.appendChild(doc.createTextNode(Boolean.toString(hasTest)));
+            capability.appendChild(button);
 
-                Element device = doc.createElement("Capability");
-                rootElement.appendChild(device);
+            Element image = doc.createElement("Image");
+            image.appendChild(doc.createTextNode(imageName));
+            capability.appendChild(image);
 
-                Element firstname = doc.createElement("Id");
-                firstname.appendChild(doc.createTextNode(ids[i]));
-                device.appendChild(firstname);
+            // write the content into xml file
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            File file = new File(CAPABILITY_FOLDER + capID + ".xml");
+            StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
 
-                Element name = doc.createElement("Names");
-                device.appendChild(name);
+            transformer.transform(source, result);
+            return true;
 
-                Element usName = doc.createElement("en_US");
-                usName.appendChild(doc.createTextNode(actionNames_en[i]));
-                name.appendChild(usName);
-
-                Element lkName = doc.createElement("si_LK");
-                lkName.appendChild(doc.createTextNode(actionNames_si[i]));
-                name.appendChild(lkName);
-
-                Element type = doc.createElement("Type");
-                type.appendChild(doc.createTextNode(types));
-                device.appendChild(type);
-
-                Element address = doc.createElement("Command");
-                address.appendChild(doc.createTextNode(actionCmd[i]));
-                device.appendChild(address);
-
-                Element button = doc.createElement("HasTestButton");
-                button.appendChild(doc.createTextNode(buttonList[i]));
-                device.appendChild(button);
-
-                Element image = doc.createElement("Image");
-                image.appendChild(doc.createTextNode("Action.png"));
-                device.appendChild(image);
-
-//            Element staticImage = doc.createElement("static_Image");
-//            staticImage.appendChild(doc.createTextNode("ImageName"));
-//            images.appendChild(staticImage);
-//
-//            Element dyncImage = doc.createElement("dync_Image");
-//            dyncImage.appendChild(doc.createTextNode("img name"));
-//            images.appendChild(dyncImage);
-                // write the content into xml file
-                TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                Transformer transformer = transformerFactory.newTransformer();
-                DOMSource source = new DOMSource(doc);
-                File file = new File("src/com/sifeb/ve/files/capabilities/" + ids[i] + ".xml");
-                StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
-
-                transformer.transform(source, result);
-
-                System.out.println("File saved!");
-
-            } catch (ParserConfigurationException | TransformerException pce) {
-                pce.printStackTrace();
-            }
-
+        } catch (ParserConfigurationException | TransformerException pce) {
+            return false;
         }
     }
 
-    public Element readFromCapabilityFile(String fileName) {
+    public Capability readFromCapabilityFile(String capID) {
 
         Element eElement = null;
-        File file = new File("src/com/sifeb/ve/files/capabilities/" + fileName + ".xml");
+        File file = new File(CAPABILITY_FOLDER + capID + ".xml");
         try {
-
-            //File fXmlFile = new File("/Users/mkyong/staff.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(file);
@@ -264,18 +250,36 @@ public class FileHandler {
             //optional, but recommended
             doc.getDocumentElement().normalize();
 
-            System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-
             NodeList nList = doc.getElementsByTagName("Capability");
             Node nNode = nList.item(0);
             eElement = (Element) nNode;
-            System.out.println("----------------------------");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return eElement;
+        return getCapFromElement(eElement);
+    }
+
+    private Capability getCapFromElement(Element el) {
+        String capId = el.getElementsByTagName("Id").item(0).getTextContent();
+        NodeList nodeList = el.getElementsByTagName("Names").item(0).getChildNodes();
+        Map<Locale, String> actNames = new HashMap<>();
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            NodeList nameNodes = nodeList.item(i).getChildNodes();
+            String locale = nameNodes.item(0).getTextContent();
+            String name = nameNodes.item(1).getTextContent();
+            actNames.put(new Locale(locale.split("_")[0], locale.split("_")[1]), name);
+        }
+
+        String command = el.getElementsByTagName("Command").item(0).getTextContent();
+        String type = el.getElementsByTagName("Type").item(0).getTextContent();
+        String image = el.getElementsByTagName("Image").item(0).getTextContent();
+        boolean hasTestButton = Boolean.parseBoolean(el.getElementsByTagName("HasTestButton").item(0).getTextContent());
+        Capability cap = new Capability(capId, actNames, null, type, command, image, hasTestButton);
+
+        return cap;
     }
 
     public void writeToGameFile(String fileName) {
@@ -310,7 +314,7 @@ public class FileHandler {
                 cap1.appendChild(text);
                 stories.appendChild(cap1);
             }
-           
+
             // write the content into xml file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
@@ -329,9 +333,8 @@ public class FileHandler {
         }
 
     }
-    
-    public Element readFromGameFile(String fileName)
-    {
+
+    public Element readFromGameFile(String fileName) {
         Element element = null;
 
         File file = new File("src/com/sifeb/ve/files/game/" + fileName + ".xml");
@@ -378,5 +381,100 @@ public class FileHandler {
         }
 
         return element;
+    }
+
+    /////////////////////////////////////////////////////////////
+    // Following methods are used to generate sample xml files //
+    /////////////////////////////////////////////////////////////
+    private void generateTestCapabilityFiles() {
+
+        String[] ids = {"cap_001", "cap_002", "cap_003", "cap_004", "cap_005", "cap_006", "cap_007", "cap_008", "cap_009"};
+        String[] actionNames_en = {"Go Forward", "Reverse", "Turn Left", "Turn Right", "Stop", "Light ON", "Light OFF", "No Object", "See Object"};
+        String[] actionNames_si = {"ඉදිරියට යන්න", "පසුපසට යන්න", "වමට හැරෙන්න", "දකුණට හැරෙන්න", "නවතින්න", "Light ON", "Light OFF", "No Object", "See Object"};
+        String[] actionCmd = {"b", "c", "e", "d", "", "l", "", "", ""};
+        String[] buttonList = {"true", "true", "true", "true", "false", "true", "false", "false", "false"};
+        //String[] imageList = {"forward", "reverse", "left", "right", "stop", "true", "false"};
+
+        for (int i = 0; i < 9; i++) {
+
+            String types;
+
+            if (i >= 7) {
+                types = "sense";
+            } else if (i < 3 || i > 5) {
+                types = "actionC";
+            } else {
+                types = "action";
+            }
+
+            Map<String, String> nameList = new HashMap<>();
+            nameList.put("en_US", actionNames_en[i]);
+            nameList.put("si_LK", actionNames_si[i]);
+
+            try {
+
+                DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+                // root elements
+                Document doc = docBuilder.newDocument();
+                Element rootElement = doc.createElement("Sifeb");
+                doc.appendChild(rootElement);
+
+                Element capability = doc.createElement("Capability");
+                rootElement.appendChild(capability);
+
+                Element id = doc.createElement("Id");
+                id.appendChild(doc.createTextNode(ids[i]));
+                capability.appendChild(id);
+
+                Element names = doc.createElement("Names");
+                capability.appendChild(names);
+
+                for (Map.Entry<String, String> entry : nameList.entrySet()) {
+                    Element name = doc.createElement("Name");
+                    Element locale = doc.createElement("Locale");
+                    Element nameStr = doc.createElement("Value");
+
+                    locale.appendChild(doc.createTextNode(entry.getKey()));
+                    nameStr.appendChild(doc.createTextNode(entry.getValue()));
+
+                    name.appendChild(locale);
+                    name.appendChild(nameStr);
+                    names.appendChild(name);
+                }
+
+                Element type = doc.createElement("Type");
+                type.appendChild(doc.createTextNode(types));
+                capability.appendChild(type);
+
+                Element cmd = doc.createElement("Command");
+                cmd.appendChild(doc.createTextNode(actionCmd[i]));
+                capability.appendChild(cmd);
+
+                Element button = doc.createElement("HasTestButton");
+                button.appendChild(doc.createTextNode(buttonList[i]));
+                capability.appendChild(button);
+
+                Element image = doc.createElement("Image");
+                image.appendChild(doc.createTextNode(ids[i]));
+                capability.appendChild(image);
+
+                // write the content into xml file
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
+                DOMSource source = new DOMSource(doc);
+                File file = new File(CAPABILITY_FOLDER + ids[i] + ".xml");
+                StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
+
+                transformer.transform(source, result);
+
+                System.out.println("File saved!");
+
+            } catch (ParserConfigurationException | TransformerException pce) {
+                pce.printStackTrace();
+            }
+
+        }
     }
 }
