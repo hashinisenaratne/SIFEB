@@ -35,11 +35,11 @@ public class Capability {
         this.type = type;
         this.command = command;
         this.imageName = imageName;
-        this.staticImage = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/static/" + imageName + ".png"));
+        this.staticImage = new Image("/com/sifeb/ve/images/static/" + imageName + ".png");
         try {
-            this.dynamicImage = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/dynamic/" + imageName + ".gif"));
-        } catch (NullPointerException ex) {
-            this.dynamicImage = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/static/" + imageName + ".png"));
+            this.dynamicImage = new Image("/com/sifeb/ve/images/dynamic/" + imageName + ".gif");
+        } catch (IllegalArgumentException ex) {
+            this.dynamicImage = new Image("/com/sifeb/ve/images/static/" + imageName + ".png");
         }
 
         this.block = new Block(this);
