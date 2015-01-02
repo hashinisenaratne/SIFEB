@@ -27,16 +27,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
+import org.controlsfx.dialog.Dialogs;
 
 /**
  * FXML Controller class
@@ -72,6 +73,10 @@ public class LibraryEditorController implements Initializable {
     ComboBox<ComboEntry> capOpenBtn;
     @FXML
     Button capClrBtn;
+    @FXML
+    ProgressIndicator capWait;
+    @FXML
+    GridPane capGrid;
 
     final File CAPABILITY_FOLDER = new File("src/com/sifeb/ve/files/capabilities/");
     final File DEVICE_FOLDER = new File("src/com/sifeb/ve/files/devices/");
@@ -83,6 +88,7 @@ public class LibraryEditorController implements Initializable {
     File capStaticImg;
     File capDynamicImg;
     Map<String, Capability> capList;
+    boolean capModified;
 
     /**
      * Initializes the controller class.
@@ -96,19 +102,29 @@ public class LibraryEditorController implements Initializable {
         capTypeSelect.getSelectionModel().selectFirst();
 
         capList = new HashMap<>();
-        File[] capFiles = CAPABILITY_FOLDER.listFiles();
+        capModified = true;
+        refreshCapList();
 
-        for (File capFile : capFiles) {
-            String fileName = capFile.getName();
-            String capID = fileName.substring(0, fileName.length() - 4);
+        setEventHandlers();
+    }
 
-            Capability cap = fileHandler.readFromCapabilityFile(capID);
-            capList.put(capID, cap);
+    private void refreshCapList() {
+        if (capModified) {
+            capList.clear();
+            File[] capFiles = CAPABILITY_FOLDER.listFiles();
+
+            for (File capFile : capFiles) {
+                String fileName = capFile.getName();
+                String capID = fileName.substring(0, fileName.length() - 4);
+
+                Capability cap = fileHandler.readFromCapabilityFile(capID);
+                capList.put(capID, cap);
 //            if (Arrays.asList(capTypes).contains(cap.getType())) {
 //                capOpenBtn.getItems().add(new ComboEntry(cap.getCapID(), cap.getCapName(Locale.US)));
 //            }
+            }
+            capModified = false;
         }
-        setEventHandlers();
     }
 
     private void setEventHandlers() {
@@ -162,14 +178,13 @@ public class LibraryEditorController implements Initializable {
             FileChooser.ExtensionFilter filterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
             fileChooser.getExtensionFilters().add(filterPNG);
 
-            capStaticImg = fileChooser.showOpenDialog(null);
+            File capStaticTemp = fileChooser.showOpenDialog(null);
             try {
-                BufferedImage bImage = ImageIO.read(capStaticImg);
+                BufferedImage bImage = ImageIO.read(capStaticTemp);
                 Image sImg = SwingFXUtils.toFXImage(bImage, null);
                 if (validateImgDimension(sImg)) {
+                    capStaticImg = capStaticTemp;
                     capStaticImgView.setImage(sImg);
-                } else {
-                    capStaticImg = null;
                 }
             } catch (IOException ex) {
                 Logger.getLogger(LibraryEditorController.class.getName()).log(Level.SEVERE, null, ex);
@@ -181,14 +196,13 @@ public class LibraryEditorController implements Initializable {
             FileChooser.ExtensionFilter filterPNG = new FileChooser.ExtensionFilter("GIF files (*.gif)", "*.gif");
             fileChooser.getExtensionFilters().add(filterPNG);
 
-            capDynamicImg = fileChooser.showOpenDialog(null);
+            File capDynamicTemp = fileChooser.showOpenDialog(null);
             try {
-                BufferedImage bImage = ImageIO.read(capDynamicImg);
+                BufferedImage bImage = ImageIO.read(capDynamicTemp);
                 Image sImg = SwingFXUtils.toFXImage(bImage, null);
                 if (validateImgDimension(sImg)) {
+                    capDynamicImg = capDynamicTemp;
                     capDynamicImgView.setImage(sImg);
-                } else {
-                    capDynamicImg = null;
                 }
             } catch (IOException ex) {
                 Logger.getLogger(LibraryEditorController.class.getName()).log(Level.SEVERE, null, ex);
@@ -246,22 +260,26 @@ public class LibraryEditorController implements Initializable {
 
         capHasTest.setSelected(false);
         capCmdTextBox.setText("");
-        
+
         capStaticImg = null;
         capStaticImgView.setImage(null);
-        
+
         capDynamicImg = null;
         capDynamicImgView.setImage(null);
-    }    
+    }
 
     private void saveCapability(boolean isNewEntry) {
+        
         String ERROR_TITLE = "Invalid Input";
 
         String capID = capIdTextBox.getText();
         String capName = capNameTextBox.getText();
         String capType = capTypeSelect.getValue();
         boolean hasTest = capHasTest.isSelected();
-        String capCmd = capCmdTextBox.getText();
+        String capCmd = "";
+        if (hasTest) {
+            capCmd = capCmdTextBox.getText();
+        }
         if (isNewEntry) {
             if ((capID == null) || (capID.isEmpty())) {
                 showErrorMessage(ERROR_TITLE, "Please enter a valid capability ID");
@@ -284,39 +302,58 @@ public class LibraryEditorController implements Initializable {
             showErrorMessage(ERROR_TITLE, "Please select a .png image for static image");
             return;
         }
-        
-        String capIDFull = "cap_"+capID;
-        Map<Locale,String> names = new HashMap<>();
-         
+
+        setCapWait(true);
+        String capIDFull = "cap_" + capID;
+        Map<Locale, String> names = new HashMap<>();
+
         try {
             //uploading images to the relevant directories
-            Files.copy(capStaticImg.toPath(), new File(S_IMG_FOLDER+capIDFull+".png").toPath(), StandardCopyOption.REPLACE_EXISTING);
-            if(capDynamicImg!=null){
-                Files.copy(capDynamicImg.toPath(), new File(D_IMG_FOLDER+capIDFull+".gif").toPath(), StandardCopyOption.REPLACE_EXISTING);
-                
-                names.put(Locale.US, capName);
-                boolean isSuccess = fileHandler.writeToCapabilityFile(capIDFull, names, capType, capCmd, capIDFull, hasTest);
-                if(isSuccess){
-                    showSuccessMessage("Success", "Capability saved successfully!");
-                    clearCapForm();
-                }
-                else{
-                    showErrorMessage("Error", "Capability not saved. Please try again.");
-                }
+            Files.copy(capStaticImg.toPath(), new File(S_IMG_FOLDER + capIDFull + ".png").toPath(), StandardCopyOption.REPLACE_EXISTING);
+            if (capDynamicImg != null) {
+                Files.copy(capDynamicImg.toPath(), new File(D_IMG_FOLDER + capIDFull + ".gif").toPath(), StandardCopyOption.REPLACE_EXISTING);
             }
+            names.put(Locale.US, capName);
+            boolean isSuccess = fileHandler.writeToCapabilityFile(capIDFull, names, capType, capCmd, capIDFull, hasTest);
+            refreshCapList();
+
+            if (isSuccess) {
+                showSuccessMessage("Success", "Capability saved successfully!");
+                capModified = true;
+                clearCapForm();
+            } else {
+                showErrorMessage("Error", "Capability not saved. Please try again.");
+            }
+
         } catch (IOException ex) {
             Logger.getLogger(LibraryEditorController.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            setCapWait(false);
         }
-        
-        
+
+    }
+    
+    private void setCapWait(boolean status){
+        capGrid.setDisable(status);
+        capSaveBtn.setDisable(status);
+        capClrBtn.setDisable(status);
+        capWait.setVisible(status);
     }
 
     private void showErrorMessage(String title, String message) {
-        JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE,new ImageIcon(IMG_FOLDER+"sad.png"));
+        Dialogs.create()
+                .title(title)
+                .masthead(title)
+                .message(message)
+                .showError();
     }
-    
+
     private void showSuccessMessage(String title, String message) {
-        JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE,new ImageIcon(IMG_FOLDER+"happy.png"));
+        Dialogs.create()
+                .title(title)
+                .masthead(title)
+                .message(message)
+                .showInformation();
     }
 }
 
