@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<?import java.net.*?>
+
+<GridPane id="home" minHeight="122.0" prefHeight="600.0" prefWidth="800.0" stylesheets="@../stylesheet.css" xmlns:fx="http://javafx.com/fxml" fx:controller="com.sifeb.ve.controller.HomeController">
+  
+    <padding>
+        <Insets top="25" right="25" bottom="10" left="25"/>
+    </padding>
+    <Text id="program-text" text="Program" 
+              GridPane.columnIndex="2" GridPane.rowIndex="3"
+              GridPane.columnSpan="1"/>
+    <Text id="learn-text" text="Learn" 
+              GridPane.columnIndex="5" GridPane.rowIndex="3"
+              GridPane.columnSpan="1"/>
+    <Button mnemonicParsing="false" onAction="#goToMainEditor" text="Easy1" 
+                GridPane.columnIndex="2" GridPane.rowIndex="5"
+                GridPane.columnSpan="2"/>
+    <Button mnemonicParsing="false" onAction="#goToTutorials" text="Easy2" 
+                GridPane.columnIndex="5" GridPane.rowIndex="5"
+                GridPane.columnSpan="2"/>    
+    <Button mnemonicParsing="false" onAction="#goToMainEditor" text="Medium1"
+                GridPane.columnIndex="2" GridPane.rowIndex="7"
+                GridPane.columnSpan="2"/>
+    <Button mnemonicParsing="false" onAction="#goToTutorials" text="Medium2" 
+                GridPane.columnIndex="5" GridPane.rowIndex="7"
+                GridPane.columnSpan="1"/>
+    <Button mnemonicParsing="false" onAction="#goToMainEditor" text="Hard1" 
+                GridPane.columnIndex="2" GridPane.rowIndex="8"
+                GridPane.columnSpan="1"/>
+    <Button mnemonicParsing="false" onAction="#goToTutorials" text="Hard2" 
+                GridPane.columnIndex="5" GridPane.rowIndex="8"
+                GridPane.columnSpan="1"/>
+    <Button mnemonicParsing="false" onAction="#goToAPI" text="Contribute"
+                GridPane.columnIndex="4" GridPane.rowIndex="10"
+                GridPane.columnSpan="1"/>
+    
+   
+    <gridLinesVisible>"true"</gridLinesVisible>
+</GridPane>

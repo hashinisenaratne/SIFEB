@@ -6,7 +6,6 @@
 package com.sifeb.ve.controller;
 
 import com.sifeb.ve.MainApp;
-import com.sifeb.ve.ScreensController;
 import com.sifeb.ve.handle.BlockCreator;
 import com.sifeb.ve.resources.Strings;
 import java.io.IOException;
@@ -38,9 +37,7 @@ import javafx.stage.Stage;
  * @author Udith Arosha
  * @author Hashini Senaratne
  */
-public class RootController implements Initializable, ControlledScreen {
-
-    ScreensController myController;
+public class RootController implements Initializable {
     
     @FXML
     BorderPane rootPane;
@@ -204,8 +201,4 @@ public class RootController implements Initializable, ControlledScreen {
 
     }
 
-    @Override
-    public void setScreenParent(ScreensController screenParent) {
-        myController = screenParent;
-    }
 }
