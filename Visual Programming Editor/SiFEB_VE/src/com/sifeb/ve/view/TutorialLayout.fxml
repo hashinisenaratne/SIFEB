@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
+<?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import java.net.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="150.0" prefWidth="200.0" xmlns:fx="http://javafx.com/fxml" fx:controller="com.sifeb.ve.controller.TutorialController">
-    <children>
-        <VBox alignment="CENTER" prefHeight="174.0" prefWidth="135.9998779296875" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <children>
-                <Label text="Screen 2 - Tutorial">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </Label>
-                <Button mnemonicParsing="false" onAction="#goToHome" text="Go to Home" />
-                <Button mnemonicParsing="false" onAction="#goToAPI" text="Go To API" />
-            </children>
-        </VBox>
-    </children>
+<AnchorPane id="learn" minHeight="122.0" prefHeight="600.0" prefWidth="800.0" stylesheets="@../stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sifeb.ve.controller.TutorialController">
+   <children>
+       <Button layoutX="-7.0" layoutY="1.0" mnemonicParsing="false" onAction="#goToHome" prefHeight="46.0" prefWidth="100.0" styleClass="breadcrumbs" text="Home">
+         <font>
+            <Font name="Arial Bold" size="22.0" />
+         </font>
+      </Button>
+       
+       <Button layoutX="87.0" layoutY="1.0" mnemonicParsing="false" onAction="#goToLearn" prefHeight="46.0" prefWidth="100.0" styleClass="breadcrumbs" text="Learn">
+         <font>
+            <Font name="Arial Bold" size="22.0" />
+         </font>
+      </Button>
+   </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
 </AnchorPane>

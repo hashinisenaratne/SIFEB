@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
+<?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.geometry.*?>
@@ -8,42 +8,89 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-
 <?import java.net.*?>
 
-<GridPane id="home" minHeight="122.0" prefHeight="600.0" prefWidth="800.0" stylesheets="@../stylesheet.css" xmlns:fx="http://javafx.com/fxml" fx:controller="com.sifeb.ve.controller.HomeController">
-  
-    <padding>
-        <Insets top="25" right="25" bottom="10" left="25"/>
-    </padding>
-    <Text id="program-text" text="Program" 
-              GridPane.columnIndex="2" GridPane.rowIndex="3"
-              GridPane.columnSpan="1"/>
-    <Text id="learn-text" text="Learn" 
-              GridPane.columnIndex="5" GridPane.rowIndex="3"
-              GridPane.columnSpan="1"/>
-    <Button mnemonicParsing="false" onAction="#goToMainEditor" text="Easy1" 
-                GridPane.columnIndex="2" GridPane.rowIndex="5"
-                GridPane.columnSpan="2"/>
-    <Button mnemonicParsing="false" onAction="#goToTutorials" text="Easy2" 
-                GridPane.columnIndex="5" GridPane.rowIndex="5"
-                GridPane.columnSpan="2"/>    
-    <Button mnemonicParsing="false" onAction="#goToMainEditor" text="Medium1"
-                GridPane.columnIndex="2" GridPane.rowIndex="7"
-                GridPane.columnSpan="2"/>
-    <Button mnemonicParsing="false" onAction="#goToTutorials" text="Medium2" 
-                GridPane.columnIndex="5" GridPane.rowIndex="7"
-                GridPane.columnSpan="1"/>
-    <Button mnemonicParsing="false" onAction="#goToMainEditor" text="Hard1" 
-                GridPane.columnIndex="2" GridPane.rowIndex="8"
-                GridPane.columnSpan="1"/>
-    <Button mnemonicParsing="false" onAction="#goToTutorials" text="Hard2" 
-                GridPane.columnIndex="5" GridPane.rowIndex="8"
-                GridPane.columnSpan="1"/>
-    <Button mnemonicParsing="false" onAction="#goToAPI" text="Contribute"
-                GridPane.columnIndex="4" GridPane.rowIndex="10"
-                GridPane.columnSpan="1"/>
-    
-   
-    <gridLinesVisible>"true"</gridLinesVisible>
+<GridPane id="home" minHeight="122.0" prefHeight="600.0" prefWidth="800.0" stylesheets="@../stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sifeb.ve.controller.HomeController">
+   <children>
+       <Text id="program-text" text="Program" GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Text>
+       <Text id="learn-text" text="Learn" GridPane.columnIndex="3" GridPane.columnSpan="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+         <font>
+            <Font name="Arial Bold Italic" size="18.0" />
+         </font>
+      </Text>
+       <Button mnemonicParsing="false" onAction="#goToMainEditor" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: rgb(255, 255, 255, 0.2);" text="EASY" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+         <font>
+            <Font name="Arial Bold" size="22.0" />
+         </font>
+      </Button>
+       <Button mnemonicParsing="false" onAction="#goToTutorials" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: rgb(255, 255, 255, 0.2);" text="EASY" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+         <font>
+            <Font name="Arial Bold" size="22.0" />
+         </font>
+      </Button>    
+       <Button mnemonicParsing="false" onAction="#goToMainEditor" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: rgb(255, 255, 255, 0.2);" text="MEDIUM" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+         <font>
+            <Font name="Arial Bold" size="22.0" />
+         </font>
+         <padding>
+            <Insets right="1.0" />
+         </padding>
+      </Button>
+       <Button mnemonicParsing="false" onAction="#goToTutorials" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: rgb(255, 255, 255, 0.2);" text="MEDIUM" GridPane.columnIndex="3" GridPane.columnSpan="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+         <font>
+            <Font name="Arial Bold" size="22.0" />
+         </font>
+         <padding>
+            <Insets right="1.0" />
+         </padding>
+      </Button>
+       <Button mnemonicParsing="false" onAction="#goToMainEditor" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: rgb(255, 255, 255, 0.2);" text="HARD" GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+         <font>
+            <Font name="Arial Bold" size="22.0" />
+         </font>
+      </Button>
+       <Button mnemonicParsing="false" onAction="#goToTutorials" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: rgb(255, 255, 255, 0.2);" text="HARD" GridPane.columnIndex="3" GridPane.columnSpan="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+         <font>
+            <Font name="Arial Bold" size="22.0" />
+         </font>
+      </Button>
+       <Button mnemonicParsing="false" onAction="#goToAPI" style="-fx-background-color: rgb(255, 255, 255, 0.6);" text="CONTRIBUTE" GridPane.columnIndex="2" GridPane.columnSpan="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER">
+         <font>
+            <Font name="Arial Bold" size="20.0" />
+         </font>
+      </Button>
+      <Button mnemonicParsing="false" onAction="#goToHome" prefHeight="46.0" prefWidth="100.0" styleClass="breadcrumbs" text="Home" GridPane.halignment="LEFT" GridPane.valignment="TOP">
+         <font>
+            <Font name="Arial Bold" size="22.0" />
+         </font>
+         <GridPane.margin>
+            <Insets left="-8.0" />
+         </GridPane.margin>
+      </Button>
+   </children>
+   <columnConstraints>
+      <ColumnConstraints maxWidth="199.0" minWidth="163.0" prefWidth="167.0" />
+      <ColumnConstraints maxWidth="142.0" minWidth="101.0" prefWidth="134.0" />
+      <ColumnConstraints maxWidth="201.0" minWidth="160.0" prefWidth="190.0" />
+      <ColumnConstraints maxWidth="136.0" minWidth="105.0" prefWidth="135.0" />
+      <ColumnConstraints maxWidth="195.0" minWidth="147.0" prefWidth="147.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints maxHeight="145.0" minHeight="100.0" prefHeight="138.0" />
+      <RowConstraints maxHeight="100.0" minHeight="32.0" prefHeight="39.0" />
+      <RowConstraints maxHeight="123.0" minHeight="90.0" prefHeight="90.0" />
+      <RowConstraints maxHeight="132.0" minHeight="77.0" prefHeight="94.0" />
+      <RowConstraints maxHeight="148.0" minHeight="74.0" prefHeight="86.0" />
+      <RowConstraints maxHeight="140.0" minHeight="5.0" prefHeight="111.0" />
+      <RowConstraints maxHeight="102.0" minHeight="10.0" prefHeight="46.0" />
+      <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
+      <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
+   </rowConstraints>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
 </GridPane>

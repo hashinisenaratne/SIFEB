@@ -47,17 +47,6 @@ public class TutorialController implements Initializable {
     }
 
     @FXML
-    private void goToAPI(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource(MainApp.LibraryFile));
-            MainApp.setPane((Pane) loader.load());
-            Scene scene = new Scene(MainApp.getPane());
-            MainApp.getStage().setScene(scene);
-            MainApp.getStage().setMaximized(false);
-            MainApp.getStage().show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void goToLearn(ActionEvent event) {
     }
 }

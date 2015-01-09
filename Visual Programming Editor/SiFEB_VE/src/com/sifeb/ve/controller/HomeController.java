@@ -75,4 +75,8 @@ public class HomeController implements Initializable {
             e.printStackTrace();
         }
     }
+    
+        @FXML
+    private void goToHome(ActionEvent event) {
+    }
 }

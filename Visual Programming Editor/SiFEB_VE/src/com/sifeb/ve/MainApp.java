@@ -8,7 +8,6 @@ package com.sifeb.ve;
 import com.sifeb.ve.controller.ComPortController;
 import com.sifeb.ve.resources.Strings;
 import java.io.IOException;
-import static java.lang.Thread.sleep;
 import java.util.Locale;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
