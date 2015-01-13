@@ -162,14 +162,11 @@ public class RootController implements Initializable {
             ComPortController.setBlockCreator(blkCreator);
             ComPortController.openPort();
             // ComPortController.setEventListener();
-            blkCreator.createCapability("cap_def1", null);
-            blkCreator.createCapability("cap_def2", null);
-            blkCreator.createCapability("cap_def3", null);
-            blkCreator.createCapability("cap_def4", null);
+            blkCreator.addDefaultCapabilities();
 
             //for test only
-            blkCreator.createBlock("10");
-            blkCreator.createBlock("11");
+            blkCreator.createDeviceBlock("10", "10");
+            blkCreator.createDeviceBlock("11", "11");
             rootPane.setCenter(mainEditor);
         } catch (IOException e) {
             e.printStackTrace();
@@ -188,12 +185,11 @@ public class RootController implements Initializable {
             ComPortController.setBlockCreator(blkCreator);
             ComPortController.openPort();
             // ComPortController.setEventListener();
-            blkCreator.createCapability("cap_def1", null);
-            blkCreator.createCapability("cap_def2", null);
+            blkCreator.addDefaultCapabilities();
 
             //for test only
-            blkCreator.createBlock("10");
-            blkCreator.createBlock("11");
+            blkCreator.createDeviceBlock("10", "10");
+            blkCreator.createDeviceBlock("11", "11");
             rootPane.setCenter(gameEditor);
         } catch (IOException e) {
             e.printStackTrace();

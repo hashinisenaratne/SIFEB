@@ -9,14 +9,10 @@ import com.sifeb.ve.Capability;
 import com.sifeb.ve.Device;
 import com.sifeb.ve.controller.MainEditorController;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
@@ -59,51 +55,32 @@ public class BlockCreator {
         observableList.add(message);
     }
 
-    // sends an integer value
-    public void createBlock(String id) {
-        String fileName = "dev_" + id;
-        Element devElement = fileHandler.readFromDeviceFile(fileName);
-
-        String devId = devElement.getElementsByTagName("Id").item(0).getTextContent();
-        NodeList nameList = devElement.getElementsByTagName("Names").item(0).getChildNodes();
-        Map<Locale, String> devNames = new HashMap<>();
-        Locale[] localeList = {new Locale("en", "US"), new Locale("si", "LK")};
-
-        for (int i = 0; i < nameList.getLength(); i++) {
-            devNames.put(localeList[i], nameList.item(i).getTextContent());
+    public void addDefaultCapabilities() {
+        String[] defaultCaps = {"cap_def1", "cap_def2", "cap_def3", "cap_def4"};
+        for (String capId : defaultCaps) {
+            Capability cap = fileHandler.readFromCapabilityFile(capId);
+            mainEditor.addCapabilityBlock(cap);
         }
+    }
 
-        String address = devElement.getElementsByTagName("Address").item(0).getTextContent();
-        String type = devElement.getElementsByTagName("Type").item(0).getTextContent();
-        String image = devElement.getElementsByTagName("Image").item(0).getTextContent();
-
-        // create device
-        Device device = new Device(devId, devNames, Integer.parseInt(address), type, image);
+    // sends an integer value
+    public void createDeviceBlock(String id, String address) {
+        String fileName = "dev_" + id;
+        Device device = fileHandler.readFromDeviceFile(fileName,address);
         mainEditor.addDeviceBlock(device);
 
-        //Device device = new Device("00001", "Wheels", 10, "actuator", "Mwheels.png");
-        NodeList capList = devElement.getElementsByTagName("Capabilities").item(0).getChildNodes();
-
-        for (int j = 0; j < capList.getLength(); j++) {
-            String capId = capList.item(j).getTextContent();
-            createCapability(capId, device);
+        for(Capability cap:device.getCapabilities()){
+            mainEditor.addCapabilityBlock(cap);
         }
 
     }
 
-    public void createCapability(String id, Device device) {
-        Capability cap = fileHandler.readFromCapabilityFile(id);
-        cap.setDevice(device);
-        mainEditor.addCapabilityBlock(cap, device);
-
-        System.out.println("capability added");
-
-    }
-
+//    public void createCapabilityBlock(Capability capability) {        
+//        mainEditor.addCapabilityBlock(cap, device);
+//    }
     public void removeBlock(String address) {
         int addr = Integer.parseInt(address);
         mainEditor.removeBlocks(addr);
-
     }
 
     public void processMessage() {
@@ -130,12 +107,12 @@ public class BlockCreator {
                 char command = readValue.charAt(0);
 
                 String address = Integer.toString((int) readValue.charAt(1));
-                System.out.println("address is - "+address);
+                System.out.println("address is - " + address);
 
                 //       System.out.println("command - " + command + " add - " + address);
                 switch (command) {
                     case 'c':
-                        this.createBlock(address);
+                        this.createDeviceBlock(address, address);
                         break;
                     case 'd':
                         this.removeBlock(address);

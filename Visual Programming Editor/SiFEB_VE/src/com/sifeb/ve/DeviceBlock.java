@@ -9,6 +9,7 @@ import com.sifeb.ve.controller.ComPortController;
 import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -37,22 +38,38 @@ public final class DeviceBlock extends Pane {
 
     private final Button btn;
     private final Device device;
+    private final Image bckImg;
     private Label name;
 
     private static final String ACTUATOR_BTN = "/com/sifeb/ve/images/MAPlay.png";
+    private static final String ACTUATOR_BCK = "/com/sifeb/ve/images/MABackground.png";
     private static final String SENSOR_BTN = "/com/sifeb/ve/images/MSPlay.png";
+    private static final String SENSOR_BCK = "/com/sifeb/ve/images/MSBackground.png";
     private static final String SHOW_COMMAND = "g";
 
     public DeviceBlock(Device device) {
 
         this.device = device;
+        
+        switch (this.device.getType()) {
+            case Device.DEV_ACTUATOR:
+                bckImg = new Image(ACTUATOR_BCK);
+                break;
+            case Device.DEV_SENSOR:
+                bckImg = new Image(SENSOR_BCK);
+                break;
+            default:
+                bckImg = new Image(ACTUATOR_BCK);
+        }
 
-        super.setPrefSize(device.getImage().getWidth(), device.getImage().getHeight());
-        super.setMaxSize(device.getImage().getWidth(), device.getImage().getHeight());
-        super.setBackground(new Background(new BackgroundImage(device.getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+        super.setPrefSize(bckImg.getWidth(), bckImg.getHeight());
+        super.setMaxSize(bckImg.getWidth(), bckImg.getHeight());
+        super.setBackground(new Background(
+                new BackgroundImage(bckImg, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT),
+                new BackgroundImage(device.getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, new BackgroundPosition(Side.RIGHT, 10, false, Side.TOP, 5, false), BackgroundSize.DEFAULT)));
         this.setCursor(Cursor.HAND);
 
-        this.btn = setButton(device.getType(), device.getImage().getWidth(), device.getImage().getHeight());
+        this.btn = setButton(device.getType(), bckImg.getWidth(), bckImg.getHeight());
         super.getChildren().add(this.btn);
 
         name = new Label();
@@ -74,9 +91,9 @@ public final class DeviceBlock extends Pane {
 
     private void setBlockLabel() {
         name.setFont(new Font(14));
-        name.setPrefSize(device.getImage().getWidth() * 0.6, 30);
-        name.setMaxWidth(device.getImage().getWidth() * 0.6);
-        name.relocate((device.getImage().getWidth() * 0.3), 30);
+        name.setPrefSize(bckImg.getWidth() * 0.6, 30);
+        name.setMaxWidth(bckImg.getWidth() * 0.6);
+        name.relocate((bckImg.getWidth() * 0.3), 30);
         name.setAlignment(Pos.CENTER_RIGHT);
         super.getChildren().add(name);
     }
@@ -84,11 +101,11 @@ public final class DeviceBlock extends Pane {
     public Button setButton(String type, double width, double height) {
         Image btnImg = new Image(getClass().getResourceAsStream(DeviceBlock.ACTUATOR_BTN));
         switch (type) {
-            case "actuator": {
+            case Device.DEV_ACTUATOR: {
                 btnImg = new Image(getClass().getResourceAsStream(DeviceBlock.ACTUATOR_BTN));
                 break;
             }
-            case "sensor": {
+            case Device.DEV_SENSOR: {
                 btnImg = new Image(getClass().getResourceAsStream(DeviceBlock.SENSOR_BTN));
                 break;
             }

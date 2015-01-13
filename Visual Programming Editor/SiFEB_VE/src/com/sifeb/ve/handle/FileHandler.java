@@ -24,18 +24,21 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
-import java.util.AbstractMap;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import org.xml.sax.SAXException;
 
 public class FileHandler {
 
     private final String CAPABILITY_FOLDER = "src/com/sifeb/ve/files/capabilities/";
+    private final String DEVICE_FOLDER = "src/com/sifeb/ve/files/devices/";
 
     public static void main(String[] args) {
 
         FileHandler fh = new FileHandler();
+        fh.generateTestDeviceFiles();
 //        fh.generateTestCapabilityFiles();
 //        fh.readFromCapabilityFile("cap_001");
 //        fh.writeToGameFile("game_001");
@@ -45,7 +48,8 @@ public class FileHandler {
         //fh.writeToDeviceFile("dev_12");
     }
 
-    public void writeToDeviceFile(String fileName) {
+    public boolean writeToDeviceFile(String devID, Map<Locale, String> devNames, String devType, String[] devCaps, String imgName) {
+
         try {
 
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -60,77 +64,64 @@ public class FileHandler {
             rootElement.appendChild(device);
 
             Element id = doc.createElement("Id");
-            id.appendChild(doc.createTextNode("1234"));
+            id.appendChild(doc.createTextNode(devID));
             device.appendChild(id);
 
-            Element name = doc.createElement("Names");
-            device.appendChild(name);
+            Element names = doc.createElement("Names");
+            device.appendChild(names);
 
-            Element usName = doc.createElement("en_US");
-            usName.appendChild(doc.createTextNode("go forward"));
-            name.appendChild(usName);
+            for (Map.Entry<Locale, String> entry : devNames.entrySet()) {
+                Element name = doc.createElement("Name");
+                Element locale = doc.createElement("Locale");
+                Element nameStr = doc.createElement("Value");
 
-            Element lkName = doc.createElement("si_LK");
-            lkName.appendChild(doc.createTextNode("go forward"));
-            name.appendChild(lkName);
+                locale.appendChild(doc.createTextNode(entry.getKey().toString()));
+                nameStr.appendChild(doc.createTextNode(entry.getValue()));
 
-            Element address = doc.createElement("Address");
-            address.appendChild(doc.createTextNode("12"));
-            device.appendChild(address);
+                name.appendChild(locale);
+                name.appendChild(nameStr);
+                names.appendChild(name);
+            }
 
             Element type = doc.createElement("Type");
-            type.appendChild(doc.createTextNode("type"));
+            type.appendChild(doc.createTextNode(devType));
             device.appendChild(type);
 
             Element image = doc.createElement("Image");
-            image.appendChild(doc.createTextNode("Mwheels.png"));
+            image.appendChild(doc.createTextNode(imgName));
             device.appendChild(image);
 
             Element capabilities = doc.createElement("Capabilities");
             device.appendChild(capabilities);
 
-            // Element cap1 = doc.createElement("capability_1");
-            for (int i = 1; i < 6; i++) {
-                String capS = "capability_" + i;
-                String capST = "cap_00" + i;
-                Element cap1 = doc.createElement(capS);
-                cap1.appendChild(doc.createTextNode(capST));
-                capabilities.appendChild(cap1);
+            for (int j = 0; j < devCaps.length; j++) {
+                Element cap = doc.createElement("capability");
+                cap.appendChild(doc.createTextNode(devCaps[j]));
+                capabilities.appendChild(cap);
             }
-            // cap1.appendChild(doc.createTextNode("cap_001"));
-            //  capabilities.appendChild(cap1);
-
-//            Element cap2 = doc.createElement("capability_2");
-//            cap2.appendChild(doc.createTextNode("cap-0034"));
-//            capabilities.appendChild(cap2);
-            // write the content into xml file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            File file = new File("src/com/sifeb/ve/files/devices/" + fileName + ".xml");
+            File file = new File(DEVICE_FOLDER + devID + ".xml");
             StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
 
             // Output to console for testing
-            // StreamResult result = new StreamResult(System.out);
             transformer.transform(source, result);
 
-            System.out.println("File saved!");
+            return true;
 
         } catch (ParserConfigurationException | TransformerException pce) {
-            pce.printStackTrace();
+            return false;
         }
     }
 
-    public Element readFromDeviceFile(String fileName) {
+    public Device readFromDeviceFile(String fileName, String address) {
 
         Element eElement = null;
-
         File file = new File("src/com/sifeb/ve/files/devices/" + fileName + ".xml");
 
-        //  Image img=new Image()
         try {
 
-            //File fXmlFile = new File("/Users/mkyong/staff.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(file);
@@ -143,33 +134,39 @@ public class FileHandler {
             NodeList nList = doc.getElementsByTagName("Device");
             Node nNode = nList.item(0);
             eElement = (Element) nNode;
-            System.out.println("----------------------------");
-
-//            for (int temp = 0; temp < nList.getLength(); temp++) {
-//
-//                System.out.println("list " + nList.getLength());
-//                Node nNode = nList.item(temp);
-//
-//                System.out.println("\nCurrent Element :" + nNode.getNodeName());
-//
-//                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-//
-//                    Element eElement = (Element) nNode;
-//
-////                    System.out.println("Staff id : " + eElement.getAttribute("id"));
-////                    System.out.println("First Name : " + eElement.getElementsByTagName("firstname").item(0).getTextContent());
-////                    System.out.println("Last Name : " + eElement.getElementsByTagName("lastname").item(0).getTextContent());
-////                    System.out.println("Nick Name : " + eElement.getElementsByTagName("nickname").item(0).getTextContent());
-////                    System.out.println("Salary : " + eElement.getElementsByTagName("salary").item(0).getTextContent());
-//                }
-//
-//                // return 
-//            }
-        } catch (Exception e) {
+        } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
 
-        return eElement;
+        return getDevFromElement(eElement, address);
+    }
+
+    private Device getDevFromElement(Element devElement, String address) {
+        
+        String devId = devElement.getElementsByTagName("Id").item(0).getTextContent();                
+        NodeList nodeList = devElement.getElementsByTagName("Names").item(0).getChildNodes();
+        Map<Locale, String> actNames = new HashMap<>();
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            NodeList nameNodes = nodeList.item(i).getChildNodes();
+            String locale = nameNodes.item(0).getTextContent();
+            String name = nameNodes.item(1).getTextContent();
+            actNames.put(new Locale(locale.split("_")[0], locale.split("_")[1]), name);
+        }
+
+        String type = devElement.getElementsByTagName("Type").item(0).getTextContent();
+        String image = devElement.getElementsByTagName("Image").item(0).getTextContent();
+        // create device
+        Device device = new Device(devId, actNames, Integer.parseInt(address), type, image);
+        
+        NodeList capList = devElement.getElementsByTagName("Capabilities").item(0).getChildNodes();
+
+        for (int j = 0; j < capList.getLength(); j++) {
+            String capId = capList.item(j).getTextContent();
+            Capability cap = readFromCapabilityFile(capId);
+            device.addCapability(cap);
+        }
+        return device;
     }
 
     public boolean writeToCapabilityFile(String capID, Map<Locale, String> capNames, String capType, String command, String imageName, boolean hasTest) {
@@ -254,7 +251,7 @@ public class FileHandler {
             Node nNode = nList.item(0);
             eElement = (Element) nNode;
 
-        } catch (Exception e) {
+        } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
 
@@ -475,6 +472,89 @@ public class FileHandler {
                 pce.printStackTrace();
             }
 
+        }
+    }
+
+    private void generateTestDeviceFiles() {
+        String[] ids = {"dev_10", "dev_11", "dev_12"};
+        String[] deviceNames_en = {"Wheels", "Sonar", "Light"};
+        String[] deviceNames_si = {"රෝද", "අතිධ්වනි", "පහන්",};
+        String[] types = {Device.DEV_ACTUATOR, Device.DEV_SENSOR, Device.DEV_ACTUATOR};
+        String[][] caps = {{"cap_001", "cap_002", "cap_003", "cap_004", "cap_005"},
+        {"cap_008", "cap_009"},
+        {"cap_006", "cap_007"}
+        };
+
+        try {
+
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+            for (int i = 0; i < 3; i++) {
+
+                Map<String, String> nameList = new HashMap<>();
+                nameList.put("en_US", deviceNames_en[i]);
+                nameList.put("si_LK", deviceNames_si[i]);
+                String[] cp = caps[i];
+
+                // root elements
+                Document doc = docBuilder.newDocument();
+                Element rootElement = doc.createElement("Sifeb");
+                doc.appendChild(rootElement);
+
+                Element device = doc.createElement("Device");
+                rootElement.appendChild(device);
+
+                Element id = doc.createElement("Id");
+                id.appendChild(doc.createTextNode(ids[i]));
+                device.appendChild(id);
+
+                Element names = doc.createElement("Names");
+                device.appendChild(names);
+
+                for (Map.Entry<String, String> entry : nameList.entrySet()) {
+                    Element name = doc.createElement("Name");
+                    Element locale = doc.createElement("Locale");
+                    Element nameStr = doc.createElement("Value");
+
+                    locale.appendChild(doc.createTextNode(entry.getKey()));
+                    nameStr.appendChild(doc.createTextNode(entry.getValue()));
+
+                    name.appendChild(locale);
+                    name.appendChild(nameStr);
+                    names.appendChild(name);
+                }
+
+                Element type = doc.createElement("Type");
+                type.appendChild(doc.createTextNode(types[i]));
+                device.appendChild(type);
+
+                Element image = doc.createElement("Image");
+                image.appendChild(doc.createTextNode(ids[i]));
+                device.appendChild(image);
+
+                Element capabilities = doc.createElement("Capabilities");
+                device.appendChild(capabilities);
+
+                for (int j = 0; j < cp.length; j++) {
+                    Element cap = doc.createElement("capability");
+                    cap.appendChild(doc.createTextNode(cp[j]));
+                    capabilities.appendChild(cap);
+                }
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
+                DOMSource source = new DOMSource(doc);
+                File file = new File(DEVICE_FOLDER + ids[i] + ".xml");
+                StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
+
+                // Output to console for testing
+                // StreamResult result = new StreamResult(System.out);
+                transformer.transform(source, result);
+
+                System.out.println("File saved!");
+            }
+        } catch (ParserConfigurationException | TransformerException pce) {
+            pce.printStackTrace();
         }
     }
 }
