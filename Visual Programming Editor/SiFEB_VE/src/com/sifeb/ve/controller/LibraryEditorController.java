@@ -213,12 +213,14 @@ public class LibraryEditorController implements Initializable {
                 String capID = fileName.substring(0, fileName.length() - 4);
 
                 Capability cap = fileHandler.readFromCapabilityFile(capID);
-                capList.put(capID, cap);
+                if ((!cap.getType().equals("control")) && (!cap.getType().equals("ifelse"))) {
+                    capList.put(capID, cap);
+                }
             }
             capModified = false;
         }
     }
-    
+
     private void refreshDevList() {
         if (devModified) {
             devList.clear();
@@ -381,6 +383,18 @@ public class LibraryEditorController implements Initializable {
             devImgView.setFitHeight(30);
             devImgView.setEffect(null);
         });
+
+        devEditBtn.setOnAction((event) -> {
+            refreshDevList();
+            Optional<Device> response = Dialogs.create()
+                    .title("Edit device")
+                    .masthead("Select a device to Edit")
+                    .message("Select Device:")
+                    .showChoices(devList.values());
+
+            response.ifPresent(chosen -> fillDevForm(chosen));
+
+        });
     }
 
     private void removeCapability(Capability cap) {
@@ -435,7 +449,6 @@ public class LibraryEditorController implements Initializable {
         isNewCap = false;
 
         capIdTextBox.setText(cap.getCapID().substring(4));
-//        capIdTextBox.setEditable(false);
         capIdTextBox.setDisable(true);
 
         capNameTextBox.setText(cap.getCapName(Locale.US));
@@ -573,10 +586,10 @@ public class LibraryEditorController implements Initializable {
         String devID = devIdTextBox.getText();
         String devName = devNameTextBox.getText();
         String devType = devTypeSelect.getValue();
-        
-        ArrayList<String> caps= new ArrayList<>();
-        for(SelectedEntry se:selectedCaps){
-            if(se.isSelected()){
+
+        ArrayList<String> caps = new ArrayList<>();
+        for (SelectedEntry se : selectedCaps) {
+            if (se.isSelected()) {
                 caps.add(se.getId());
             }
         }
@@ -585,8 +598,7 @@ public class LibraryEditorController implements Initializable {
             if ((devID == null) || (devID.isEmpty())) {
                 showErrorMessage(ERROR_TITLE, "Please enter a valid device ID");
                 return;
-            }
-            else if (devList.containsKey("dev_" + devID)) {
+            } else if (devList.containsKey("dev_" + devID)) {
                 showErrorMessage(ERROR_TITLE, "Device ID is already existing");
                 return;
             }
@@ -601,13 +613,13 @@ public class LibraryEditorController implements Initializable {
             showErrorMessage(ERROR_TITLE, "Please select a .png image for device image");
             return;
         } else {
-            imgValid = validateImgDimension(devImgView.getImage(),true);
+            imgValid = validateImgDimension(devImgView.getImage(), true);
         }
 
         if (!imgValid) {
             return;
         }
-        
+
         setDevWait(true);
         String devIDFull = "dev_" + devID;
         Map<Locale, String> names = new HashMap<>();
@@ -615,7 +627,7 @@ public class LibraryEditorController implements Initializable {
         try {
             //uploading images to the relevant directories
             Files.copy(devImg.toPath(), new File(DEVICE_IMG_FOLDER + devIDFull + ".png").toPath(), StandardCopyOption.REPLACE_EXISTING);
-            
+
             names.put(Locale.US, devName);
             boolean isSuccess = fileHandler.writeToDeviceFile(devIDFull, names, devType, caps.toArray(new String[caps.size()]), devIDFull);
             refreshDevList();
@@ -704,6 +716,30 @@ public class LibraryEditorController implements Initializable {
                 se.setSelected(cb.isSelected());
             }
         }
+    }
+
+    private void fillDevForm(Device dev) {
+        clearDevForm();
+        isNewDev = false;
+
+        devIdTextBox.setText(dev.getDeviceID().substring(4));
+        devIdTextBox.setDisable(true);
+
+        devNameTextBox.setText(dev.getDeviceName(Locale.US));
+        devTypeSelect.getSelectionModel().select(dev.getType());
+        
+        String[] caps = new String[dev.getCapabilities().size()];
+        for(int i=0;i<dev.getCapabilities().size();i++){
+            caps[i] = dev.getCapabilities().get(i).getCapID();
+        }
+        refreshSelectedCaps(caps);
+
+        devImg = new File(DEVICE_IMG_FOLDER + dev.getDeviceID() + ".png");
+        if (devImg.exists()) {
+            devImgView.setImage(dev.getImage());
+        } else {
+            devImg = null;
+        }        
     }
 }
 

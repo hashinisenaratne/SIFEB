@@ -65,6 +65,10 @@ public class Device {
         Locale currentLocale = Strings.getLocale();
         return deviceNames.get(currentLocale);
     }
+    
+    public String getDeviceName(Locale locale) {
+        return deviceNames.get(locale);
+    }
 
     public DeviceBlock getDeviceBlock() {
         return deviceBlock;
@@ -77,4 +81,10 @@ public class Device {
     public void addCapability(Capability cap) {
         this.capabilities.add(cap);
     }
+
+    @Override
+    public String toString() {
+        return (this.getDeviceName() + " (" + this.getDeviceID() + ")");
+    }
+
 }

@@ -8,8 +8,6 @@ package com.sifeb.ve;
 import com.sifeb.ve.controller.MainEditorController;
 import com.sun.javafx.beans.event.AbstractNotifyListener;
 import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Side;
 import javafx.scene.Node;

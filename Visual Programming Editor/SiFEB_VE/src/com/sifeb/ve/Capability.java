@@ -6,8 +6,6 @@
 package com.sifeb.ve;
 
 import com.sifeb.ve.resources.Strings;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Map;
 import javafx.scene.image.Image;
