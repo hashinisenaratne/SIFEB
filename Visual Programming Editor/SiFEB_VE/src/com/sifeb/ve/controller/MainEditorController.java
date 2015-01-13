@@ -9,12 +9,14 @@ import com.sifeb.ve.ActionBlock;
 import com.sifeb.ve.Block;
 import com.sifeb.ve.Capability;
 import com.sifeb.ve.ConditionBlock;
-import com.sifeb.ve.RepeatBlock;
 import com.sifeb.ve.Device;
 import com.sifeb.ve.FeedBackLogger;
 import com.sifeb.ve.Holder;
 import com.sifeb.ve.IfBlock;
+import com.sifeb.ve.MainApp;
+import com.sifeb.ve.RepeatBlock;
 import com.sifeb.ve.resources.Strings;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -23,10 +25,12 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -606,5 +610,27 @@ public class MainEditorController implements Initializable {
 
     public Label getFbText() {
         return fbText;
+    }
+    
+    @FXML
+    private void goToProgram(ActionEvent event) {
+    }
+    
+    @FXML
+    private void goToHome(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource(MainApp.HomeFile));
+            MainApp.setPane((Pane) loader.load());
+            Scene scene = new Scene(MainApp.getPane());
+            MainApp.getStage().setScene(scene);
+            MainApp.getStage().setMaximized(false);
+            MainApp.getStage().setResizable(false);
+            MainApp.getStage().setWidth(800);
+            MainApp.getStage().setHeight(600);
+            MainApp.getStage().show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

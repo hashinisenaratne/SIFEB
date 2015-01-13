@@ -54,6 +54,7 @@ public class RootController implements Initializable {
 
     MainEditorController meCtrl;
     Stage libEditStage;
+    private static int ProgramLevel = 1;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -163,6 +164,13 @@ public class RootController implements Initializable {
             ComPortController.openPort();
             // ComPortController.setEventListener();
             blkCreator.addDefaultCapabilities();
+            if(ProgramLevel == 2){
+                blkCreator.addLevel2Capabilities();
+            }
+            else if(ProgramLevel == 3){                
+                blkCreator.addLevel3Capabilities();
+            }
+            
 
             //for test only
             blkCreator.createDeviceBlock("10", "10");
@@ -195,6 +203,10 @@ public class RootController implements Initializable {
             e.printStackTrace();
         }
 
+    }
+    
+    public static void setLevel(int level){
+        ProgramLevel = level;
     }
 
 }

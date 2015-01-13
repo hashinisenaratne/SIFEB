@@ -32,20 +32,36 @@ public class HomeController implements Initializable {
     }
 
     @FXML
-    private void goToMainEditor(ActionEvent event) {
+    private void goToMainEditor1(ActionEvent event){
+            goToMainEditor(1);
+    }
+    
+    @FXML
+    private void goToMainEditor2(ActionEvent event){
+            goToMainEditor(2);
+    }
+    
+    @FXML
+    private void goToMainEditor3(ActionEvent event){
+            goToMainEditor(3);
+    }
+    
+    private void goToMainEditor(int level) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/RootLayout.fxml"));
+            RootController.setLevel(level);
+            loader.setLocation(MainApp.class.getResource(MainApp.RootFile));
             MainApp.setPane((Pane) loader.load());
             Scene scene = new Scene(MainApp.getPane());
             MainApp.getStage().setScene(scene);
-            MainApp.getStage().setMaximized(true);
+            MainApp.getStage().setMaximized(true);            
+            MainApp.getStage().setResizable(true);
             MainApp.getStage().show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
+    
     @FXML
     private void goToTutorials(ActionEvent event) {
         try {
@@ -53,8 +69,11 @@ public class HomeController implements Initializable {
             loader.setLocation(MainApp.class.getResource(MainApp.TutorialFile));
             MainApp.setPane((Pane) loader.load());
             Scene scene = new Scene(MainApp.getPane());
-            MainApp.getStage().setScene(scene);
+            MainApp.getStage().setScene(scene); 
             MainApp.getStage().setMaximized(false);
+            MainApp.getStage().setResizable(false);
+            MainApp.getStage().setWidth(800);
+            MainApp.getStage().setHeight(600);
             MainApp.getStage().show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -70,6 +89,7 @@ public class HomeController implements Initializable {
             Scene scene = new Scene(MainApp.getPane());
             MainApp.getStage().setScene(scene);
             MainApp.getStage().setMaximized(false);
+            MainApp.getStage().setResizable(false);
             MainApp.getStage().show();
         } catch (IOException e) {
             e.printStackTrace();

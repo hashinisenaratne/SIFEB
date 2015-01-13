@@ -56,8 +56,24 @@ public class BlockCreator {
     }
 
     public void addDefaultCapabilities() {
-        String[] defaultCaps = {"cap_def1", "cap_def2", "cap_def3", "cap_def4"};
+        String[] defaultCaps = {"cap_def1", "cap_def2"};
         for (String capId : defaultCaps) {
+            Capability cap = fileHandler.readFromCapabilityFile(capId);
+            mainEditor.addCapabilityBlock(cap);
+        }
+    }
+    
+    public void addLevel2Capabilities() {
+        String[] level2Caps = {"cap_def3"};
+        for (String capId : level2Caps) {
+            Capability cap = fileHandler.readFromCapabilityFile(capId);
+            mainEditor.addCapabilityBlock(cap);
+        }
+    }
+    
+    public void addLevel3Capabilities() {
+        String[] level3Caps = {"cap_def3", "cap_def4"};
+        for (String capId : level3Caps) {
             Capability cap = fileHandler.readFromCapabilityFile(capId);
             mainEditor.addCapabilityBlock(cap);
         }

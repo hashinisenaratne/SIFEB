@@ -39,7 +39,10 @@ public class TutorialController implements Initializable {
             MainApp.setPane((Pane) loader.load());
             Scene scene = new Scene(MainApp.getPane());
             MainApp.getStage().setScene(scene);
-            MainApp.getStage().setMaximized(false);
+            MainApp.getStage().setMaximized(false);            
+            MainApp.getStage().setResizable(false);
+            MainApp.getStage().setWidth(800);
+            MainApp.getStage().setHeight(600);
             MainApp.getStage().show();
         } catch (IOException e) {
             e.printStackTrace();
