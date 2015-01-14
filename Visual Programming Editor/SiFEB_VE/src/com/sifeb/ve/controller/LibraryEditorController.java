@@ -7,6 +7,7 @@ package com.sifeb.ve.controller;
 
 import com.sifeb.ve.Capability;
 import com.sifeb.ve.Device;
+import com.sifeb.ve.MainApp;
 import com.sifeb.ve.handle.FileHandler;
 import com.sifeb.ve.resources.SifebUtil;
 import java.awt.image.BufferedImage;
@@ -28,7 +29,9 @@ import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -42,6 +45,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -130,9 +134,6 @@ public class LibraryEditorController implements Initializable {
 
     final File CAPABILITY_FOLDER = new File(SifebUtil.CAP_FILE_DIR);
     final File DEVICE_FOLDER = new File(SifebUtil.DEV_FILE_DIR);
-//    final String S_IMG_FOLDER = "src/com/sifeb/ve/images/static/";
-//    final String D_IMG_FOLDER = "src/com/sifeb/ve/images/dynamic/";
-//    final String DEVICE_IMG_FOLDER = "src/com/sifeb/ve/images/devices/";
     final String[] capTypes = new String[]{Capability.CAP_ACTION, Capability.CAP_ACTION_C, Capability.CAP_SENSE, Capability.CAP_CONDITION};
     final String[] devTypes = new String[]{Device.DEV_ACTUATOR, Device.DEV_SENSOR};
     FileHandler fileHandler;
@@ -734,6 +735,28 @@ public class LibraryEditorController implements Initializable {
             devImgView.setImage(dev.getImage());
         } else {
             devImg = null;
+        }
+    }
+    
+    @FXML
+    private void goToLibEditor(ActionEvent event) {
+    }
+    
+    @FXML
+    private void goToHome(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource(MainApp.HomeFile));
+            MainApp.setPane((Pane) loader.load());
+            Scene scene = new Scene(MainApp.getPane());
+            MainApp.getStage().setScene(scene);
+            MainApp.getStage().setMaximized(false);
+            MainApp.getStage().setResizable(false);
+            MainApp.getStage().setWidth(800);
+            MainApp.getStage().setHeight(600);
+            MainApp.getStage().show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
