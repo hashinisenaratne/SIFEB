@@ -16,6 +16,15 @@ import javafx.scene.layout.Pane;
  * @author Udith Arosha
  */
 public class Capability {
+    
+    // Capability Type Definitions /////////////////////////
+    public static final String CAP_ACTION = "action";
+    public static final String CAP_ACTION_C = "actionC";
+    public static final String CAP_SENSE = "sense";
+    public static final String CAP_CONDITION = "condition";
+    public static final String CAP_CONTROL = "control";
+    public static final String CAP_IFELSE = "ifelse";
+    ///////////////////////////////////////////////////////
 
     private final String capID;
     private final Map<Locale, String> capNames;

@@ -17,7 +17,7 @@
         <tabs>
           <Tab fx:id="deviceTab" text="Device">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <AnchorPane fx:id="devPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <Button fx:id="devEditBtn" mnemonicParsing="false" text="Edit Device ..." AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
                         <ProgressIndicator fx:id="devWait" prefHeight="25.0" prefWidth="30.0" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="150.0" />
@@ -88,7 +88,7 @@
           </Tab>
           <Tab fx:id="capabilityTab" text="Capability">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <AnchorPane fx:id="capPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <GridPane fx:id="capGrid" layoutX="100.0" layoutY="149.0" vgap="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
                           <columnConstraints>

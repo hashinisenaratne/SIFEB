@@ -23,21 +23,15 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -46,21 +40,14 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javax.imageio.ImageIO;
 import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.DialogStyle;
 import org.controlsfx.dialog.Dialogs;
 
 /**
@@ -135,6 +122,10 @@ public class LibraryEditorController implements Initializable {
     ImageView devImgView;
     @FXML
     Button devImgBtn;
+    @FXML
+    AnchorPane devPane;
+    @FXML
+    AnchorPane capPane;
 
     final File CAPABILITY_FOLDER = new File("src/com/sifeb/ve/files/capabilities/");
     final File DEVICE_FOLDER = new File("src/com/sifeb/ve/files/devices/");
@@ -142,7 +133,7 @@ public class LibraryEditorController implements Initializable {
     final String S_IMG_FOLDER = "src/com/sifeb/ve/images/static/";
     final String D_IMG_FOLDER = "src/com/sifeb/ve/images/dynamic/";
     final String DEVICE_IMG_FOLDER = "src/com/sifeb/ve/images/devices/";
-    final String[] capTypes = new String[]{"action", "actionC", "sense", "condition"};
+    final String[] capTypes = new String[]{Capability.CAP_ACTION, Capability.CAP_ACTION_C, Capability.CAP_SENSE, Capability.CAP_CONDITION};
     final String[] devTypes = new String[]{Device.DEV_ACTUATOR, Device.DEV_SENSOR};
     FileHandler fileHandler;
     File capStaticImg;
@@ -180,6 +171,8 @@ public class LibraryEditorController implements Initializable {
         refreshCapList();
         refreshSelectedCaps(null);
         refreshDevList();
+        
+        
 
         setEventHandlers();
     }
@@ -213,7 +206,7 @@ public class LibraryEditorController implements Initializable {
                 String capID = fileName.substring(0, fileName.length() - 4);
 
                 Capability cap = fileHandler.readFromCapabilityFile(capID);
-                if ((!cap.getType().equals("control")) && (!cap.getType().equals("ifelse"))) {
+                if ((!cap.getType().equals(Capability.CAP_CONTROL)) && (!cap.getType().equals(Capability.CAP_IFELSE))) {
                     capList.put(capID, cap);
                 }
             }
@@ -727,9 +720,9 @@ public class LibraryEditorController implements Initializable {
 
         devNameTextBox.setText(dev.getDeviceName(Locale.US));
         devTypeSelect.getSelectionModel().select(dev.getType());
-        
+
         String[] caps = new String[dev.getCapabilities().size()];
-        for(int i=0;i<dev.getCapabilities().size();i++){
+        for (int i = 0; i < dev.getCapabilities().size(); i++) {
             caps[i] = dev.getCapabilities().get(i).getCapID();
         }
         refreshSelectedCaps(caps);
@@ -739,7 +732,7 @@ public class LibraryEditorController implements Initializable {
             devImgView.setImage(dev.getImage());
         } else {
             devImg = null;
-        }        
+        }
     }
 }
 

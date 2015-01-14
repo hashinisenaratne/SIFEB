@@ -90,7 +90,7 @@ public class Holder extends Pane {
                     } else {
                         ((Pane) p).getChildren().remove(draggedBlock);
                     }
-                    if (draggedBlock.getCapability().getType().equals("action")) {
+                    if (draggedBlock.getCapability().getType().equals(Capability.CAP_ACTION)) {
                         this.addElementToVbox(draggedBlock);
                         success = true;
                     } else  {
@@ -111,7 +111,7 @@ public class Holder extends Pane {
         this.setOnDragOver((DragEvent event) -> {
             if (event.getDragboard().hasString()) {
                 String dbStr = event.getDragboard().getString();
-                if (dbStr.contains("action") || dbStr.contains("control") || dbStr.contains("ifelse")) {
+                if (dbStr.contains(Capability.CAP_ACTION) || dbStr.contains(Capability.CAP_CONTROL) || dbStr.contains(Capability.CAP_IFELSE)) {
                     event.acceptTransferModes(TransferMode.COPY);
                 } else {
                     System.out.println("not allowed");

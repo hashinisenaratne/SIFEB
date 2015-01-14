@@ -101,16 +101,16 @@ public final class Block extends Pane {
 
     private void placeIcon(String type) {
         switch (type) {
-            case "actionC":
-            case "action":
-            case "control":
-            case "ifelse":
+            case Capability.CAP_ACTION_C:
+            case Capability.CAP_ACTION:
+            case Capability.CAP_CONTROL:
+            case Capability.CAP_IFELSE:
                 blockIcon.relocate(15, 2);
                 break;
-            case "sense":
+            case Capability.CAP_SENSE:
                 blockIcon.relocate(25, 2);
                 break;
-            case "condition":
+            case Capability.CAP_CONDITION:
                 blockIcon.relocate(25, 2);
                 break;
         }
@@ -119,18 +119,18 @@ public final class Block extends Pane {
     private Image setBackgroundImage(String type) {
         Image bckImage;
         switch (type) {
-            case "actionC":
-            case "action":
+            case Capability.CAP_ACTION_C:
+            case Capability.CAP_ACTION:
                 bckImage = new Image(getClass().getResourceAsStream(Block.ACTION_BCK_IMG));
                 break;
-            case "sense":
+            case Capability.CAP_SENSE:
                 bckImage = new Image(getClass().getResourceAsStream(Block.SENSE_BCK_IMG));
                 break;
-            case "condition":
+            case Capability.CAP_CONDITION:
                 bckImage = new Image(getClass().getResourceAsStream(Block.CONST_BCK_IMG));
                 break;
-            case "control":
-            case "ifelse":
+            case Capability.CAP_CONTROL:
+            case Capability.CAP_IFELSE:
                 bckImage = new Image(getClass().getResourceAsStream(Block.CONTROL_BCK_IMG));
                 break;
             default:
@@ -197,7 +197,7 @@ public final class Block extends Pane {
 
                 if (this.getParent().getClass().getName().contains("ActionBlock") == false) {
 
-                    if (capability.getType().contains("action") || capability.getType().equals("sense") || capability.getType().equals("condition") || capability.getType().equals("control")|| capability.getType().equals("ifelse")) {
+                    if (capability.getType().contains(Capability.CAP_ACTION) || capability.getType().equals(Capability.CAP_SENSE) || capability.getType().equals(Capability.CAP_CONDITION) || capability.getType().equals(Capability.CAP_CONTROL)|| capability.getType().equals(Capability.CAP_IFELSE)) {
                         contextMenu.show(this, event.getSceneX(), event.getSceneY());
                     }
 
@@ -216,25 +216,26 @@ public final class Block extends Pane {
     }
 
     private void setShape(String type, Image img) {
+        
         switch (type) {
             case "rectangle":
                 break;
-            case "action":
-            case "actionC":
-            case "control":
-            case "ifelse":
+            case Capability.CAP_ACTION_C:
+            case Capability.CAP_ACTION:
+            case Capability.CAP_CONTROL:
+            case Capability.CAP_IFELSE:
                 name.setFont(new Font(12));
                 name.setPrefSize(img.getWidth() * 0.9, 12);
                 name.setMaxWidth(img.getWidth() * 0.9);
                 name.relocate((img.getWidth() * 0.05), 45);
                 break;
-            case "sense":
+            case Capability.CAP_SENSE:
                 name.setFont(new Font(12));
                 name.setPrefSize(img.getWidth() * 0.9, 30);
                 name.setMaxWidth(img.getWidth() * 0.9);
                 name.relocate((img.getWidth() * 0.05), 23);
                 break;
-            case "condition":
+            case Capability.CAP_CONDITION:
                 name.setFont(new Font(12));
                 name.setPrefSize(img.getWidth() * 0.9, 12);
                 name.setMaxWidth(img.getWidth() * 0.9);

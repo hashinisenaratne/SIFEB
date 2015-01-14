@@ -397,11 +397,11 @@ public class FileHandler {
             String types;
 
             if (i >= 7) {
-                types = "sense";
+                types = Capability.CAP_SENSE;
             } else if (i < 3 || i > 5) {
-                types = "actionC";
+                types = Capability.CAP_ACTION_C;
             } else {
-                types = "action";
+                types = Capability.CAP_ACTION;
             }
 
             Map<String, String> nameList = new HashMap<>();

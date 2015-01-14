@@ -190,14 +190,14 @@ public class MainEditorController implements Initializable {
 
         if (node == null) {
             addBlockHolder(index, parent, 0);
-        } else if (node.getId().contains("actionC")) {
+        } else if (node.getId().contains(Capability.CAP_ACTION_C)) {
             addBlockHolder(index, parent, 1);
-        } else if (node.getId().contains("control")) {
+        } else if (node.getId().contains(Capability.CAP_CONTROL)) {
             addBlockHolder(index, parent, 2);
-        } else if (node.getId().contains("action")) {
+        } else if (node.getId().contains(Capability.CAP_ACTION)) {
             addBlockHolder(index, parent, 0);
         }
-        else if (node.getId().contains("ifelse")) {
+        else if (node.getId().contains(Capability.CAP_IFELSE)) {
             addBlockHolder(index, parent, 3);
         }
         if (node != null) {
@@ -267,7 +267,7 @@ public class MainEditorController implements Initializable {
                     editorPane.getChildren().add(draggedBlock);
                     draggedBlock.setLayoutX(event.getX());
                     draggedBlock.setLayoutY(event.getY());
-                    if (draggedBlock.getCapability().getType().equals("condition")) {
+                    if (draggedBlock.getCapability().getType().equals(Capability.CAP_CONDITION)) {
                         draggedBlock.disableTextField(false);
                     }
                 }

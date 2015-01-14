@@ -94,7 +94,7 @@ public class IfBlock extends Holder {
         ifHolders.setMinWidth(276);
         ifHolders.setMinHeight(101);
         ifHolders.setPadding(new Insets(94, 0, 30, 10));
-        this.ifHolders.setBackground(new Background(bckTopMid,bckMid, bckTopLeft, bckBottom1));
+        this.ifHolders.setBackground(new Background(bckTopMid, bckMid, bckTopLeft, bckBottom1));
         ((Pane) this.ifHolders).getChildren().add(new Holder(mainCtrl));
         container.getChildren().add(ifHolders);
 
@@ -123,7 +123,7 @@ public class IfBlock extends Holder {
     public VBox getCondition() {
         return condition;
     }
-    
+
     public VBox getIfHolders() {
         return ifHolders;
     }
@@ -131,6 +131,7 @@ public class IfBlock extends Holder {
     public VBox getElseHolders() {
         return elseHolders;
     }
+
     public final void setCondition() {
         this.condition = new VBox();
         this.condition.setPrefSize(90, 60);
@@ -157,25 +158,32 @@ public class IfBlock extends Holder {
                         ((Pane) p).getChildren().remove(draggedBlock);
                     }
                     String blockType = draggedBlock.getCapability().getType();
-                    if (blockType.equals("ifelse")) {
-                        this.addElementToVbox(draggedBlock);
-                        if (this.getActions().getChildren().size() > 1) {
-                            this.getActions().getChildren().remove(0);
-                        }
-                        success = true;
-                        this.mainCtrl.addHolderAfterMe(this, (VBox) this.getParent(), false);
-                    } else if (blockType.equals("action") || blockType.equals("actionC")|| blockType.equals("control")) {
-                        super.mainCtrl.changeHolderType(this, (VBox) this.getParent(), draggedBlock);
-                        success = true;
-                    } else if (blockType.equals("sense") || blockType.equals("condition")) {
-                        if (this.hasCondition()) {
-                            this.removeCurrentCondition();
-                        }
-                        this.addCondition(draggedBlock);
-                        if (blockType.equals("condition")) {
-                            draggedBlock.disableTextField(false);
-                        }
-                        success = true;
+                    switch (blockType) {
+                        case Capability.CAP_IFELSE:
+                            this.addElementToVbox(draggedBlock);
+                            if (this.getActions().getChildren().size() > 1) {
+                                this.getActions().getChildren().remove(0);
+                            }
+                            success = true;
+                            this.mainCtrl.addHolderAfterMe(this, (VBox) this.getParent(), false);
+                            break;
+                        case Capability.CAP_ACTION:
+                        case Capability.CAP_ACTION_C:
+                        case Capability.CAP_CONTROL:
+                            super.mainCtrl.changeHolderType(this, (VBox) this.getParent(), draggedBlock);
+                            success = true;
+                            break;
+                        case Capability.CAP_SENSE:
+                        case Capability.CAP_CONDITION:
+                            if (this.hasCondition()) {
+                                this.removeCurrentCondition();
+                            }
+                            this.addCondition(draggedBlock);
+                            if (blockType.equals(Capability.CAP_CONDITION)) {
+                                draggedBlock.disableTextField(false);
+                            }
+                            success = true;
+                            break;
                     }
                 }
             }

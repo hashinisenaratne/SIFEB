@@ -88,23 +88,31 @@ public class ConditionBlock extends Holder {
                     } else {
                         ((Pane) p).getChildren().remove(draggedBlock);
                     }
+                    
                     String blockType = draggedBlock.getCapability().getType();
-                    if (blockType.equals("actionC")) {
-                        this.addElementToVbox(draggedBlock);
-                        success = true;
-                        this.mainCtrl.addHolderAfterMe(this, (VBox) this.getParent(), false);
-                    } else if (blockType.equals("action") || blockType.equals("control") || blockType.equals("ifelse")) {
-                        super.mainCtrl.changeHolderType(this, (VBox) this.getParent(), draggedBlock);
-                        success = true;
-                    } else if (blockType.equals("sense") || blockType.equals("condition")) {
-                        if (this.hasCondition()) {
-                            this.removeCurrentCondition();
-                        }
-                        this.addCondition(draggedBlock);
-                        if (blockType.equals("condition")) {
-                            draggedBlock.disableTextField(false);
-                        }
-                        success = true;
+                    switch (blockType) {
+                        case Capability.CAP_ACTION_C:
+                            this.addElementToVbox(draggedBlock);
+                            success = true;
+                            this.mainCtrl.addHolderAfterMe(this, (VBox) this.getParent(), false);
+                            break;
+                        case Capability.CAP_ACTION:
+                        case Capability.CAP_CONTROL:
+                        case Capability.CAP_IFELSE:
+                            super.mainCtrl.changeHolderType(this, (VBox) this.getParent(), draggedBlock);
+                            success = true;
+                            break;
+                        case Capability.CAP_SENSE:
+                        case Capability.CAP_CONDITION:
+                            if (this.hasCondition()) {
+                                this.removeCurrentCondition();
+                            }   
+                            this.addCondition(draggedBlock);
+                            if (blockType.equals(Capability.CAP_CONDITION)) {
+                                draggedBlock.disableTextField(false);
+                            }   
+                            success = true;
+                            break;
                     }
                 }
             }
