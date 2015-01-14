@@ -11,6 +11,7 @@ package com.sifeb.ve.handle;
  */
 import com.sifeb.ve.Capability;
 import com.sifeb.ve.Device;
+import com.sifeb.ve.resources.SifebUtil;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -32,8 +33,8 @@ import org.xml.sax.SAXException;
 
 public class FileHandler {
 
-    private final String CAPABILITY_FOLDER = "src/com/sifeb/ve/files/capabilities/";
-    private final String DEVICE_FOLDER = "src/com/sifeb/ve/files/devices/";
+//    private final String CAPABILITY_FOLDER = "src/com/sifeb/ve/files/capabilities/";
+//    private final String DEVICE_FOLDER = "src/com/sifeb/ve/files/devices/";
 
     public static void main(String[] args) {
 
@@ -102,7 +103,7 @@ public class FileHandler {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            File file = new File(DEVICE_FOLDER + devID + ".xml");
+            File file = new File(SifebUtil.DEV_FILE_DIR + devID + ".xml");
             StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
 
             // Output to console for testing
@@ -118,7 +119,7 @@ public class FileHandler {
     public Device readFromDeviceFile(String fileName, String address) {
 
         Element eElement = null;
-        File file = new File("src/com/sifeb/ve/files/devices/" + fileName + ".xml");
+        File file = new File(SifebUtil.DEV_FILE_DIR + fileName + ".xml");
 
         try {
 
@@ -224,7 +225,7 @@ public class FileHandler {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            File file = new File(CAPABILITY_FOLDER + capID + ".xml");
+            File file = new File(SifebUtil.CAP_FILE_DIR + capID + ".xml");
             StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
 
             transformer.transform(source, result);
@@ -238,7 +239,7 @@ public class FileHandler {
     public Capability readFromCapabilityFile(String capID) {
 
         Element eElement = null;
-        File file = new File(CAPABILITY_FOLDER + capID + ".xml");
+        File file = new File(SifebUtil.CAP_FILE_DIR + capID + ".xml");
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -316,7 +317,7 @@ public class FileHandler {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            File file = new File("src/com/sifeb/ve/files/game/" + fileName + ".xml");
+            File file = new File(SifebUtil.GAME_FILE_DIR + fileName + ".xml");
             StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
 
             // Output to console for testing
@@ -334,7 +335,7 @@ public class FileHandler {
     public Element readFromGameFile(String fileName) {
         Element element = null;
 
-        File file = new File("src/com/sifeb/ve/files/game/" + fileName + ".xml");
+        File file = new File(SifebUtil.GAME_FILE_DIR + fileName + ".xml");
 
         //  Image img=new Image()
         try {
@@ -461,7 +462,7 @@ public class FileHandler {
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
                 DOMSource source = new DOMSource(doc);
-                File file = new File(CAPABILITY_FOLDER + ids[i] + ".xml");
+                File file = new File(SifebUtil.CAP_FILE_DIR + ids[i] + ".xml");
                 StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
 
                 transformer.transform(source, result);
@@ -544,7 +545,7 @@ public class FileHandler {
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
                 DOMSource source = new DOMSource(doc);
-                File file = new File(DEVICE_FOLDER + ids[i] + ".xml");
+                File file = new File(SifebUtil.DEV_FILE_DIR + ids[i] + ".xml");
                 StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
 
                 // Output to console for testing

@@ -6,6 +6,7 @@
 package com.sifeb.ve;
 
 import com.sifeb.ve.resources.Strings;
+import com.sifeb.ve.resources.SifebUtil;
 import java.util.Locale;
 import java.util.Map;
 import javafx.scene.image.Image;
@@ -16,7 +17,7 @@ import javafx.scene.layout.Pane;
  * @author Udith Arosha
  */
 public class Capability {
-    
+
     // Capability Type Definitions /////////////////////////
     public static final String CAP_ACTION = "action";
     public static final String CAP_ACTION_C = "actionC";
@@ -44,11 +45,11 @@ public class Capability {
         this.type = type;
         this.command = command;
         this.imageName = imageName;
-        
-        this.staticImage = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/static/" + imageName + ".png"));
-        
+
+        this.staticImage = new Image("file:" + SifebUtil.STATIC_IMG_DIR + imageName + ".png");
+
         try {
-            this.dynamicImage = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/dynamic/" + imageName + ".gif"));
+            this.dynamicImage = new Image("file:" + SifebUtil.DYNAMIC_IMG_DIR + imageName + ".gif");
         } catch (NullPointerException ex) {
             this.dynamicImage = this.staticImage;
         }

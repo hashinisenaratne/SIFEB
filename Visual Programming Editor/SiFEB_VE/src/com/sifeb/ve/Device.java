@@ -5,6 +5,7 @@
  */
 package com.sifeb.ve;
 
+import com.sifeb.ve.resources.SifebUtil;
 import com.sifeb.ve.resources.Strings;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -36,7 +37,7 @@ public class Device {
         this.deviceNames = deviceNames;
         this.address = address;
         this.type = type;
-        this.image = new Image("/com/sifeb/ve/images/devices/" + imageName + ".png");
+        this.image = new Image("file:" + SifebUtil.DEVICE_IMG_DIR + imageName + ".png");
         this.deviceBlock = new DeviceBlock(this);
         this.capabilities = new ArrayList<>();
     }

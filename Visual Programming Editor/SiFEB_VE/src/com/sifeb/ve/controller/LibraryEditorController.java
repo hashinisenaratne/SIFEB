@@ -8,6 +8,7 @@ package com.sifeb.ve.controller;
 import com.sifeb.ve.Capability;
 import com.sifeb.ve.Device;
 import com.sifeb.ve.handle.FileHandler;
+import com.sifeb.ve.resources.SifebUtil;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -127,12 +128,11 @@ public class LibraryEditorController implements Initializable {
     @FXML
     AnchorPane capPane;
 
-    final File CAPABILITY_FOLDER = new File("src/com/sifeb/ve/files/capabilities/");
-    final File DEVICE_FOLDER = new File("src/com/sifeb/ve/files/devices/");
-    final String IMG_FOLDER = "src/com/sifeb/ve/images/";
-    final String S_IMG_FOLDER = "src/com/sifeb/ve/images/static/";
-    final String D_IMG_FOLDER = "src/com/sifeb/ve/images/dynamic/";
-    final String DEVICE_IMG_FOLDER = "src/com/sifeb/ve/images/devices/";
+    final File CAPABILITY_FOLDER = new File(SifebUtil.CAP_FILE_DIR);
+    final File DEVICE_FOLDER = new File(SifebUtil.DEV_FILE_DIR);
+//    final String S_IMG_FOLDER = "src/com/sifeb/ve/images/static/";
+//    final String D_IMG_FOLDER = "src/com/sifeb/ve/images/dynamic/";
+//    final String DEVICE_IMG_FOLDER = "src/com/sifeb/ve/images/devices/";
     final String[] capTypes = new String[]{Capability.CAP_ACTION, Capability.CAP_ACTION_C, Capability.CAP_SENSE, Capability.CAP_CONDITION};
     final String[] devTypes = new String[]{Device.DEV_ACTUATOR, Device.DEV_SENSOR};
     FileHandler fileHandler;
@@ -145,6 +145,7 @@ public class LibraryEditorController implements Initializable {
     boolean devModified;
     boolean isNewCap;
     boolean isNewDev;
+    String[] devCapIds;
 
     ArrayList<SelectedEntry> selectedCaps = new ArrayList();
 
@@ -169,17 +170,16 @@ public class LibraryEditorController implements Initializable {
         isNewCap = true;
         isNewDev = true;
         refreshCapList();
-        refreshSelectedCaps(null);
-        refreshDevList();
-        
-        
+        refreshSelectedCaps();
+        refreshDevList(); 
+        devCapIds = new String[0];
 
         setEventHandlers();
     }
 
-    private void refreshSelectedCaps(String[] capIds) {
+    private void refreshSelectedCaps() {
         selectedCaps.clear();
-        if (capIds == null) {
+        if (isNewDev) {
             for (Capability cap : capList.values()) {
                 SelectedEntry se = new SelectedEntry(cap.getCapID(), cap.toString());
                 selectedCaps.add(se);
@@ -188,7 +188,7 @@ public class LibraryEditorController implements Initializable {
             for (Capability cap : capList.values()) {
                 String id = cap.getCapID();
                 SelectedEntry se = new SelectedEntry(id, cap.toString());
-                if (Arrays.asList(capIds).contains(id)) {
+                if (Arrays.asList(devCapIds).contains(id)) {
                     se.setSelected(true);
                 }
                 selectedCaps.add(se);
@@ -211,6 +211,7 @@ public class LibraryEditorController implements Initializable {
                 }
             }
             capModified = false;
+            refreshSelectedCaps();
         }
     }
 
@@ -450,13 +451,13 @@ public class LibraryEditorController implements Initializable {
         capHasTest.setSelected(cap.isHasTest());
         capCmdTextBox.setText(cap.getCommand());
 
-        capStaticImg = new File(S_IMG_FOLDER + cap.getCapID() + ".png");
+        capStaticImg = new File(SifebUtil.STATIC_IMG_DIR + cap.getCapID() + ".png");
         if (capStaticImg.exists()) {
             capStaticImgView.setImage(cap.getStaticImage());
         } else {
             capStaticImg = null;
         }
-        capDynamicImg = new File(D_IMG_FOLDER + cap.getCapID() + ".gif");
+        capDynamicImg = new File(SifebUtil.DYNAMIC_IMG_DIR + cap.getCapID() + ".gif");
         if (capDynamicImg.exists()) {
             capDynamicImgView.setImage(cap.getDynamicImage());
         } else {
@@ -534,9 +535,9 @@ public class LibraryEditorController implements Initializable {
 
         try {
             //uploading images to the relevant directories
-            Files.copy(capStaticImg.toPath(), new File(S_IMG_FOLDER + capIDFull + ".png").toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(capStaticImg.toPath(), new File(SifebUtil.STATIC_IMG_DIR + capIDFull + ".png").toPath(), StandardCopyOption.REPLACE_EXISTING);
             if (capDynamicImg != null) {
-                Files.copy(capDynamicImg.toPath(), new File(D_IMG_FOLDER + capIDFull + ".gif").toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(capDynamicImg.toPath(), new File(SifebUtil.DYNAMIC_IMG_DIR + capIDFull + ".gif").toPath(), StandardCopyOption.REPLACE_EXISTING);
             }
             names.put(Locale.US, capName);
             boolean isSuccess = fileHandler.writeToCapabilityFile(capIDFull, names, capType, capCmd, capIDFull, hasTest);
@@ -619,7 +620,7 @@ public class LibraryEditorController implements Initializable {
 
         try {
             //uploading images to the relevant directories
-            Files.copy(devImg.toPath(), new File(DEVICE_IMG_FOLDER + devIDFull + ".png").toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(devImg.toPath(), new File(SifebUtil.DEVICE_IMG_DIR + devIDFull + ".png").toPath(), StandardCopyOption.REPLACE_EXISTING);
 
             names.put(Locale.US, devName);
             boolean isSuccess = fileHandler.writeToDeviceFile(devIDFull, names, devType, caps.toArray(new String[caps.size()]), devIDFull);
@@ -646,11 +647,11 @@ public class LibraryEditorController implements Initializable {
 
         devNameTextBox.setText("");
         devTypeSelect.getSelectionModel().selectFirst();
-        refreshSelectedCaps(null);
 
         devImg = null;
         devImgView.setImage(null);
-        isNewCap = true;
+        isNewDev = true;        
+        refreshSelectedCaps();
     }
 
     private void showErrorMessage(String title, String message) {
@@ -682,6 +683,7 @@ public class LibraryEditorController implements Initializable {
             CheckBox cb = new CheckBox(se.getName());
             cb.setId(Integer.toString(i));
             cb.setSelected(se.isSelected());
+            cb.setMnemonicParsing(false);
             capCheckList.getChildren().add(cb);
         }
 
@@ -721,13 +723,13 @@ public class LibraryEditorController implements Initializable {
         devNameTextBox.setText(dev.getDeviceName(Locale.US));
         devTypeSelect.getSelectionModel().select(dev.getType());
 
-        String[] caps = new String[dev.getCapabilities().size()];
+        devCapIds = new String[dev.getCapabilities().size()];
         for (int i = 0; i < dev.getCapabilities().size(); i++) {
-            caps[i] = dev.getCapabilities().get(i).getCapID();
+            devCapIds[i] = dev.getCapabilities().get(i).getCapID();
         }
-        refreshSelectedCaps(caps);
+        refreshSelectedCaps();
 
-        devImg = new File(DEVICE_IMG_FOLDER + dev.getDeviceID() + ".png");
+        devImg = new File(SifebUtil.DEVICE_IMG_DIR + dev.getDeviceID() + ".png");
         if (devImg.exists()) {
             devImgView.setImage(dev.getImage());
         } else {
