@@ -98,7 +98,7 @@
             <top>
             <AnchorPane>
                <children>
-                            <HBox fx:id="btnPanel" alignment="CENTER" layoutX="244.0" spacing="20.0" BorderPane.alignment="CENTER">
+                            <HBox fx:id="btnPanel" alignment="CENTER" layoutX="357.0" layoutY="6.0" prefHeight="57.0" prefWidth="182.0" spacing="20.0" BorderPane.alignment="CENTER">
                                 <children>
                                     <Button fx:id="addDeviceBtn" mnemonicParsing="false" text="Add Device" visible="false" />
                                     <Button fx:id="addCapBtn" layoutX="425.0" layoutY="20.0" mnemonicParsing="false" text="Add Capability" visible="false" />
@@ -113,17 +113,17 @@
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                 </padding>
                             </HBox>
-                  <Button layoutX="96.0" layoutY="6.0" mnemonicParsing="false" onAction="#goToProgram" prefHeight="46.0" prefWidth="140.0" styleClass="breadcrumbs" text="Program">
-                     <font>
-                        <Font name="Arial Bold" size="22.0" />
-                     </font>
-                  </Button>
-                  <Button layoutX="-5.0" layoutY="6.0" mnemonicParsing="false" onAction="#goToHome" prefHeight="46.0" prefWidth="100.0" styleClass="breadcrumbs" text="Home">
-                     <font>
-                        <Font name="Arial Bold" size="22.0" />
-                     </font>
-                  </Button>
-               </children>
+                  <Button fx:id="programBtn" layoutX="82.0" layoutY="6.0" mnemonicParsing="false" onAction="#goToProgram" prefHeight="46.0" prefWidth="217.0" styleClass="breadcrumbs" text="Program Level 1">
+                           <font>
+                              <Font name="Arial Bold" size="22.0" />
+                           </font>
+                        </Button>
+                  <Button fx:id="homeBtn" layoutX="-8.0" layoutY="6.0" mnemonicParsing="false" onAction="#goToHome" prefHeight="46.0" prefWidth="100.0" styleClass="breadcrumbs" text="Home">
+                           <font>
+                              <Font name="Arial Bold" size="22.0" />
+                           </font>
+                        </Button>
+                     </children>
             </AnchorPane>
             </top>
         </BorderPane>

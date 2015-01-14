@@ -23,6 +23,28 @@
             <Font name="Arial Bold" size="22.0" />
          </font>
       </Button>
+      <Button layoutX="74.0" layoutY="300.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="93.0" text="1">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Button>
+      <Button layoutX="244.0" layoutY="412.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="93.0" text="2">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Button>
+      <Button layoutX="425.0" layoutY="300.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="93.0" text="3">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Button>
+      <Button layoutX="599.0" layoutY="412.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="93.0" text="4">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="upButton" layoutX="692.0" layoutY="70.0" mnemonicParsing="false" styleClass="upButton" />
+      <Button fx:id="downButton" layoutX="692.0" layoutY="128.0" mnemonicParsing="false" styleClass="downButton" />
    </children>
    <opaqueInsets>
       <Insets />

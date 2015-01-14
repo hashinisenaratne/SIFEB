@@ -34,6 +34,8 @@ public class MainApp extends Application {
     public static String TutorialFile = "view/TutorialLayout.fxml";
     public static String LibraryID = "LibraryEditor";
     public static String LibraryFile = "view/LibraryEditor.fxml";
+    public static int InitialScreenWidth = 800;
+    public static int InitialScreenHeight = 600;
 
     @Override
     public void start(Stage primaryStage) {

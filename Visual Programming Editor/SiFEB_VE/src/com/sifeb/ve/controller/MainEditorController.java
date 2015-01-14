@@ -84,6 +84,8 @@ public class MainEditorController implements Initializable {
     Label haveLabel;
     @FXML
     Label doLabel;
+    @FXML
+    Button programBtn;
 
 //    ArrayList<Holder> holders;
     Holder lastHolder;
@@ -626,8 +628,8 @@ public class MainEditorController implements Initializable {
             MainApp.getStage().setScene(scene);
             MainApp.getStage().setMaximized(false);
             MainApp.getStage().setResizable(false);
-            MainApp.getStage().setWidth(800);
-            MainApp.getStage().setHeight(600);
+            MainApp.getStage().setWidth(MainApp.InitialScreenWidth);
+            MainApp.getStage().setHeight(MainApp.InitialScreenHeight);
             MainApp.getStage().show();
         } catch (IOException e) {
             e.printStackTrace();

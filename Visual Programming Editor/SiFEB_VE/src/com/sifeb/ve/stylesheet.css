@@ -128,3 +128,15 @@ and open the template in the editor.
 .breadcrumbs:hover {
   -fx-border-image-source: url("images/crumb-hover.png");
 }
+
+.upButton {
+  -fx-background-color: null;
+  -fx-border-color: null;
+  -fx-graphic: url("images/up.png");
+}
+
+.downButton {
+  -fx-background-color: null;
+  -fx-border-color: null;
+  -fx-graphic: url("images/down.png");
+}
