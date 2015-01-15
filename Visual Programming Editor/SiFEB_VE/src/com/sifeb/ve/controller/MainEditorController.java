@@ -17,6 +17,8 @@ import com.sifeb.ve.MainApp;
 import com.sifeb.ve.RepeatBlock;
 import com.sifeb.ve.resources.Strings;
 import java.io.IOException;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -370,7 +372,7 @@ public class MainEditorController implements Initializable {
 
             int numSteps = editorBox.getChildren().size();
             for (int i = 0; i < numSteps; i++) {
-                Holder h = (Holder)editorBox.getChildren().get(i);
+                Holder h = (Holder) editorBox.getChildren().get(i);
                 h.toggleHighlight(true);
                 if (h.getClass().getName().contains("ConditionBlock")) {
                     ConditionBlock cb = (ConditionBlock) editorBox.getChildren().get(i);
@@ -378,7 +380,7 @@ public class MainEditorController implements Initializable {
                 } else if (h.getClass().getName().contains("RepeatBlock")) {
                     RepeatBlock rb = (RepeatBlock) editorBox.getChildren().get(i);
                     runRepeatBlock(rb);
-                } else if(h.getClass().getName().contains("IfBlock")){
+                } else if (h.getClass().getName().contains("IfBlock")) {
                     IfBlock ib = (IfBlock) editorBox.getChildren().get(i);
                     runIfBlock(ib);
                 } else {
@@ -396,8 +398,8 @@ public class MainEditorController implements Initializable {
             // ... user cancelled, reset form to default
         }
     }
-    
-    public void runConditionBlock(ConditionBlock cb){
+
+    public void runConditionBlock(ConditionBlock cb) {
         if ((cb.getActions().getChildren().size() == 0) || (cb.getCondition().getChildren().size() == 0)) {
             cb.toggleHighlight(false);
             return;
@@ -416,8 +418,8 @@ public class MainEditorController implements Initializable {
                     .getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void runBlock(Holder h){
+
+    public void runBlock(Holder h) {
         if (h.getActions().getChildren().size() == 0) {
             h.toggleHighlight(false);
             return;
@@ -433,8 +435,8 @@ public class MainEditorController implements Initializable {
                     .getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void runRepeatBlock(RepeatBlock rb){
+
+    public void runRepeatBlock(RepeatBlock rb) {
         if ((rb.getActions().getChildren().size() == 0) || (rb.getCondition().getChildren().size() == 0)
                 || rb.getHolders().getChildren().size() == 0) {
             rb.toggleHighlight(false);
@@ -442,7 +444,7 @@ public class MainEditorController implements Initializable {
         }
         int numRepeatSteps = rb.getHolders().getChildren().size();
         for (int j = 0; j < numRepeatSteps; j++) {
-            Holder rh = (Holder)rb.getHolders().getChildren().get(j);
+            Holder rh = (Holder) rb.getHolders().getChildren().get(j);
             rh.toggleHighlight(true);
             if (rh.getClass().getName().contains("ConditionBlock")) {
                 ConditionBlock cb = (ConditionBlock) rb.getHolders().getChildren().get(j);
@@ -450,7 +452,7 @@ public class MainEditorController implements Initializable {
             } else if (rh.getClass().getName().contains("RepeatBlock")) {
                 RepeatBlock rb1 = (RepeatBlock) rb.getHolders().getChildren().get(j);
                 runRepeatBlock(rb1);
-            } else if(rh.getClass().getName().contains("IfBlock")){
+            } else if (rh.getClass().getName().contains("IfBlock")) {
                 IfBlock ib = (IfBlock) rb.getHolders().getChildren().get(j);
                 runIfBlock(ib);
             } else {
@@ -458,8 +460,8 @@ public class MainEditorController implements Initializable {
             }
         }
     }
-    
-    public void runIfBlock(IfBlock ib){
+
+    public void runIfBlock(IfBlock ib) {
         if ((ib.getActions().getChildren().size() == 0) || (ib.getCondition().getChildren().size() == 0)
                 || ib.getIfHolders().getChildren().size() == 0) {
             ib.toggleHighlight(false);
@@ -469,16 +471,15 @@ public class MainEditorController implements Initializable {
         boolean condition = getConstraint(conBlock);
         int numSteps;
         VBox ieVbox;
-        if(condition){
+        if (condition) {
             numSteps = ib.getIfHolders().getChildren().size();
             ieVbox = ib.getIfHolders();
-        }
-        else{
+        } else {
             numSteps = ib.getElseHolders().getChildren().size();
             ieVbox = ib.getElseHolders();
         }
         for (int j = 0; j < numSteps; j++) {
-            Holder ieh = (Holder)ieVbox.getChildren().get(j);
+            Holder ieh = (Holder) ieVbox.getChildren().get(j);
             ieh.toggleHighlight(true);
             if (ieh.getClass().getName().contains("ConditionBlock")) {
                 ConditionBlock cb = (ConditionBlock) ieVbox.getChildren().get(j);
@@ -486,7 +487,7 @@ public class MainEditorController implements Initializable {
             } else if (ieh.getClass().getName().contains("RepeatBlock")) {
                 RepeatBlock rb = (RepeatBlock) ieVbox.getChildren().get(j);
                 runRepeatBlock(rb);
-            } else if(ieh.getClass().getName().contains("IfBlock")){
+            } else if (ieh.getClass().getName().contains("IfBlock")) {
                 IfBlock ib1 = (IfBlock) ieVbox.getChildren().get(j);
                 runIfBlock(ib1);
             } else {
@@ -564,7 +565,7 @@ public class MainEditorController implements Initializable {
             }
         }
     }
-    
+
     public boolean getConstraint(Block constBlock) {    // need to generalize to test constraints
         String constID = constBlock.getCapability().getCapID();
         switch (constID) {
@@ -578,10 +579,9 @@ public class MainEditorController implements Initializable {
                     Logger.getLogger(MainEditorController.class
                             .getName()).log(Level.SEVERE, null, ex);
                 }
-                if(hValue > 20){
+                if (hValue > 20) {
                     return true;
-                }
-                else {
+                } else {
                     return false;
                 }
             }
@@ -595,10 +595,9 @@ public class MainEditorController implements Initializable {
                             .getName()).log(Level.SEVERE, null, ex);
                 }
                 sendCmd(10, "h");   //where does h get update?
-                if(hValue < 20) {
+                if (hValue < 20) {
                     return true;
-                }
-                else {
+                } else {
                     return false;
                 }
             }

@@ -97,10 +97,10 @@
                                  <children>
                                     <Button fx:id="prevBtn" layoutX="49.0" layoutY="265.0" mnemonicParsing="false" text="Prev" />
                                     <Button fx:id="nextBtn" layoutX="223.0" layoutY="265.0" mnemonicParsing="false" text="Next" />
-                                    <ProgressBar fx:id="progressBar" layoutX="49.0" layoutY="341.0" prefHeight="18.0" prefWidth="215.0" progress="0.0" />
                                     <Label fx:id="progressLabel" layoutX="49.0" layoutY="310.0" text="Progress" />
                                     <TextArea fx:id="gameText" layoutX="49.0" layoutY="146.0" prefHeight="95.0" prefWidth="216.0" />
                                     <ImageView fx:id="gameImg" fitHeight="74.0" fitWidth="89.0" layoutX="106.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" />
+                                    <ProgressBar fx:id="progressBar" layoutX="49.0" layoutY="345.0" prefHeight="18.0" prefWidth="209.0" progress="0.0" />
                                  </children>
                               </Pane>
                            </items>

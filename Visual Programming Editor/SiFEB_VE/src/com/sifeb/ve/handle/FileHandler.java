@@ -12,15 +12,23 @@ package com.sifeb.ve.handle;
 import com.sifeb.ve.Capability;
 import com.sifeb.ve.Device;
 import com.sifeb.ve.resources.SifebUtil;
+import com.sifeb.ve.FeedBackLogger;
+import java.io.File;
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
@@ -165,6 +173,7 @@ public class FileHandler {
         for (int j = 0; j < capList.getLength(); j++) {
             String capId = capList.item(j).getTextContent();
             Capability cap = readFromCapabilityFile(capId);
+            cap.setDevice(device);
             device.addCapability(cap);
         }
         return device;
@@ -337,43 +346,62 @@ public class FileHandler {
 
         File file = new File(SifebUtil.GAME_FILE_DIR + fileName + ".xml");
 
-        //  Image img=new Image()
         try {
 
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(file);
-
-            //optional, but recommended
             doc.getDocumentElement().normalize();
 
             System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-
             NodeList nList = doc.getElementsByTagName("Game");
             Node nNode = nList.item(0);
             element = (Element) nNode;
             System.out.println("----------------------------");
 
-//            for (int temp = 0; temp < nList.getLength(); temp++) {
-//
-//                System.out.println("list " + nList.getLength());
-//                Node nNode = nList.item(temp);
-//
-//                System.out.println("\nCurrent Element :" + nNode.getNodeName());
-//
-//                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-//
-//                    Element eElement = (Element) nNode;
-//
-////                    System.out.println("Staff id : " + eElement.getAttribute("id"));
-////                    System.out.println("First Name : " + eElement.getElementsByTagName("firstname").item(0).getTextContent());
-////                    System.out.println("Last Name : " + eElement.getElementsByTagName("lastname").item(0).getTextContent());
-////                    System.out.println("Nick Name : " + eElement.getElementsByTagName("nickname").item(0).getTextContent());
-////                    System.out.println("Salary : " + eElement.getElementsByTagName("salary").item(0).getTextContent());
-//                }
-//
-//                // return 
-//            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return element;
+    }
+
+    public void writeToEditorFile(String filePath, Document doc) {
+
+        try {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            File file = new File(filePath + ".xml");
+            StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
+
+            transformer.transform(source, result);
+            System.out.println("File saved!");
+            FeedBackLogger.sendGoodMessage("File Saved Successfully!!!");
+
+        } catch (TransformerException pce) {
+            pce.printStackTrace();
+        }
+
+    }
+
+    public Element readFromEditorFile(String filePath) {
+        Element element = null;
+        File file = new File(filePath);
+        
+        try {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(file);
+            doc.getDocumentElement().normalize();
+            System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+
+            NodeList nList = doc.getElementsByTagName("MainEditor");
+            Node nNode = nList.item(0);
+            element = (Element) nNode;
+            System.out.println("----------------------------");
+
+            System.out.println(element);
         } catch (Exception e) {
             e.printStackTrace();
         }

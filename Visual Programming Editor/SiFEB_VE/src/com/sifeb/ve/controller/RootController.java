@@ -5,9 +5,13 @@
  */
 package com.sifeb.ve.controller;
 
+import com.sifeb.ve.FeedBackLogger;
 import com.sifeb.ve.MainApp;
 import com.sifeb.ve.handle.BlockCreator;
+import com.sifeb.ve.handle.EditorHandler;
+import com.sifeb.ve.handle.FileHandler;
 import com.sifeb.ve.resources.Strings;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
@@ -29,8 +33,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javax.swing.JFileChooser;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
 
 /**
  *
@@ -51,16 +61,19 @@ public class RootController implements Initializable {
     MenuItem aboutMenuItem;
     @FXML
     MenuItem libEditMenu;
+    @FXML
+    MenuItem saveFile, loadFile, closeBtn;
 
     MainEditorController meCtrl;
     Stage libEditStage;
     private static int ProgramLevel = 1;
+    EditorHandler editorHandler;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setEventHandlers();
         loadMainEditor();
-//        loadGameEditor();
+        // loadGameEditor();
         //TEST
 //        FXMLLoader loader = new FXMLLoader();
 //        loader.setLocation(MainApp.class.getResource("view/LibraryEditor.fxml"));
@@ -144,6 +157,39 @@ public class RootController implements Initializable {
                 ex.printStackTrace();
             }
 
+        });
+
+        saveFile.setOnAction((ActionEvent event) -> {
+
+            JFileChooser fileChooser = new JFileChooser();
+            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                if (editorHandler == null) {
+                    editorHandler = new EditorHandler();
+    }
+                editorHandler.saveFile(file.getPath(), meCtrl.editorBox);
+            }
+
+        });
+
+        loadFile.setOnAction((ActionEvent event) -> {
+
+            JFileChooser fileChooser = new JFileChooser();
+
+            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                if (editorHandler == null) {
+                    editorHandler = new EditorHandler();
+                }
+                editorHandler.loadFile(file.getPath(), meCtrl.editorBox);
+            }
+
+        });
+
+        closeBtn.setOnAction((ActionEvent event) -> {
+
+            System.exit(0);
+            // changeLanguage(new Locale("si", "LK"));
         });
     }
 
