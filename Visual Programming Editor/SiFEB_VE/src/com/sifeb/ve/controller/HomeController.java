@@ -89,8 +89,6 @@ public class HomeController implements Initializable {
             Scene scene = new Scene(MainApp.getPane());
             MainApp.getStage().setScene(scene);
             MainApp.getStage().setMaximized(false);
-            MainApp.getStage().setWidth(700);
-            MainApp.getStage().setHeight(500);
             MainApp.getStage().setResizable(false);
             MainApp.getStage().show();
         } catch (IOException e) {
