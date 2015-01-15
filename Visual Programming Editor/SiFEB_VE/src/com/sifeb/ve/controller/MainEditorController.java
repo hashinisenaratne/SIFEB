@@ -9,12 +9,14 @@ import com.sifeb.ve.ActionBlock;
 import com.sifeb.ve.Block;
 import com.sifeb.ve.Capability;
 import com.sifeb.ve.ConditionBlock;
-import com.sifeb.ve.RepeatBlock;
 import com.sifeb.ve.Device;
 import com.sifeb.ve.FeedBackLogger;
 import com.sifeb.ve.Holder;
 import com.sifeb.ve.IfBlock;
+import com.sifeb.ve.MainApp;
+import com.sifeb.ve.RepeatBlock;
 import com.sifeb.ve.resources.Strings;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -23,10 +25,12 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -80,6 +84,8 @@ public class MainEditorController implements Initializable {
     Label haveLabel;
     @FXML
     Label doLabel;
+    @FXML
+    Button programBtn;
 
 //    ArrayList<Holder> holders;
     Holder lastHolder;
@@ -186,14 +192,14 @@ public class MainEditorController implements Initializable {
 
         if (node == null) {
             addBlockHolder(index, parent, 0);
-        } else if (node.getId().contains("actionC")) {
+        } else if (node.getId().contains(Capability.CAP_ACTION_C)) {
             addBlockHolder(index, parent, 1);
-        } else if (node.getId().contains("control")) {
+        } else if (node.getId().contains(Capability.CAP_CONTROL)) {
             addBlockHolder(index, parent, 2);
-        } else if (node.getId().contains("action")) {
+        } else if (node.getId().contains(Capability.CAP_ACTION)) {
             addBlockHolder(index, parent, 0);
         }
-        else if (node.getId().contains("ifelse")) {
+        else if (node.getId().contains(Capability.CAP_IFELSE)) {
             addBlockHolder(index, parent, 3);
         }
         if (node != null) {
@@ -263,7 +269,7 @@ public class MainEditorController implements Initializable {
                     editorPane.getChildren().add(draggedBlock);
                     draggedBlock.setLayoutX(event.getX());
                     draggedBlock.setLayoutY(event.getY());
-                    if (draggedBlock.getCapability().getType().equals("condition")) {
+                    if (draggedBlock.getCapability().getType().equals(Capability.CAP_CONDITION)) {
                         draggedBlock.disableTextField(false);
                     }
                 }
@@ -323,12 +329,8 @@ public class MainEditorController implements Initializable {
 
     }
 
-    public void addCapabilityBlock(Capability cap, Device dev) {
-
+    public void addCapabilityBlock(Capability cap) {
         capabilities.add(cap);
-        if (dev != null) {
-            dev.addCapability(cap);
-        }
         ActionBlock action = new ActionBlock(cap.getBlock(), cap.isHasTest());
         action.addToPane(capabilityBox);
 
@@ -610,5 +612,27 @@ public class MainEditorController implements Initializable {
 
     public Label getFbText() {
         return fbText;
+    }
+    
+    @FXML
+    private void goToProgram(ActionEvent event) {
+    }
+    
+    @FXML
+    private void goToHome(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource(MainApp.HomeFile));
+            MainApp.setPane((Pane) loader.load());
+            Scene scene = new Scene(MainApp.getPane());
+            MainApp.getStage().setScene(scene);
+            MainApp.getStage().setMaximized(false);
+            MainApp.getStage().setResizable(false);
+            MainApp.getStage().setWidth(MainApp.InitialScreenWidth);
+            MainApp.getStage().setHeight(MainApp.InitialScreenHeight);
+            MainApp.getStage().show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

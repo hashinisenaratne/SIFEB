@@ -6,6 +6,7 @@
 package com.sifeb.ve;
 
 import com.sifeb.ve.resources.Strings;
+import com.sifeb.ve.resources.SifebUtil;
 import java.util.Locale;
 import java.util.Map;
 import javafx.scene.image.Image;
@@ -17,13 +18,22 @@ import javafx.scene.layout.Pane;
  */
 public class Capability {
 
+    // Capability Type Definitions /////////////////////////
+    public static final String CAP_ACTION = "action";
+    public static final String CAP_ACTION_C = "actionC";
+    public static final String CAP_SENSE = "sense";
+    public static final String CAP_CONDITION = "condition";
+    public static final String CAP_CONTROL = "control";
+    public static final String CAP_IFELSE = "ifelse";
+    ///////////////////////////////////////////////////////
+
     private final String capID;
     private final Map<Locale, String> capNames;
     private Device device;
     private final String type;
     private final String command;
     private final String imageName;
-    private final Image staticImage;
+    private Image staticImage;
     private Image dynamicImage;
     private final Block block;
     private final boolean hasTest;
@@ -35,11 +45,13 @@ public class Capability {
         this.type = type;
         this.command = command;
         this.imageName = imageName;
-        this.staticImage = new Image("/com/sifeb/ve/images/static/" + imageName + ".png");
+
+        this.staticImage = new Image("file:" + SifebUtil.STATIC_IMG_DIR + imageName + ".png");
+
         try {
-            this.dynamicImage = new Image("/com/sifeb/ve/images/dynamic/" + imageName + ".gif");
-        } catch (IllegalArgumentException ex) {
-            this.dynamicImage = new Image("/com/sifeb/ve/images/static/" + imageName + ".png");
+            this.dynamicImage = new Image("file:" + SifebUtil.DYNAMIC_IMG_DIR + imageName + ".gif");
+        } catch (NullPointerException ex) {
+            this.dynamicImage = this.staticImage;
         }
 
         this.block = new Block(this);
@@ -54,8 +66,8 @@ public class Capability {
         Locale currentLocale = Strings.getLocale();
         return capNames.get(currentLocale);
     }
-    
-    public String getCapName(Locale locale){
+
+    public String getCapName(Locale locale) {
         return capNames.get(locale);
     }
 
@@ -90,7 +102,6 @@ public class Capability {
     public void setDevice(Device device) {
         this.device = device;
     }
-    
 
     public Capability cloneCapability() {
         Capability cap = new Capability(this.capID, this.capNames, this.device, this.type, this.command, this.imageName, true);

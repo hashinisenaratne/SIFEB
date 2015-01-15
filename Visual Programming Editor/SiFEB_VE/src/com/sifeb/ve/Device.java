@@ -5,6 +5,7 @@
  */
 package com.sifeb.ve;
 
+import com.sifeb.ve.resources.SifebUtil;
 import com.sifeb.ve.resources.Strings;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -18,21 +19,26 @@ import javafx.scene.layout.Pane;
  */
 public class Device {
 
+    // Device Type Definitions /////////////////////////
+    public static final String DEV_ACTUATOR = "actuator";
+    public static final String DEV_SENSOR = "sensor";
+    ////////////////////////////////////////////////////
+
     private final String deviceID;
-    private final Map<Locale,String> deviceNames;
+    private final Map<Locale, String> deviceNames;
     private final int address;
     private final String type;
     private final Image image;
     private final ArrayList<Capability> capabilities;
     private final DeviceBlock deviceBlock;
 
-    public Device(String deviceID, Map<Locale,String> deviceNames, int address, String type, String imageName) {
+    public Device(String deviceID, Map<Locale, String> deviceNames, int address, String type, String imageName) {
         this.deviceID = deviceID;
         this.deviceNames = deviceNames;
         this.address = address;
         this.type = type;
-        this.image = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/devices/" + imageName));
-        this.deviceBlock = new DeviceBlock(this);        
+        this.image = new Image("file:" + SifebUtil.DEVICE_IMG_DIR + imageName + ".png");
+        this.deviceBlock = new DeviceBlock(this);
         this.capabilities = new ArrayList<>();
     }
 
@@ -60,6 +66,10 @@ public class Device {
         Locale currentLocale = Strings.getLocale();
         return deviceNames.get(currentLocale);
     }
+    
+    public String getDeviceName(Locale locale) {
+        return deviceNames.get(locale);
+    }
 
     public DeviceBlock getDeviceBlock() {
         return deviceBlock;
@@ -68,8 +78,14 @@ public class Device {
     public void addToPane(Pane parent) {
         parent.getChildren().add(this.deviceBlock);
     }
-    
-    public void addCapability(Capability cap){
+
+    public void addCapability(Capability cap) {
         this.capabilities.add(cap);
     }
+
+    @Override
+    public String toString() {
+        return (this.getDeviceName() + " (" + this.getDeviceID() + ")");
+    }
+
 }

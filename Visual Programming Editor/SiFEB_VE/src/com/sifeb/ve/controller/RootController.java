@@ -54,6 +54,7 @@ public class RootController implements Initializable {
 
     MainEditorController meCtrl;
     Stage libEditStage;
+    private static int ProgramLevel = 1;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -162,14 +163,20 @@ public class RootController implements Initializable {
             ComPortController.setBlockCreator(blkCreator);
             ComPortController.openPort();
             // ComPortController.setEventListener();
-            blkCreator.createCapability("cap_def1", null);
-            blkCreator.createCapability("cap_def2", null);
-            blkCreator.createCapability("cap_def3", null);
-            blkCreator.createCapability("cap_def4", null);
+            blkCreator.addDefaultCapabilities();
+            if(ProgramLevel == 2){
+                blkCreator.addLevel2Capabilities();
+                meCtrl.programBtn.setText("Program Level 2");
+            }
+            else if(ProgramLevel == 3){                
+                blkCreator.addLevel3Capabilities();
+                meCtrl.programBtn.setText("Program Level 3");
+            }
+            
 
             //for test only
-            blkCreator.createBlock("10");
-            blkCreator.createBlock("11");
+            blkCreator.createDeviceBlock("10", "10");
+            blkCreator.createDeviceBlock("11", "11");
             rootPane.setCenter(mainEditor);
         } catch (IOException e) {
             e.printStackTrace();
@@ -188,17 +195,20 @@ public class RootController implements Initializable {
             ComPortController.setBlockCreator(blkCreator);
             ComPortController.openPort();
             // ComPortController.setEventListener();
-            blkCreator.createCapability("cap_def1", null);
-            blkCreator.createCapability("cap_def2", null);
+            blkCreator.addDefaultCapabilities();
 
             //for test only
-            blkCreator.createBlock("10");
-            blkCreator.createBlock("11");
+            blkCreator.createDeviceBlock("10", "10");
+            blkCreator.createDeviceBlock("11", "11");
             rootPane.setCenter(gameEditor);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+    
+    public static void setLevel(int level){
+        ProgramLevel = level;
     }
 
 }

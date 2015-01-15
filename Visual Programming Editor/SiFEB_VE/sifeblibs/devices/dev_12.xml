@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><Sifeb><Device><Id>dev_12</Id><Names><Name><Locale>en_US</Locale><Value>Light</Value></Name><Name><Locale>si_LK</Locale><Value>පහන්</Value></Name></Names><Type>actuator</Type><Image>dev_12</Image><Capabilities><capability>cap_006</capability><capability>cap_007</capability></Capabilities></Device></Sifeb>

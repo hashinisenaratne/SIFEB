@@ -1,1 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><Sifeb><Capability><Id>cap_003</Id><Names><Name><Locale>en_US</Locale><Value>Turn Left</Value></Name><Name><Locale>si_LK</Locale><Value>වමට හැරෙන්න</Value></Name></Names><Type>actionC</Type><Command>e</Command><HasTestButton>true</HasTestButton><Image>cap_003</Image></Capability></Sifeb>

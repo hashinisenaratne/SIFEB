@@ -34,6 +34,8 @@ public class MainApp extends Application {
     public static String TutorialFile = "view/TutorialLayout.fxml";
     public static String LibraryID = "LibraryEditor";
     public static String LibraryFile = "view/LibraryEditor.fxml";
+    public static int InitialScreenWidth = 800;
+    public static int InitialScreenHeight = 600;
 
     @Override
     public void start(Stage primaryStage) {
@@ -53,6 +55,9 @@ public class MainApp extends Application {
         Scene scene = new Scene(rootLayout);
         MainApp.primaryStage.setScene(scene);
         MainApp.primaryStage.setMaximized(false);
+        MainApp.primaryStage.setResizable(false);
+        MainApp.primaryStage.setWidth(800);
+        MainApp.primaryStage.setHeight(600);
         MainApp.primaryStage.show();
     }
 
