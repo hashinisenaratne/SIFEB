@@ -35,6 +35,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
@@ -47,6 +48,8 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 
@@ -88,6 +91,12 @@ public class MainEditorController implements Initializable {
     Label doLabel;
     @FXML
     Button programBtn;
+    @FXML
+    Button refreshConnBtn;
+    @FXML
+    Label connectedText;
+    @FXML
+    ImageView connectedImg;
 
 //    ArrayList<Holder> holders;
     Holder lastHolder;
@@ -119,7 +128,29 @@ public class MainEditorController implements Initializable {
         FeedBackLogger.setControls(this.fbFace, this.fbText);
         setFeedbackPanel();
 
+        checkConnection(true);
         setTextStrings();
+    }
+
+    private void checkConnection(boolean initialCheck) {
+        if (initialCheck) {
+            Image img = new Image(MainApp.class.getResourceAsStream("/com/sifeb/ve/images/Conn_refresh.png"));
+            refreshConnBtn.setGraphic(new ImageView(img));
+            refreshConnBtn.setTooltip(new Tooltip("Retry Connection"));
+        }
+        if (ComPortController.serialPort.isOpened()) {
+            Image img = new Image(MainApp.class.getResourceAsStream("/com/sifeb/ve/images/connected.png"));
+            connectedImg.setImage(img);
+            connectedText.setTextFill(Color.FORESTGREEN);
+            connectedText.setText("Robot Connected");
+            refreshConnBtn.setVisible(false);
+        } else {
+            Image img = new Image(MainApp.class.getResourceAsStream("/com/sifeb/ve/images/disconnected.png"));
+            connectedImg.setImage(img);
+            connectedText.setTextFill(Color.CRIMSON);
+            connectedText.setText("Robot Not Connected");
+            refreshConnBtn.setVisible(true);
+        }
     }
 
     private void setFeedbackPanel() {
@@ -200,8 +231,7 @@ public class MainEditorController implements Initializable {
             addBlockHolder(index, parent, 2);
         } else if (node.getId().contains(Capability.CAP_ACTION)) {
             addBlockHolder(index, parent, 0);
-        }
-        else if (node.getId().contains(Capability.CAP_IFELSE)) {
+        } else if (node.getId().contains(Capability.CAP_IFELSE)) {
             addBlockHolder(index, parent, 3);
         }
         if (node != null) {
@@ -240,6 +270,19 @@ public class MainEditorController implements Initializable {
 //        addHolderBtn.setOnAction((ActionEvent event) -> {
 //            FeedBackLogger.sendBadMessage("This is a sad message!");
 //        });
+        refreshConnBtn.setOnAction((event)->{
+            refreshConnBtn.setDisable(true);
+            try {
+                ComPortController.closePort();
+                Thread.sleep(2000);
+                ComPortController.openPort();
+                checkConnection(false);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(RootController.class.getName()).log(Level.SEVERE, null, ex);
+            }finally{
+                refreshConnBtn.setDisable(false);
+            }
+        });
 
         runBtn.setOnAction((ActionEvent event) -> {
 
@@ -612,11 +655,11 @@ public class MainEditorController implements Initializable {
     public Label getFbText() {
         return fbText;
     }
-    
+
     @FXML
     private void goToProgram(ActionEvent event) {
     }
-    
+
     @FXML
     private void goToHome(ActionEvent event) {
         try {

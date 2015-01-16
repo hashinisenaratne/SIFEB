@@ -102,9 +102,7 @@ public class RootController implements Initializable {
         connectMenu.setOnAction((ActionEvent event) -> {
             try {
                 ComPortController.closePort();
-
                 Thread.sleep(2000);
-
                 ComPortController.openPort();
             } catch (InterruptedException ex) {
                 Logger.getLogger(RootController.class.getName()).log(Level.SEVERE, null, ex);
@@ -199,7 +197,8 @@ public class RootController implements Initializable {
     }
 
     private void loadMainEditor() {
-        try {
+        try {            
+            ComPortController.openPort();
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/MainEditor.fxml"));
             AnchorPane mainEditor = (AnchorPane) loader.load();
@@ -207,7 +206,6 @@ public class RootController implements Initializable {
             BlockCreator blkCreator = new BlockCreator(meCtrl);
 
             ComPortController.setBlockCreator(blkCreator);
-            ComPortController.openPort();
             // ComPortController.setEventListener();
             blkCreator.addDefaultCapabilities();
             if(ProgramLevel == 2){

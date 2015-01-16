@@ -45,8 +45,6 @@ public class MainApp extends Application {
         Strings.setLocale(new Locale("en", "US"));
 
         MainApp.primaryStage.setOnCloseRequest((WindowEvent event) -> {
-            ComPortController.statusQuery.cancel();
-            ComPortController.timer.cancel();
         });
         MainApp.primaryStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("/com/sifeb/ve/images/appIcon.png")));
 
