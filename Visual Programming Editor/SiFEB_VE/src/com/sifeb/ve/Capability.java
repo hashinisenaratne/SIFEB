@@ -48,9 +48,8 @@ public class Capability {
 
         this.staticImage = new Image("file:" + SifebUtil.STATIC_IMG_DIR + imageName + ".png");
 
-        try {
-            this.dynamicImage = new Image("file:" + SifebUtil.DYNAMIC_IMG_DIR + imageName + ".gif");
-        } catch (NullPointerException ex) {
+        this.dynamicImage = new Image("file:" + SifebUtil.DYNAMIC_IMG_DIR + imageName + ".gif");
+        if (dynamicImage.getWidth() == 0) {
             this.dynamicImage = this.staticImage;
         }
 

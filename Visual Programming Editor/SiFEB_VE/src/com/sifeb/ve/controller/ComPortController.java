@@ -10,28 +10,16 @@ package com.sifeb.ve.controller;
  * @author Hashini Senaratne
  */
 import com.sifeb.ve.handle.BlockCreator;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import jssc.*;
 
 public class ComPortController {
 
     public static String port = "COM18";
     public static SerialPort serialPort = new SerialPort(port);
-    public static BlockCreator blkCreator;
-    public static Timer timer = new Timer();
-    public static TimerTask statusQuery = new TimerTask() {
-        @Override
-        public void run() {
-            writeComPort(port, 10, "z");
-        }
-    };
+    public static BlockCreator blkCreator;  
     private static Semaphore writeLock = new Semaphore(1);
 
     public static void setBlockCreator(BlockCreator blkCreator) {
@@ -60,12 +48,12 @@ public class ComPortController {
 
         } catch (SerialPortException ex) {
 //            Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex1) {
-                Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex1);
-            }
-            JOptionPane.showMessageDialog(null, ex.getPortName()+" - "+ex.getExceptionType(), "COM Port Error", JOptionPane.ERROR_MESSAGE);
+//            try {
+//                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex1) {
+//                Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex1);
+//            }
+//            JOptionPane.showMessageDialog(null, ex.getPortName()+" - "+ex.getExceptionType(), "COM Port Error", JOptionPane.ERROR_MESSAGE);
         }
 //        timer.schedule(statusQuery, 2000, 5000);
         //   writeComPort(port, 10, "z");
