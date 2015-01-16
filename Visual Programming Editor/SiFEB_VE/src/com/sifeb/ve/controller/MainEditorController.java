@@ -194,7 +194,7 @@ public class MainEditorController implements Initializable {
     //type 1 = condition block
     //type 2 = repeat block
     //type 3 = if block
-    private void addBlockHolder(int index, VBox parent, int type) {
+    public void addBlockHolder(int index, VBox parent, int type) {
         Holder holder;
         switch (type) {
             case 1:
@@ -676,5 +676,25 @@ public class MainEditorController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Device getConnectedDevice(String devId, int address) {
+
+        for (int i = 0; i < devices.size(); i++) {
+            Device device = devices.get(i);
+            if (device.getDeviceID().equals(devId) && device.getAddress() == address) {
+                return device;
+            }
+        }
+        return null;
+    }
+
+    public void clearEditorVbox() {
+        editorBox.getChildren().clear();
+        addBlockHolder(0, editorBox, 0);
+    }
+
+    public VBox getEditorBox() {
+        return editorBox;
     }
 }

@@ -88,7 +88,7 @@ public class ConditionBlock extends Holder {
                     } else {
                         ((Pane) p).getChildren().remove(draggedBlock);
                     }
-                    
+
                     String blockType = draggedBlock.getCapability().getType();
                     switch (blockType) {
                         case Capability.CAP_ACTION_C:
@@ -106,11 +106,11 @@ public class ConditionBlock extends Holder {
                         case Capability.CAP_CONDITION:
                             if (this.hasCondition()) {
                                 this.removeCurrentCondition();
-                            }   
+                            }
                             this.addCondition(draggedBlock);
                             if (blockType.equals(Capability.CAP_CONDITION)) {
                                 draggedBlock.disableTextField(false);
-                            }   
+                            }
                             success = true;
                             break;
                     }

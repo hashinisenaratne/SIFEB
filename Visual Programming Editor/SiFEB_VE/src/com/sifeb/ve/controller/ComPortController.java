@@ -17,7 +17,7 @@ import jssc.*;
 
 public class ComPortController {
 
-    public static String port = "COM18";
+    public static String port = "COM198";
     public static SerialPort serialPort = new SerialPort(port);
     public static BlockCreator blkCreator;  
     private static Semaphore writeLock = new Semaphore(1);

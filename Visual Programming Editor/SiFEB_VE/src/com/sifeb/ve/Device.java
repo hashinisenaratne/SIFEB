@@ -66,7 +66,7 @@ public class Device {
         Locale currentLocale = Strings.getLocale();
         return deviceNames.get(currentLocale);
     }
-    
+
     public String getDeviceName(Locale locale) {
         return deviceNames.get(locale);
     }
@@ -86,6 +86,17 @@ public class Device {
     @Override
     public String toString() {
         return (this.getDeviceName() + " (" + this.getDeviceID() + ")");
+    }
+
+    public Block getCapabilityBlock(String capId) {
+        for (int i = 0; i < capabilities.size(); i++) {
+            if (capabilities.get(i).getCapID().equals(capId)) {
+                
+                return capabilities.get(i).cloneCapability().getBlock();
+            }
+        }
+
+        return null;
     }
 
 }

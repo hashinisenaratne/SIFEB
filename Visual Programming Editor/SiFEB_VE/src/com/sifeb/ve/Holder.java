@@ -93,15 +93,15 @@ public class Holder extends Pane {
                     if (draggedBlock.getCapability().getType().equals(Capability.CAP_ACTION)) {
                         this.addElementToVbox(draggedBlock);
                         success = true;
-                    } else  {
+                    } else {
                         this.mainCtrl.changeHolderType(this, (VBox) this.getParent(), draggedBlock);
                         success = true;
                     }
                     /*
-                    if (draggedBlock.getCapability().getType().equals("actionC")
-                            || draggedBlock.getCapability().getType().equals("control")
-                            || draggedBlock.getCapability().getType().equals("ifelse"))
-                    */
+                     if (draggedBlock.getCapability().getType().equals("actionC")
+                     || draggedBlock.getCapability().getType().equals("control")
+                     || draggedBlock.getCapability().getType().equals("ifelse"))
+                     */
                 }
             }
             event.setDropCompleted(success);
@@ -149,8 +149,8 @@ public class Holder extends Pane {
         BackgroundImage bottom = new BackgroundImage(bottomImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, new BackgroundPosition(Side.LEFT, 0, true, Side.BOTTOM, 0, true), BackgroundSize.DEFAULT);
         super.setBackground(new Background(bottom, top));
     }
-    
-    public final void setEmptyBackImage(){
+
+    public final void setEmptyBackImage() {
         super.setBackground(Background.EMPTY);
     }
 
@@ -166,7 +166,7 @@ public class Holder extends Pane {
         button.setStyle("-fx-background-color: transparent");
 
         button.setOnAction((ActionEvent event) -> {
-            this.mainCtrl.deleteHolder(this,(VBox) this.getParent());
+            this.mainCtrl.deleteHolder(this, (VBox) this.getParent());
         });
         setBtnHoverEffects(this.exitBtn);
     }
@@ -184,7 +184,7 @@ public class Holder extends Pane {
         button.setStyle("-fx-background-color: transparent");
 
         button.setOnAction((ActionEvent event) -> {
-            this.mainCtrl.addHolderAfterMe(this,(VBox) this.getParent(), true);
+            this.mainCtrl.addHolderAfterMe(this, (VBox) this.getParent(), true);
         });
         setBtnHoverEffects(this.addBtn);
     }
@@ -212,6 +212,18 @@ public class Holder extends Pane {
         } else {
             this.setEffect(null);
         }
+    }
+
+    public void addToHolder(Block draggedBlock) {
+        this.mainCtrl.addHolderAfterMe(this, (VBox) this.getParent(), false);
+        if (draggedBlock.getCapability().getType().equals(Capability.CAP_ACTION)) {
+            this.addElementToVbox(draggedBlock);
+            //  success = true;
+        } else {
+            this.mainCtrl.changeHolderType(this, (VBox) this.getParent(), draggedBlock);
+            //success = true;
+        }
+
     }
 
 }

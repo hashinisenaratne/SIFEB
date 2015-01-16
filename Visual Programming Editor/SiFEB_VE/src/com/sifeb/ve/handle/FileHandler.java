@@ -420,7 +420,7 @@ public class FileHandler {
 
             if (i >= 7) {
                 types = Capability.CAP_SENSE;
-            } else if (i < 3 || i > 5) {
+            } else if (i < 2 || i > 5) {
                 types = Capability.CAP_ACTION_C;
             } else {
                 types = Capability.CAP_ACTION;

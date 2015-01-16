@@ -48,7 +48,7 @@ import org.w3c.dom.Document;
  * @author Hashini Senaratne
  */
 public class RootController implements Initializable {
-    
+
     @FXML
     BorderPane rootPane;
     @FXML
@@ -164,7 +164,7 @@ public class RootController implements Initializable {
                 File file = fileChooser.getSelectedFile();
                 if (editorHandler == null) {
                     editorHandler = new EditorHandler();
-    }
+                }
                 editorHandler.saveFile(file.getPath(), meCtrl.editorBox);
             }
 
@@ -173,13 +173,12 @@ public class RootController implements Initializable {
         loadFile.setOnAction((ActionEvent event) -> {
 
             JFileChooser fileChooser = new JFileChooser();
-
             if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 if (editorHandler == null) {
                     editorHandler = new EditorHandler();
                 }
-                editorHandler.loadFile(file.getPath(), meCtrl.editorBox);
+                editorHandler.loadFile(file.getPath(), meCtrl);
             }
 
         });
@@ -197,7 +196,7 @@ public class RootController implements Initializable {
     }
 
     private void loadMainEditor() {
-        try {            
+        try {
             ComPortController.openPort();
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/MainEditor.fxml"));
@@ -208,15 +207,13 @@ public class RootController implements Initializable {
             ComPortController.setBlockCreator(blkCreator);
             // ComPortController.setEventListener();
             blkCreator.addDefaultCapabilities();
-            if(ProgramLevel == 2){
+            if (ProgramLevel == 2) {
                 blkCreator.addLevel2Capabilities();
                 meCtrl.programBtn.setText("Program Level 2");
-            }
-            else if(ProgramLevel == 3){                
+            } else if (ProgramLevel == 3) {
                 blkCreator.addLevel3Capabilities();
                 meCtrl.programBtn.setText("Program Level 3");
             }
-            
 
             //for test only
             blkCreator.createDeviceBlock("10", "10");
@@ -250,8 +247,8 @@ public class RootController implements Initializable {
         }
 
     }
-    
-    public static void setLevel(int level){
+
+    public static void setLevel(int level) {
         ProgramLevel = level;
     }
 

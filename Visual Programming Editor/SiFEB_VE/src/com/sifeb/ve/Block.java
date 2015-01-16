@@ -214,6 +214,11 @@ public final class Block extends Pane {
     public void setBlockText(String text) {
         name.setText(text);
     }
+    
+    public void setTextField(String value)
+    {
+        this.textField.setText(value);
+    }
 
     private void setShape(String type, Image img) {
         
