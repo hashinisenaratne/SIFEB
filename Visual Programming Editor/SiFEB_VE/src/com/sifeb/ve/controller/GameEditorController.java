@@ -5,20 +5,25 @@
  */
 package com.sifeb.ve.controller;
 
+import com.sifeb.ve.MainApp;
 import com.sifeb.ve.handle.FileHandler;
 import com.sifeb.ve.resources.SifebUtil;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -37,7 +42,7 @@ public class GameEditorController extends MainEditorController {
     @FXML
     Label progressLabel;
     @FXML
-    ProgressBar progressBar;    
+    ProgressBar progressBar;
     NodeList nodeList;
     FileHandler fileHandler;
     int storyCount, totalStories;
@@ -80,7 +85,7 @@ public class GameEditorController extends MainEditorController {
         gameText.setText(storyText);
         gameText.setWrapText(true);
         imgText += ".png";
-        Image img = new Image("file:"+SifebUtil.GAME_IMG_DIR + imgText);
+        Image img = new Image("file:" + SifebUtil.GAME_IMG_DIR + imgText);
         gameImg.setImage(img);
         gameText.setEditable(false);
 
@@ -102,7 +107,7 @@ public class GameEditorController extends MainEditorController {
                     String storyText = nodeList.item(storyCount - 1).getChildNodes().item(1).getTextContent();
                     gameText.setText(storyText);
                     imgText += ".png";
-                    Image img = new Image("file:"+SifebUtil.GAME_IMG_DIR + imgText);
+                    Image img = new Image("file:" + SifebUtil.GAME_IMG_DIR + imgText);
                     gameImg.setImage(img);
                     setProgressBar(storyCount);
 
@@ -131,7 +136,7 @@ public class GameEditorController extends MainEditorController {
                     String storyText = nodeList.item(storyCount - 1).getChildNodes().item(1).getTextContent();
                     gameText.setText(storyText);
                     imgText += ".png";
-                    Image img = new Image("file:"+SifebUtil.GAME_IMG_DIR + imgText);
+                    Image img = new Image("file:" + SifebUtil.GAME_IMG_DIR + imgText);
                     gameImg.setImage(img);
                     setProgressBar(storyCount);
 
@@ -144,4 +149,31 @@ public class GameEditorController extends MainEditorController {
         });
     }
 
+    @FXML
+    private void goToHome(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource(MainApp.HomeFile));
+            MainApp.setPane((Pane) loader.load());
+            Scene scene = new Scene(MainApp.getPane());
+            MainApp.getStage().setScene(scene);
+            MainApp.getStage().setMaximized(false);
+            MainApp.getStage().setResizable(false);
+            MainApp.getStage().setWidth(MainApp.InitialScreenWidth);
+            MainApp.getStage().setHeight(MainApp.InitialScreenHeight);
+            MainApp.getStage().show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void goToLearn(ActionEvent event) {
+
+    }
+
+    @FXML
+    private void goToChallenge(ActionEvent event) {
+
+    }
 }

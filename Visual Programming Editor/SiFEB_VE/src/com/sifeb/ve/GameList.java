@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.sifeb.ve;
 
 import java.util.ArrayList;
@@ -13,28 +12,20 @@ import java.util.ArrayList;
  * @author Hashini
  */
 public class GameList {
-    
+
     private final int level;
     private final ArrayList<Game> games;
-    
-    public GameList(int level){
+
+    public GameList(int level) {
         this.level = level;
         this.games = new ArrayList();
     }
-    
-    public void addGame (String id, String file){
+
+    public void addGame(String id, String file) {
         games.add(new Game(id, file));
     }
-}
 
-class Game{
-    
-    private final String gameID;
-    private final String gameFile;
-    
-    public Game(String id, String file){
-        this.gameID = id;
-        this.gameFile = file;
+    public ArrayList<Game> getGames() {
+        return games;
     }
-    
 }
