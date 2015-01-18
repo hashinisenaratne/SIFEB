@@ -43,7 +43,7 @@ public class HomeController implements Initializable {
         if (musicBtn.isSelected()) {
             SoundHandler.setMusicOn(true);
             SoundHandler.playBackMusic();
-        } else {            
+        } else {
             SoundHandler.setMusicOn(false);
             SoundHandler.stopBackMusic();
         }
@@ -63,10 +63,11 @@ public class HomeController implements Initializable {
     private void goToMainEditor3(ActionEvent event) {
         goToMainEditor(3);
     }
-    
+
     private void goToMainEditor(int level) {
         try {
             FXMLLoader loader = new FXMLLoader();
+            RootController.setType("Main");
             RootController.setLevel(level);
             loader.setLocation(MainApp.class.getResource(MainApp.RootFile));
             MainApp.setPane((Pane) loader.load());
@@ -81,7 +82,7 @@ public class HomeController implements Initializable {
             e.printStackTrace();
         }
     }
-    
+
     @FXML
     private void goToTutorialsLevel1(ActionEvent event) {
         goToTutorials(1);

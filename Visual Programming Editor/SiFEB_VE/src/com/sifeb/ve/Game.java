@@ -7,7 +7,7 @@ package com.sifeb.ve;
 
 /**
  *
- * @author Hashini
+ * @author Hashini Senaratne
  */
 public class Game {
 

@@ -23,22 +23,22 @@
                 <Font name="Arial Bold" size="22.0" />
             </font>
         </Button>
-        <Button fx:id="milestoneBut1" layoutX="74.0" layoutY="300.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="93.0" text="1">
+        <Button fx:id="milestoneBut1" layoutX="74.0" layoutY="300.0" mnemonicParsing="false" onAction="#goToLearn1" prefHeight="53.0" prefWidth="93.0" text="1">
             <font>
                 <Font name="System Bold" size="20.0" />
             </font>
         </Button>
-        <Button fx:id="milestoneBut2" layoutX="244.0" layoutY="412.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="93.0" text="2">
+        <Button fx:id="milestoneBut2" layoutX="244.0" layoutY="412.0" mnemonicParsing="false" onAction="#goToLearn2" prefHeight="53.0" prefWidth="93.0" text="2">
             <font>
                 <Font name="System Bold" size="20.0" />
             </font>
         </Button>
-        <Button fx:id="milestoneBut3" layoutX="425.0" layoutY="300.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="93.0" text="3">
+        <Button fx:id="milestoneBut3" layoutX="425.0" layoutY="300.0" mnemonicParsing="false" onAction="#goToLearn3" prefHeight="53.0" prefWidth="93.0" text="3">
             <font>
                 <Font name="System Bold" size="20.0" />
             </font>
         </Button>
-        <Button fx:id="milestoneBut4" layoutX="599.0" layoutY="412.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="93.0" text="4">
+        <Button fx:id="milestoneBut4" layoutX="599.0" layoutY="412.0" mnemonicParsing="false" onAction="#goToLearn4" prefHeight="53.0" prefWidth="93.0" text="4">
             <font>
                 <Font name="System Bold" size="20.0" />
             </font>

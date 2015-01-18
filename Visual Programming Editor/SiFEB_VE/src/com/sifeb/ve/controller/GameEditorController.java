@@ -30,11 +30,12 @@ import org.w3c.dom.NodeList;
 /**
  *
  * @author Pubudu
+ * @author Hashini Senaratne
  */
 public class GameEditorController extends MainEditorController {
 
     @FXML
-    Button prevBtn, nextBtn;
+    Button prevBtn, nextBtn, learnBtn, challengeBtn;
     @FXML
     ImageView gameImg;
     @FXML
@@ -47,18 +48,24 @@ public class GameEditorController extends MainEditorController {
     FileHandler fileHandler;
     int storyCount, totalStories;
 
+    private static int TutorialLevel;
+    private static String GameID;
+    private static String GameFile;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         super.initialize(location, resources);
         fileHandler = new FileHandler();
-        readGameFile("game_001");
+        readGameFile(GameFile);
         storyCount = 1;
         totalStories = nodeList.getLength();
         setStartingConditions();
         setEventListeners();
         double initProg = (double) storyCount / (double) totalStories;
         progressBar.setProgress(initProg);
+        learnBtn.setText("Learn - Level " + TutorialLevel);
+        challengeBtn.setText("Challenge - " + GameID);
 
     }
 
@@ -169,11 +176,36 @@ public class GameEditorController extends MainEditorController {
 
     @FXML
     private void goToLearn(ActionEvent event) {
-
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            TutorialController.setLevel(RootController.getTutorialLevel());
+            loader.setLocation(MainApp.class.getResource(MainApp.TutorialFile));
+            MainApp.setPane((Pane) loader.load());
+            Scene scene = new Scene(MainApp.getPane());
+            MainApp.getStage().setScene(scene);
+            MainApp.getStage().setMaximized(false);
+            MainApp.getStage().setResizable(false);
+            MainApp.getStage().setWidth(MainApp.InitialScreenWidth);
+            MainApp.getStage().setHeight(MainApp.InitialScreenHeight);
+            MainApp.getStage().show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void goToChallenge(ActionEvent event) {
+    }
 
+    public static void setLevel(int level) {
+        TutorialLevel = level;
+    }
+
+    public static void setGameFile(String gameFile) {
+        GameFile = gameFile;
+    }
+
+    public static void setGameID(String gameID) {
+        GameID = gameID;
     }
 }

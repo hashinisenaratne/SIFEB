@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Hashini
+ * @author Hashini Senaratne
  */
 public class GameList {
 

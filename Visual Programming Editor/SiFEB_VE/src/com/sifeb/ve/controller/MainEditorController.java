@@ -56,6 +56,7 @@ import org.controlsfx.dialog.Dialog;
 /**
  *
  * @author Udith Arosha
+ * @author Hashini Senaratne
  */
 public class MainEditorController implements Initializable {
 
@@ -270,7 +271,7 @@ public class MainEditorController implements Initializable {
 //        addHolderBtn.setOnAction((ActionEvent event) -> {
 //            FeedBackLogger.sendBadMessage("This is a sad message!");
 //        });
-        refreshConnBtn.setOnAction((event)->{
+        refreshConnBtn.setOnAction((event) -> {
             refreshConnBtn.setDisable(true);
             try {
                 ComPortController.closePort();
@@ -279,7 +280,7 @@ public class MainEditorController implements Initializable {
                 checkConnection(false);
             } catch (InterruptedException ex) {
                 Logger.getLogger(RootController.class.getName()).log(Level.SEVERE, null, ex);
-            }finally{
+            } finally {
                 refreshConnBtn.setDisable(false);
             }
         });

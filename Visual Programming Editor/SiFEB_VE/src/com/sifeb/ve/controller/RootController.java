@@ -58,15 +58,28 @@ public class RootController implements Initializable {
     MenuItem saveFile, loadFile, closeBtn;
 
     MainEditorController meCtrl;
+    GameEditorController geCtrl;
     Stage libEditStage;
-    private static int ProgramLevel = 1;
+    private static String Type;
+    private static int ProgramLevel;
+    private static int TutorialLevel;
+    private static String GameFile;
+    private static String GameID;
     EditorHandler editorHandler;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setEventHandlers();
-        loadMainEditor();
-        // loadGameEditor();
+        if (null != Type) {
+            switch (Type) {
+                case "Main":
+                    loadMainEditor();
+                    break;
+                case "Game":
+                    loadGameEditor();
+                    break;
+            }
+        }
         //TEST
 //        FXMLLoader loader = new FXMLLoader();
 //        loader.setLocation(MainApp.class.getResource("view/LibraryEditor.fxml"));
@@ -172,7 +185,7 @@ public class RootController implements Initializable {
                 if (editorHandler == null) {
                     editorHandler = new EditorHandler();
                 }
-                editorHandler.loadFile(file.getName(),file.getPath(), meCtrl);
+                editorHandler.loadFile(file.getName(), file.getPath(), meCtrl);
             }
 
         });
@@ -221,16 +234,26 @@ public class RootController implements Initializable {
     private void loadGameEditor() {
 
         try {
+            GameEditorController.setLevel(TutorialLevel);
+            GameEditorController.setGameFile(GameFile);
+            GameEditorController.setGameID(GameID);
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/GameEditor.fxml"));
             AnchorPane gameEditor = (AnchorPane) loader.load();
-            meCtrl = loader.getController();
-            BlockCreator blkCreator = new BlockCreator(meCtrl);
+            geCtrl = loader.getController();
+            BlockCreator blkCreator = new BlockCreator(geCtrl);
 
             ComPortController.setBlockCreator(blkCreator);
             ComPortController.openPort();
             // ComPortController.setEventListener();
             blkCreator.addDefaultCapabilities();
+            if (TutorialLevel == 2) {
+                blkCreator.addLevel2Capabilities();
+                geCtrl.learnBtn.setText("Learn - Level 2");
+            } else if (TutorialLevel == 3) {
+                blkCreator.addLevel3Capabilities();
+                geCtrl.learnBtn.setText("Learn - Level 3");
+            }
 
             //for test only
             blkCreator.createDeviceBlock("10", "10");
@@ -242,8 +265,33 @@ public class RootController implements Initializable {
 
     }
 
+    public static void setType(String type) {
+        Type = type;
+    }
+
     public static void setLevel(int level) {
-        ProgramLevel = level;
+        if (null != Type) {
+            switch (Type) {
+                case "Main":
+                    ProgramLevel = level;
+                    break;
+                case "Game":
+                    TutorialLevel = level;
+                    break;
+            }
+        }
+    }
+
+    public static void setGameFile(String gameFile) {
+        GameFile = gameFile;
+    }
+
+    public static int getTutorialLevel() {
+        return TutorialLevel;
+    }
+
+    public static void setGameID(String gameID) {
+        GameID = gameID;
     }
 
 }

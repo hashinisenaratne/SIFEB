@@ -138,12 +138,41 @@ public class TutorialController implements Initializable {
         TutorialLevel = level;
     }
 
-    private void goToGameEditor(String type, int level, String gameFile) {
+    @FXML
+    private void goToLearn1(ActionEvent event) {
+        goToGameEditor(TutorialLevel,
+                gamelist.getGames().get(4 * (pageNo - 1)).getGameFile(),
+                gamelist.getGames().get(4 * (pageNo - 1)).getGameID());
+    }
+
+    @FXML
+    private void goToLearn2(ActionEvent event) {
+        goToGameEditor(TutorialLevel,
+                gamelist.getGames().get(4 * (pageNo - 1) + 1).getGameFile(),
+                gamelist.getGames().get(4 * (pageNo - 1) + 1).getGameID());
+    }
+
+    @FXML
+    private void goToLearn3(ActionEvent event) {
+        goToGameEditor(TutorialLevel,
+                gamelist.getGames().get(4 * (pageNo - 1) + 2).getGameFile(),
+                gamelist.getGames().get(4 * (pageNo - 1) + 2).getGameID());
+    }
+
+    @FXML
+    private void goToLearn4(ActionEvent event) {
+        goToGameEditor(TutorialLevel,
+                gamelist.getGames().get(4 * (pageNo - 1) + 3).getGameFile(),
+                gamelist.getGames().get(4 * (pageNo - 1) + 3).getGameID());
+    }
+
+    private void goToGameEditor(int level, String gameFile, String gameID) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            //RootController.setType(type);
+            RootController.setType("Game");
             RootController.setLevel(level);
-            //RootController.setGameFile(gameFile);
+            RootController.setGameID(gameID);
+            RootController.setGameFile(gameFile);
             loader.setLocation(MainApp.class.getResource(MainApp.RootFile));
             MainApp.setPane((Pane) loader.load());
             Scene scene = new Scene(MainApp.getPane());
