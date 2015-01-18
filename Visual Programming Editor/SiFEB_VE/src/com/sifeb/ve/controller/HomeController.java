@@ -6,6 +6,7 @@
 package com.sifeb.ve.controller;
 
 import com.sifeb.ve.MainApp;
+import com.sifeb.ve.handle.SoundHandler;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -14,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Pane;
 
 /**
@@ -23,29 +25,45 @@ import javafx.scene.layout.Pane;
  */
 public class HomeController implements Initializable {
 
+    @FXML
+    ToggleButton musicBtn;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        musicBtn.setSelected(SoundHandler.isMusicOn());
+        SoundHandler.playBackMusic();
+
     }
 
     @FXML
-    private void goToMainEditor1(ActionEvent event){
-            goToMainEditor(1);
+    private void goToMainEditor1(ActionEvent event) {
+        goToMainEditor(1);
     }
-    
+
     @FXML
-    private void goToMainEditor2(ActionEvent event){
-            goToMainEditor(2);
+    private void goToMainEditor2(ActionEvent event) {
+        goToMainEditor(2);
     }
-    
+
     @FXML
-    private void goToMainEditor3(ActionEvent event){
-            goToMainEditor(3);
+    private void goToMainEditor3(ActionEvent event) {
+        goToMainEditor(3);
     }
-    
+
+    @FXML
+    private void toggleMusic(ActionEvent event) {
+        if (musicBtn.isSelected()) {
+            SoundHandler.setMusicOn(true);
+            SoundHandler.playBackMusic();
+        } else {            
+            SoundHandler.setMusicOn(false);
+            SoundHandler.stopBackMusic();
+        }
+    }
+
     private void goToMainEditor(int level) {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -54,14 +72,16 @@ public class HomeController implements Initializable {
             MainApp.setPane((Pane) loader.load());
             Scene scene = new Scene(MainApp.getPane());
             MainApp.getStage().setScene(scene);
-            MainApp.getStage().setMaximized(true);            
+            MainApp.getStage().setMaximized(true);
             MainApp.getStage().setResizable(true);
             MainApp.getStage().show();
+
+            SoundHandler.stopBackMusic();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     @FXML
     private void goToTutorials(ActionEvent event) {
         try {
@@ -69,7 +89,7 @@ public class HomeController implements Initializable {
             loader.setLocation(MainApp.class.getResource(MainApp.TutorialFile));
             MainApp.setPane((Pane) loader.load());
             Scene scene = new Scene(MainApp.getPane());
-            MainApp.getStage().setScene(scene); 
+            MainApp.getStage().setScene(scene);
             MainApp.getStage().setMaximized(false);
             MainApp.getStage().setResizable(false);
             MainApp.getStage().setWidth(MainApp.InitialScreenWidth);
@@ -91,12 +111,14 @@ public class HomeController implements Initializable {
             MainApp.getStage().setMaximized(false);
             MainApp.getStage().setResizable(false);
             MainApp.getStage().show();
+
+            SoundHandler.stopBackMusic();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
-        @FXML
+
+    @FXML
     private void goToHome(ActionEvent event) {
     }
 }

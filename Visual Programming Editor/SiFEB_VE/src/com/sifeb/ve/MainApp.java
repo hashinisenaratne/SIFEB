@@ -6,6 +6,7 @@
 package com.sifeb.ve;
 
 import com.sifeb.ve.controller.ComPortController;
+import com.sifeb.ve.handle.SoundHandler;
 import com.sifeb.ve.resources.Strings;
 import java.io.IOException;
 import java.util.Locale;
@@ -61,6 +62,8 @@ public class MainApp extends Application {
         MainApp.primaryStage.setWidth(800);
         MainApp.primaryStage.setHeight(600);
         MainApp.primaryStage.show();
+
+        SoundHandler.playWelcome();
     }
 
     /**

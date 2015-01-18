@@ -71,13 +71,21 @@
             <Insets left="-8.0" />
          </GridPane.margin>
       </Button>
+      <ToggleButton fx:id="musicBtn" mnemonicParsing="false" onAction="#toggleMusic" prefHeight="40.0" prefWidth="40.0" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
+         <GridPane.margin>
+            <Insets right="5.0" top="40.0" />
+         </GridPane.margin>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ToggleButton>
    </children>
    <columnConstraints>
       <ColumnConstraints maxWidth="199.0" minWidth="157.0" prefWidth="158.0" />
       <ColumnConstraints maxWidth="144.0" minWidth="101.0" prefWidth="143.0" />
       <ColumnConstraints maxWidth="201.0" minWidth="160.0" prefWidth="185.0" />
       <ColumnConstraints maxWidth="140.0" minWidth="105.0" prefWidth="140.0" />
-      <ColumnConstraints maxWidth="195.0" minWidth="147.0" prefWidth="147.0" />
+      <ColumnConstraints minWidth="147.0" prefWidth="147.0" />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints maxHeight="145.0" minHeight="100.0" prefHeight="138.0" />
