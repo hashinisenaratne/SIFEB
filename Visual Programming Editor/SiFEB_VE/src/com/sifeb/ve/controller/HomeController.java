@@ -39,6 +39,17 @@ public class HomeController implements Initializable {
     }
 
     @FXML
+    private void toggleMusic(ActionEvent event) {
+        if (musicBtn.isSelected()) {
+            SoundHandler.setMusicOn(true);
+            SoundHandler.playBackMusic();
+        } else {            
+            SoundHandler.setMusicOn(false);
+            SoundHandler.stopBackMusic();
+        }
+    }
+
+    @FXML
     private void goToMainEditor1(ActionEvent event) {
         goToMainEditor(1);
     }
@@ -52,18 +63,7 @@ public class HomeController implements Initializable {
     private void goToMainEditor3(ActionEvent event) {
         goToMainEditor(3);
     }
-
-    @FXML
-    private void toggleMusic(ActionEvent event) {
-        if (musicBtn.isSelected()) {
-            SoundHandler.setMusicOn(true);
-            SoundHandler.playBackMusic();
-        } else {            
-            SoundHandler.setMusicOn(false);
-            SoundHandler.stopBackMusic();
-        }
-    }
-
+    
     private void goToMainEditor(int level) {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -81,11 +81,26 @@ public class HomeController implements Initializable {
             e.printStackTrace();
         }
     }
+    
+    @FXML
+    private void goToTutorialsLevel1(ActionEvent event) {
+        goToTutorials(1);
+    }
 
     @FXML
-    private void goToTutorials(ActionEvent event) {
+    private void goToTutorialsLevel2(ActionEvent event) {
+        goToTutorials(2);
+    }
+
+    @FXML
+    private void goToTutorialsLevel3(ActionEvent event) {
+        goToTutorials(3);
+    }
+
+    private void goToTutorials(int level) {
         try {
             FXMLLoader loader = new FXMLLoader();
+            TutorialController.setLevel(level);
             loader.setLocation(MainApp.class.getResource(MainApp.TutorialFile));
             MainApp.setPane((Pane) loader.load());
             Scene scene = new Scene(MainApp.getPane());

@@ -209,10 +209,10 @@ public class RootController implements Initializable {
             blkCreator.addDefaultCapabilities();
             if (ProgramLevel == 2) {
                 blkCreator.addLevel2Capabilities();
-                meCtrl.programBtn.setText("Program Level 2");
+                meCtrl.programBtn.setText("Program - Level 2");
             } else if (ProgramLevel == 3) {
                 blkCreator.addLevel3Capabilities();
-                meCtrl.programBtn.setText("Program Level 3");
+                meCtrl.programBtn.setText("Program - Level 3");
             }
 
             //for test only

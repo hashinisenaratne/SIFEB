@@ -11,8 +11,14 @@ package com.sifeb.ve.handle;
  */
 import com.sifeb.ve.Capability;
 import com.sifeb.ve.Device;
-import com.sifeb.ve.resources.SifebUtil;
 import com.sifeb.ve.FeedBackLogger;
+import com.sifeb.ve.GameList;
+import com.sifeb.ve.resources.SifebUtil;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -22,14 +28,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
 import org.w3c.dom.Element;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class FileHandler {
@@ -400,6 +401,43 @@ public class FileHandler {
         }
 
         return element;
+    }
+
+    public GameList readFromGameListFile(int level) {
+
+        Element eElement = null;
+        File file = new File(SifebUtil.GAME_FILE_DIR + "game_list.xml");
+        try {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(file);
+
+            //optional, but recommended
+            doc.getDocumentElement().normalize();
+
+            NodeList nList = doc.getElementsByTagName("Level"+level);
+            Node nNode = nList.item(0);
+            eElement = (Element) nNode;
+
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return getGameListFromElement(eElement, level);
+    }
+
+    private GameList getGameListFromElement(Element el, int level) {
+        NodeList nodeList = el.getElementsByTagName("Games").item(0).getChildNodes();
+        GameList gamelist = new GameList(level);
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            NodeList nameNodes = nodeList.item(i).getChildNodes();
+            String id = nameNodes.item(0).getTextContent();
+            String file = nameNodes.item(1).getTextContent();
+            gamelist.addGame(id, file);
+        }
+
+        return gamelist;
     }
 
     /////////////////////////////////////////////////////////////

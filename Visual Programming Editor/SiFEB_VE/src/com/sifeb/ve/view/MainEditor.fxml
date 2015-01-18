@@ -109,7 +109,7 @@
                         <Button fx:id="refreshConnBtn" contentDisplay="GRAPHIC_ONLY" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" />
                      </children>
                             </HBox>
-                  <Button fx:id="programBtn" layoutX="82.0" layoutY="6.0" mnemonicParsing="false" onAction="#goToProgram" prefHeight="46.0" prefWidth="217.0" styleClass="breadcrumbs" text="Program Level 1">
+                  <Button fx:id="programBtn" layoutX="82.0" layoutY="6.0" mnemonicParsing="false" onAction="#goToProgram" prefHeight="46.0" prefWidth="217.0" styleClass="breadcrumbs" text="Program - Level 1">
                            <font>
                               <Font name="Arial Bold" size="22.0" />
                            </font>

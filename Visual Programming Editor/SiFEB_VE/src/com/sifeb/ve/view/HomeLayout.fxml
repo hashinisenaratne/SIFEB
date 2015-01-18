@@ -27,7 +27,7 @@
             <Font name="Arial Bold" size="22.0" />
          </font>
       </Button>
-       <Button mnemonicParsing="false" onAction="#goToTutorials" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: rgb(255, 255, 255, 0.2);" text="EASY" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+       <Button mnemonicParsing="false" onAction="#goToTutorialsLevel1" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: rgb(255, 255, 255, 0.2);" text="EASY" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
          <font>
             <Font name="Arial Bold" size="22.0" />
          </font>
@@ -40,7 +40,7 @@
             <Insets right="1.0" />
          </padding>
       </Button>
-       <Button mnemonicParsing="false" onAction="#goToTutorials" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: rgb(255, 255, 255, 0.2);" text="MEDIUM" GridPane.columnIndex="3" GridPane.columnSpan="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+       <Button mnemonicParsing="false" onAction="#goToTutorialsLevel2" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: rgb(255, 255, 255, 0.2);" text="MEDIUM" GridPane.columnIndex="3" GridPane.columnSpan="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
          <font>
             <Font name="Arial Bold" size="22.0" />
          </font>
@@ -53,7 +53,7 @@
             <Font name="Arial Bold" size="22.0" />
          </font>
       </Button>
-       <Button mnemonicParsing="false" onAction="#goToTutorials" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: rgb(255, 255, 255, 0.2);" text="HARD" GridPane.columnIndex="3" GridPane.columnSpan="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+       <Button mnemonicParsing="false" onAction="#goToTutorialsLevel3" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: rgb(255, 255, 255, 0.2);" text="HARD" GridPane.columnIndex="3" GridPane.columnSpan="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
          <font>
             <Font name="Arial Bold" size="22.0" />
          </font>

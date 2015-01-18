@@ -10,7 +10,7 @@
 <?import javafx.scene.text.*?>
 <?import java.net.*?>
 
-<AnchorPane id="learn" minHeight="122.0" prefHeight="600.0" prefWidth="800.0" stylesheets="@../stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sifeb.ve.controller.TutorialController">
+<AnchorPane fx:id="learn" minHeight="122.0" prefHeight="600.0" prefWidth="800.0" styleClass="learnScreen" stylesheets="@../stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sifeb.ve.controller.TutorialController">
    <children>
        <Button layoutX="-7.0" layoutY="1.0" mnemonicParsing="false" onAction="#goToHome" prefHeight="46.0" prefWidth="100.0" styleClass="breadcrumbs" text="Home">
          <font>
@@ -18,7 +18,7 @@
          </font>
       </Button>
        
-       <Button layoutX="87.0" layoutY="1.0" mnemonicParsing="false" onAction="#goToLearn" prefHeight="46.0" prefWidth="100.0" styleClass="breadcrumbs" text="Learn">
+       <Button fx:id="learnBtn" layoutX="87.0" layoutY="1.0" mnemonicParsing="false" onAction="#goToLearn" prefHeight="46.0" prefWidth="195.0" styleClass="breadcrumbs" text="Learn - Level 1">
          <font>
             <Font name="Arial Bold" size="22.0" />
          </font>
@@ -43,8 +43,8 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Button>
-      <Button fx:id="upButton" layoutX="692.0" layoutY="70.0" mnemonicParsing="false" styleClass="upButton" />
-      <Button fx:id="downButton" layoutX="692.0" layoutY="128.0" mnemonicParsing="false" styleClass="downButton" />
+      <Button fx:id="upButton" layoutX="692.0" layoutY="70.0" mnemonicParsing="false" onAction="#pageUp" styleClass="upButton" />
+      <Button fx:id="downButton" layoutX="692.0" layoutY="128.0" mnemonicParsing="false" onAction="#pageDown" styleClass="downButton" />
    </children>
    <opaqueInsets>
       <Insets />
