@@ -11,6 +11,7 @@ import com.sifeb.ve.ConditionBlock;
 import com.sifeb.ve.Device;
 import com.sifeb.ve.Holder;
 import com.sifeb.ve.IfBlock;
+import com.sifeb.ve.MainApp;
 import com.sifeb.ve.RepeatBlock;
 import com.sifeb.ve.controller.MainEditorController;
 import java.util.logging.Level;
@@ -144,12 +145,12 @@ public class EditorHandler {
             String conditionId = conBlock.getCapability().getCapID();
 
             System.out.println("<block>Condition</block>");
-            Element conditionBlk = doc.createElement("Block");
+            Element conditionBlk = doc.createElement("Condition");
             Attr conAttr = doc.createAttribute("id");
             conAttr.setValue("Condition");
             conditionBlk.setAttributeNode(conAttr);
             //conditionBlk.appendChild(doc.createTextNode("Condition"));
-            conStep.appendChild(conditionBlk);
+            block.appendChild(conditionBlk);
 
             System.out.println("<conId>" + conditionId);
             Element conCapId = doc.createElement("CapId");
@@ -191,12 +192,12 @@ public class EditorHandler {
             String capId = conBlk.getCapability().getCapID();
 
             System.out.println("<block>Condition</block>");
-            Element conditionBlk = doc.createElement("Block");
+            Element conditionBlk = doc.createElement("Condition");
             Attr conAttr = doc.createAttribute("id");
             conAttr.setValue("Condition");
             conditionBlk.setAttributeNode(conAttr);
             //  conditionBlk.appendChild(doc.createTextNode("Condition"));
-            repeatStep.appendChild(conditionBlk);
+            repeatBlk.appendChild(conditionBlk);
 
             System.out.println("<conId>" + capId);
             Element conCapId = doc.createElement("CapId");
@@ -233,15 +234,15 @@ public class EditorHandler {
 
             if (rh.getClass().getName().contains("ConditionBlock")) {
                 ConditionBlock cb = (ConditionBlock) rb.getHolders().getChildren().get(j);
-                saveConditionBlocks(cb, repeatStep);
+                saveConditionBlocks(cb, repeatBlk);
             } else if (rh.getClass().getName().contains("RepeatBlock")) {
                 RepeatBlock rb1 = (RepeatBlock) rb.getHolders().getChildren().get(j);
-                saveRepeatBlocks(rb1, repeatStep);
+                saveRepeatBlocks(rb1, repeatBlk);
             } else if (rh.getClass().getName().contains("IfBlock")) {
                 IfBlock ib = (IfBlock) rb.getHolders().getChildren().get(j);
-                saveIfBlock(ib, repeatStep);
+                saveIfBlock(ib, repeatBlk);
             } else {
-                saveBlock(rh, repeatStep);
+                saveBlock(rh, repeatBlk);
             }
         }
     }
@@ -264,12 +265,12 @@ public class EditorHandler {
             System.out.println("<block>Condition</block>");
             System.out.println("<conId>" + capId);
 
-            Element conditionBlk = doc.createElement("Block");
+            Element conditionBlk = doc.createElement("Condition");
             Attr conAttr = doc.createAttribute("id");
             conAttr.setValue("Condition");
             conditionBlk.setAttributeNode(conAttr);
             //conditionBlk.appendChild(doc.createTextNode("Condition"));
-            ifStep.appendChild(conditionBlk);
+            ifBlk.appendChild(conditionBlk);
 
             Element conCapId = doc.createElement("CapId");
             conCapId.appendChild(doc.createTextNode(capId));
@@ -307,7 +308,7 @@ public class EditorHandler {
             iffAttr.setValue("IF");
             ifConBlk.setAttributeNode(iffAttr);
             //  ifConBlk.appendChild(doc.createTextNode("IF"));
-            ifStep.appendChild(ifConBlk);
+            ifBlk.appendChild(ifConBlk);
             saveIfElse(numSteps, ieVbox, ifConBlk);
         }
 
@@ -320,7 +321,7 @@ public class EditorHandler {
             elseAttr.setValue("ELSE");
             elseConBlk.setAttributeNode(elseAttr);
             //elseConBlk.appendChild(doc.createTextNode("ELSE"));
-            ifStep.appendChild(elseConBlk);
+            ifBlk.appendChild(elseConBlk);
             saveIfElse(numSteps, ieVbox, elseConBlk);
         }
 
@@ -383,57 +384,60 @@ public class EditorHandler {
 
     }
 
-    public void loadFile(String filePath, MainEditorController meCtrl) {
+    public void loadFile(String fileName,String filePath, MainEditorController meCtrl) {
 
         Element mainFile = fileHandler.readFromEditorFile(filePath);
         NodeList stepNodes = mainFile.getElementsByTagName("Steps").item(0).getChildNodes();
-
-        System.out.println("step nodes length = " + stepNodes.getLength());
         meCtrl.clearEditorVbox();
+        MainApp.appendTitle(fileName);
 
         for (int i = 0; i < stepNodes.getLength(); i++) {
             NodeList blockNodes = stepNodes.item(i).getChildNodes();
-            System.out.println("Step Value@@@@@@@@@@@@@ " + i);
-            int conditionIndex = 0;
-            String conditionValue = "";
 
-            for (int j = 0; j < blockNodes.getLength(); j++) {
-                System.out.println("Block value $$$$$$$$$$$$ " + j);
-                int ind = meCtrl.getEditorBox().getChildren().size() - 1;
-                System.out.println("holderindex - " + ind);
-
-                Element block = (Element) blockNodes.item(j);
+            if (blockNodes.getLength() > 0) {
+                Element block = (Element) blockNodes.item(0);
 
                 if (block.getAttribute("id").equals("ConditionalBlock")) {
 
-                    String deviceId = block.getElementsByTagName("DeviceId").item(0).getTextContent();
-                    int address = Integer.parseInt(block.getElementsByTagName("Location").item(0).getTextContent());
-                    String capId = block.getElementsByTagName("CapId").item(0).getTextContent();
+                    Block capBlock = checkActionBlock(block, meCtrl);
+                    if (capBlock != null) {
 
-                    Device device = meCtrl.getConnectedDevice(deviceId, address);
-                    if (device != null) {
-                        Block capBlock = device.getCapabilityBlock(capId);
+                        int holderIndex = meCtrl.getEditorBox().getChildren().size() - 1;
+                        Holder holder = (Holder) meCtrl.getEditorBox().getChildren().get(holderIndex);
+                        holder.addToHolder(capBlock);
 
-                        if (capBlock != null) {
-                            int holderIndex = meCtrl.getEditorBox().getChildren().size() - 1;
-                            Holder holder = (Holder) meCtrl.getEditorBox().getChildren().get(holderIndex);
-                            conditionIndex = holderIndex;
-                            conditionValue = "ConditionalBlock";
-                            holder.addToHolder(capBlock);
+                        NodeList childNodes = block.getElementsByTagName("Condition");
+                        if (childNodes.getLength() > 0) {
+                            ConditionBlock cb = (ConditionBlock) meCtrl.getEditorBox().getChildren().get(holderIndex);
+                            loadCLBlock(cb, childNodes, meCtrl);
                         }
 
                     } else {
-                        //highlight view
+                        //highlight for not available
                     }
+
                 } else if (block.getAttribute("id").equals("RepeatBlock")) {
 
                     String repeatBlkId = "cap_def3";
                     Capability capBlk = fileHandler.readFromCapabilityFile(repeatBlkId);
                     int holderIndex = meCtrl.getEditorBox().getChildren().size() - 1;
                     Holder holder = (Holder) meCtrl.getEditorBox().getChildren().get(holderIndex);
-                    conditionIndex = holderIndex;
-                    conditionValue = "RepeatBlock";
                     holder.addToHolder(capBlk.getBlock());
+                    RepeatBlock rb = (RepeatBlock) meCtrl.getEditorBox().getChildren().get(holderIndex);
+
+                    Element repeatCondNode = (Element) block.getChildNodes().item(0);
+
+                    if (repeatCondNode != null) {
+                        if (repeatCondNode.getAttribute("id").equals("Condition")) {
+                            Capability capabilityBlk = loadCondition(repeatCondNode, meCtrl);
+
+                            if (capabilityBlk != null) {
+                                rb.addCondition(capabilityBlk.getBlock());
+                            }
+                        }
+                    }
+                    NodeList childNodes = block.getChildNodes();
+                    loadRepeatBlock(rb, childNodes, meCtrl);
 
                 } else if (block.getAttribute("id").equals("IfBlock")) {
 
@@ -441,59 +445,322 @@ public class EditorHandler {
                     Capability capBlk = fileHandler.readFromCapabilityFile(ifBlkId);
                     int holderIndex = meCtrl.getEditorBox().getChildren().size() - 1;
                     Holder holder = (Holder) meCtrl.getEditorBox().getChildren().get(holderIndex);
-                    conditionIndex = holderIndex;
-                    conditionValue = "IfBlock";
                     holder.addToHolder(capBlk.getBlock());
 
-                } else if (block.getAttribute("id").equals("Condition")) {
+                    IfBlock ib = (IfBlock) meCtrl.getEditorBox().getChildren().get(holderIndex);
 
-                    String capId = block.getElementsByTagName("CapId").item(0).getTextContent();
+                    Element ifCondNode = (Element) block.getChildNodes().item(0);
 
-                    if (capId.equals("cap_def1") || capId.equals("cap_def2")) {
-                        String conValue = block.getElementsByTagName("ConValue").item(0).getTextContent();
-                        Capability capBlk = fileHandler.readFromCapabilityFile(capId);
-                        capBlk.getBlock().setTextField(conValue);
-                        capBlk.getBlock().disableTextField(false);
-                        loadCondition(capBlk, meCtrl, conditionValue, conditionIndex);
+                    if (ifCondNode != null) {
+                        if (ifCondNode.getAttribute("id").equals("Condition")) {
+                            Capability capabilityBlk = loadCondition(ifCondNode, meCtrl);
 
-                    } else {
-                        String devId = block.getElementsByTagName("DeviceId").item(0).getTextContent();
-                        int location = Integer.parseInt(block.getElementsByTagName("Location").item(0).getTextContent());
-
-                        Device device = meCtrl.getConnectedDevice(devId, location);
-                        if (device != null) {
-                            System.out.println("worked well");
-                            Block capBlock = device.getCapabilityBlock(capId);
-
-                            if (capBlock != null) {
-                                loadCondition(capBlock.getCapability(), meCtrl, conditionValue, conditionIndex);
+                            if (capabilityBlk != null) {
+                                ib.addCondition(capabilityBlk.getBlock());
                             }
-
-                        } else {
-                            //highlight view
                         }
                     }
 
+                    NodeList childNodes = block.getChildNodes();
+                    loadIfBlockContent(ib, childNodes, meCtrl);
+
                 }
-                int inddd = meCtrl.getEditorBox().getChildren().size();
-                System.out.println("########### holderindex ############### - " + inddd);
             }
         }
 
     }
 
-    public void loadCondition(Capability capBlk, MainEditorController meCtrl, String conditionValue, int conditionIndex) {
+    private void loadCLBlock(ConditionBlock cb, NodeList childNodes, MainEditorController meCtrl) {
 
-        if (conditionValue.equals("ConditionalBlock")) {
-            ConditionBlock cb = (ConditionBlock) meCtrl.getEditorBox().getChildren().get(conditionIndex);
-            cb.addCondition(capBlk.getBlock());
-        } else if (conditionValue.equals("RepeatBlock")) {
-            RepeatBlock rb = (RepeatBlock) meCtrl.getEditorBox().getChildren().get(conditionIndex);
-            rb.addCondition(capBlk.getBlock());
-        } else if (conditionValue.equals("IfBlock")) {
-            IfBlock ib = (IfBlock) meCtrl.getEditorBox().getChildren().get(conditionIndex);
-            ib.addCondition(capBlk.getBlock());
+        if (childNodes.getLength() != 0) {
+            Element conditionBlk = (Element) childNodes.item(0);
+            Capability capBlk = loadCondition(conditionBlk, meCtrl);
+
+            if (capBlk != null) {
+                cb.addCondition(capBlk.getBlock());
+            }
+
         }
     }
 
+    private Capability loadCondition(Element block, MainEditorController meCtrl) {
+
+        String capId = block.getElementsByTagName("CapId").item(0).getTextContent();
+
+        System.out.println(" cap id" + capId);
+        if (capId.equals("cap_def1") || capId.equals("cap_def2")) {
+            String conValue = block.getElementsByTagName("ConValue").item(0).getTextContent();
+            Capability capBlk = fileHandler.readFromCapabilityFile(capId);
+            capBlk.getBlock().setTextField(conValue);
+            capBlk.getBlock().disableTextField(false);
+            return capBlk;
+
+        } else {
+            return checkActionBlock(block, meCtrl).getCapability();
+
+        }
+
+    }
+
+    private Block checkActionBlock(Element block, MainEditorController meCtrl) {
+
+        String deviceId = block.getElementsByTagName("DeviceId").item(0).getTextContent();
+        int address = Integer.parseInt(block.getElementsByTagName("Location").item(0).getTextContent());
+        String capId = block.getElementsByTagName("CapId").item(0).getTextContent();
+
+        Device device = meCtrl.getConnectedDevice(deviceId, address);
+        if (device != null) {
+            return device.getCapabilityBlock(capId);
+        }
+        return null;
+
+    }
+
+    private void loadRepeatBlock(RepeatBlock rb, NodeList blockNodes, MainEditorController meCtrl) {
+
+        for (int j = 0; j < blockNodes.getLength(); j++) {
+            Element blk = (Element) blockNodes.item(j);
+            System.out.println(" elements 999 - " + blockNodes.getLength());
+
+            if (blk.getAttribute("id").equals("ConditionalBlock")) {
+
+                Block capBlock = checkActionBlock(blk, meCtrl);
+                if (capBlock != null) {
+                    int childIndex = rb.getHolders().getChildren().size() - 1;
+                    ((Holder) rb.getHolders().getChildren().get(childIndex)).addToHolder(capBlock);
+
+                    NodeList childNodes = blk.getElementsByTagName("Condition");
+                    if (childNodes.getLength() > 0) {
+                        ConditionBlock cb = (ConditionBlock) rb.getHolders().getChildren().get(childIndex);
+                        loadCLBlock(cb, childNodes, meCtrl);
+                    }
+
+                } else {
+                    //highlight for not available
+                }
+
+            } else if (blk.getAttribute("id").equals("RepeatBlock")) {
+
+                String repeatBlkId = "cap_def3";
+                Capability capBlk = fileHandler.readFromCapabilityFile(repeatBlkId);
+                int childIndex = rb.getHolders().getChildren().size() - 1;
+                ((Holder) rb.getHolders().getChildren().get(childIndex)).addToHolder(capBlk.getBlock());
+                RepeatBlock rbb = (RepeatBlock) rb.getHolders().getChildren().get(childIndex);
+
+                Element repeatCondNode = (Element) blk.getChildNodes().item(0);
+
+                if (repeatCondNode != null) {
+                    if (repeatCondNode.getAttribute("id").equals("Condition")) {
+                        Capability capabilityBlk = loadCondition(repeatCondNode, meCtrl);
+
+                        if (capabilityBlk != null) {
+                            rbb.addCondition(capabilityBlk.getBlock());
+                        }
+                    }
+                }
+
+                NodeList childNodes = blk.getChildNodes();
+                loadRepeatBlock(rbb, childNodes, meCtrl);
+
+            } else if (blk.getAttribute("id").equals("IfBlock")) {
+
+                String ifBlkId = "cap_def4";
+                Capability capBlk = fileHandler.readFromCapabilityFile(ifBlkId);
+                int holderIndex = rb.getHolders().getChildren().size() - 1;
+                Holder holder = (Holder) rb.getHolders().getChildren().get(holderIndex);
+                holder.addToHolder(capBlk.getBlock());
+
+                IfBlock ibb = (IfBlock) rb.getHolders().getChildren().get(holderIndex);
+
+                Element ifCondNode = (Element) blk.getChildNodes().item(0);
+
+                if (ifCondNode != null) {
+                    if (ifCondNode.getAttribute("id").equals("Condition")) {
+                        Capability capabilityBlk = loadCondition(ifCondNode, meCtrl);
+
+                        if (capabilityBlk != null) {
+                            ibb.addCondition(capabilityBlk.getBlock());
+                        }
+                    }
+                }
+
+                NodeList childNodes = blk.getChildNodes();
+                loadIfBlockContent(ibb, childNodes, meCtrl);
+            }
+        }
+
+    }
+
+    private void loadIfBlockContent(IfBlock ib, NodeList blockNodes, MainEditorController meCtrl) {
+
+        for (int j = 0; j < blockNodes.getLength(); j++) {
+            Element blk = (Element) blockNodes.item(j);
+
+            if (blk.getAttribute("id").equals("IF")) {
+                NodeList ifChildNodes = blk.getChildNodes();
+                loadIfBlock(ib, ifChildNodes, meCtrl);
+            } else if (blk.getAttribute("id").equals("ELSE")) {
+                NodeList elseChildNodes = blk.getChildNodes();
+                loadElseBlock(ib, elseChildNodes, meCtrl);
+            }
+        }
+
+    }
+
+    private void loadIfBlock(IfBlock ib, NodeList ifChildNodes, MainEditorController meCtrl) {
+
+        for (int j = 0; j < ifChildNodes.getLength(); j++) {
+            Element blk = (Element) ifChildNodes.item(j);
+            System.out.println(" elements 999 - " + ifChildNodes.getLength());
+
+            System.out.println("nnnnnnnnnnn - ");
+            if (blk.getAttribute("id").equals("ConditionalBlock")) {
+
+                Block capBlock = checkActionBlock(blk, meCtrl);
+                if (capBlock != null) {
+                    int childIndex = ib.getIfHolders().getChildren().size() - 1;
+                    Holder holder = (Holder) ib.getIfHolders().getChildren().get(childIndex);
+                    holder.addToHolder(capBlock);
+
+                    NodeList childNodes = blk.getElementsByTagName("Condition");
+                    if (childNodes.getLength() > 0) {
+                        ConditionBlock cb = (ConditionBlock) ib.getIfHolders().getChildren().get(childIndex);
+                        loadCLBlock(cb, childNodes, meCtrl);
+                    }
+
+                } else {
+                    //highlight for not available
+                }
+
+            } else if (blk.getAttribute("id").equals("RepeatBlock")) {
+
+                String repeatBlkId = "cap_def3";
+                Capability capBlk = fileHandler.readFromCapabilityFile(repeatBlkId);
+                int childIndex = ib.getIfHolders().getChildren().size() - 1;
+                Holder holder = (Holder) ib.getIfHolders().getChildren().get(childIndex);
+                holder.addToHolder(capBlk.getBlock());
+                // ((Holder) holder.getChildren().get(childIndex)).addToHolder(capBlk.getBlock());
+                RepeatBlock rbb = (RepeatBlock) ib.getIfHolders().getChildren().get(childIndex);
+
+                Element repeatCondNode = (Element) blk.getChildNodes().item(0);
+
+                if (repeatCondNode != null) {
+                    if (repeatCondNode.getAttribute("id").equals("Condition")) {
+                        Capability capabilityBlk = loadCondition(repeatCondNode, meCtrl);
+
+                        if (capabilityBlk != null) {
+                            rbb.addCondition(capabilityBlk.getBlock());
+                        }
+                    }
+                }
+
+                NodeList childNodes = blk.getChildNodes();
+                loadRepeatBlock(rbb, childNodes, meCtrl);
+
+            } else if (blk.getAttribute("id").equals("IfBlock")) {
+
+                String ifBlkId = "cap_def4";
+                Capability capBlk = fileHandler.readFromCapabilityFile(ifBlkId);
+                int holderIndex = ib.getIfHolders().getChildren().size() - 1;
+                Holder holder = (Holder) ib.getIfHolders().getChildren().get(holderIndex);
+                holder.addToHolder(capBlk.getBlock());
+
+                IfBlock ibb = (IfBlock) ib.getIfHolders().getChildren().get(holderIndex);
+
+                Element ifCondNode = (Element) blk.getChildNodes().item(0);
+
+                if (ifCondNode != null) {
+                    if (ifCondNode.getAttribute("id").equals("Condition")) {
+                        Capability capabilityBlk = loadCondition(ifCondNode, meCtrl);
+
+                        if (capabilityBlk != null) {
+                            ibb.addCondition(capabilityBlk.getBlock());
+                        }
+                    }
+                }
+
+                NodeList childNodes = blk.getChildNodes();
+                loadIfBlockContent(ibb, childNodes, meCtrl);
+            }
+        }
+
+    }
+
+    private void loadElseBlock(IfBlock ib, NodeList elseChildNodes, MainEditorController meCtrl) {
+
+        for (int j = 0; j < elseChildNodes.getLength(); j++) {
+            Element blk = (Element) elseChildNodes.item(j);
+            //  System.out.println(" elements 999 - " + elseChildNodes.getLength());
+
+            System.out.println("nnnnnnnnnnn - ");
+            if (blk.getAttribute("id").equals("ConditionalBlock")) {
+
+                Block capBlock = checkActionBlock(blk, meCtrl);
+                if (capBlock != null) {
+                    int childIndex = ib.getElseHolders().getChildren().size() - 1;
+                    Holder holder = (Holder) ib.getElseHolders().getChildren().get(childIndex);
+                    holder.addToHolder(capBlock);
+
+                    NodeList childNodes = blk.getElementsByTagName("Condition");
+                    if (childNodes.getLength() > 0) {
+                        ConditionBlock cb = (ConditionBlock) ib.getElseHolders().getChildren().get(childIndex);
+                        loadCLBlock(cb, childNodes, meCtrl);
+                    }
+
+                } else {
+                    //highlight for not available
+                }
+
+            } else if (blk.getAttribute("id").equals("RepeatBlock")) {
+
+                String repeatBlkId = "cap_def3";
+                Capability capBlk = fileHandler.readFromCapabilityFile(repeatBlkId);
+                int childIndex = ib.getElseHolders().getChildren().size() - 1;
+                Holder holder = (Holder) ib.getElseHolders().getChildren().get(childIndex);
+                holder.addToHolder(capBlk.getBlock());
+                // ((Holder) holder.getChildren().get(childIndex)).addToHolder(capBlk.getBlock());
+                RepeatBlock rbb = (RepeatBlock) ib.getElseHolders().getChildren().get(childIndex);
+
+                Element repeatCondNode = (Element) blk.getChildNodes().item(0);
+
+                if (repeatCondNode != null) {
+                    if (repeatCondNode.getAttribute("id").equals("Condition")) {
+                        Capability capabilityBlk = loadCondition(repeatCondNode, meCtrl);
+
+                        if (capabilityBlk != null) {
+                            rbb.addCondition(capabilityBlk.getBlock());
+                        }
+                    }
+                }
+
+                NodeList childNodes = blk.getChildNodes();
+                loadRepeatBlock(rbb, childNodes, meCtrl);
+
+            } else if (blk.getAttribute("id").equals("IfBlock")) {
+
+                String ifBlkId = "cap_def4";
+                Capability capBlk = fileHandler.readFromCapabilityFile(ifBlkId);
+                int holderIndex = ib.getElseHolders().getChildren().size() - 1;
+                Holder holder = (Holder) ib.getElseHolders().getChildren().get(holderIndex);
+                holder.addToHolder(capBlk.getBlock());
+
+                IfBlock ibb = (IfBlock) ib.getElseHolders().getChildren().get(holderIndex);
+
+                Element ifCondNode = (Element) blk.getChildNodes().item(0);
+
+                if (ifCondNode != null) {
+                    if (ifCondNode.getAttribute("id").equals("Condition")) {
+                        Capability capabilityBlk = loadCondition(ifCondNode, meCtrl);
+
+                        if (capabilityBlk != null) {
+                            ibb.addCondition(capabilityBlk.getBlock());
+                        }
+                    }
+                }
+
+                NodeList childNodes = blk.getChildNodes();
+                loadIfBlockContent(ibb, childNodes, meCtrl);
+            }
+        }
+    }
 }

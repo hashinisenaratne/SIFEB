@@ -5,11 +5,9 @@
  */
 package com.sifeb.ve.controller;
 
-import com.sifeb.ve.FeedBackLogger;
 import com.sifeb.ve.MainApp;
 import com.sifeb.ve.handle.BlockCreator;
 import com.sifeb.ve.handle.EditorHandler;
-import com.sifeb.ve.handle.FileHandler;
 import com.sifeb.ve.resources.Strings;
 import java.io.File;
 import java.io.IOException;
@@ -36,11 +34,6 @@ import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
-import javax.swing.JFileChooser;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Document;
 
 /**
  *
@@ -159,9 +152,10 @@ public class RootController implements Initializable {
 
         saveFile.setOnAction((ActionEvent event) -> {
 
-            JFileChooser fileChooser = new JFileChooser();
-            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File file = fileChooser.getSelectedFile();
+            FileChooser fileChooser = new FileChooser();
+            File file = fileChooser.showSaveDialog(rootPane.getScene().getWindow());
+
+            if (file != null) {
                 if (editorHandler == null) {
                     editorHandler = new EditorHandler();
                 }
@@ -172,13 +166,13 @@ public class RootController implements Initializable {
 
         loadFile.setOnAction((ActionEvent event) -> {
 
-            JFileChooser fileChooser = new JFileChooser();
-            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File file = fileChooser.getSelectedFile();
+            FileChooser fileChooser = new FileChooser();
+            File file = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
+            if (file != null) {
                 if (editorHandler == null) {
                     editorHandler = new EditorHandler();
                 }
-                editorHandler.loadFile(file.getPath(), meCtrl);
+                editorHandler.loadFile(file.getName(),file.getPath(), meCtrl);
             }
 
         });

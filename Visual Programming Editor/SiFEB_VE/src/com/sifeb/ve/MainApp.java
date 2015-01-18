@@ -41,12 +41,13 @@ public class MainApp extends Application {
     public static String LibraryFile = "view/LibraryEditor.fxml";
     public static int InitialScreenWidth = 800;
     public static int InitialScreenHeight = 600;
+    public static String appName = "SiFEB Visual Programming Editor";
 
     @Override
     public void start(Stage primaryStage) {
 
         MainApp.primaryStage = primaryStage;
-        MainApp.primaryStage.setTitle("SiFEB Visual Programming Editor");
+        MainApp.primaryStage.setTitle(appName);
         Strings.setLocale(new Locale("en", "US"));
 
         MainApp.primaryStage.setOnCloseRequest((WindowEvent event) -> {
@@ -102,4 +103,9 @@ public class MainApp extends Application {
         return rootLayout;
     }
 
+    public static void appendTitle(String fileName)
+    {
+        String title = appName + " - "+fileName;
+        MainApp.primaryStage.setTitle(title);
+    }
 }
