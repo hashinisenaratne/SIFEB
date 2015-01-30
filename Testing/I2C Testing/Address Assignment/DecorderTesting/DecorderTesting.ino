@@ -37,7 +37,7 @@ void resetDecoder()
   selectDecoderLines(decoder[15][3],decoder[15][2],decoder[15][1],decoder[15][0]);
 }
 
-void selectDecoderLines(int line1, int line2, int line3, int line4){
+void selectDecoderLines(byte line1, byte line2, byte line3, byte line4){
   digitalWrite(DECODER_1, line1);
   digitalWrite(DECODER_2, line2); 
   digitalWrite(DECODER_3, line3);

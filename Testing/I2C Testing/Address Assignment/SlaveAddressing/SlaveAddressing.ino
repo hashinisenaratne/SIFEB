@@ -1,6 +1,6 @@
-// Base Module
-// s - show, t - test, a - act, A - address
-// mode 1- initial(ask is device there), 2 - send an address to set, 3 - module running mode
+// Slave addressing template
+// s - show, t - test, a - act, A - address, B - on selectout, C - off selectout
+// mode 1- initial(ask is device there), 2 - send an address to set, 3 - send command to on (B)/off (C) select or request to act or test
 
 #include <Wire.h>
 
@@ -17,11 +17,15 @@ void setup()
   pinMode(SELECT_IN, INPUT);
   pinMode(SELECT_OUT, OUTPUT);
   
+  Wire.begin(10);                  // unconfigured
+  Wire.onReceive(receiveEvent);   // register events
+  Wire.onRequest(requestEvent);
+  
   while (digitalRead(SELECT_IN) == LOW) {
     delay(10);    //change accordingly
   }
   //NEED TO TAKE CARE AT MASTER. WARNNING: I2C POWER UP MAY NOT FINISHED WHEN MASTER BIGIN COMMUNICATION
-  Wire.begin(11);                  // set default address
+  Wire.begin(11);                  // selected
   Wire.onReceive(receiveEvent);   // register events
   Wire.onRequest(requestEvent);
   Serial.begin(9600);
@@ -48,36 +52,59 @@ void receiveEvent(int howMany)
   int id;
   int add;
   
-  if(mode == 2){
-    add = Wire.read ();    
-    Wire.begin(add);                  // set new address
-    Wire.onReceive(receiveEvent);   // register events
-    Wire.onRequest(requestEvent);
-  } 
-  
-  //if got one byte
-  else if (howMany == 1){    
-    command = Wire.read ();
-    if(command == 's'){     
-         show();
-    }
+  if(mode == 1){    
     if(command == 'A'){
       mode = 2; //will receive an address soon
     }
   }
+  
+  else if(mode == 2){
+    add = Wire.read ();    
+    Wire.begin(add);                  // set new address
+    Wire.onReceive(receiveEvent);   // register events
+    Wire.onRequest(requestEvent);
+    mode = 3;
+  }
+  
+  else if(mode == 3){
     
-  //if got two bytes
-  else if (howMany == 2){
-    command = Wire.read ();
-    if(command == 't'){     
-        id= Wire.read ();
-        test(id);
+    if(command == 'B'){
+      digitalWrite(SELECT_OUT, HIGH); //On selectout
     }
-    else if(command == 'a'){
-        id= Wire.read ();
-        act(id);
+    
+    else if(command == 'C'){
+      digitalWrite(SELECT_OUT, LOW); //Off selectout
+    }
+    
+    else if(command == 'R'){          // Reset in order to do addressing 
+      Wire.begin(10);                  // unconfigured
+      Wire.onReceive(receiveEvent);   // register events
+      Wire.onRequest(requestEvent);  
+      digitalWrite(SELECT_OUT, LOW); //Off selectout
+    }
+      
+    //if got one byte
+    else if (howMany == 1){    
+      command = Wire.read ();
+      if(command == 's'){     // show
+           show();
+      }
+    }
+      
+    //if got two bytes
+    else if (howMany == 2){
+      command = Wire.read ();
+      if(command == 't'){     // test
+          id= Wire.read ();
+          test(id);
+      }
+      else if(command == 'a'){  // act
+          id= Wire.read ();
+          act(id);
+      }
     }
   }
+  
 
   // throw away any garbage
   while (Wire.available () > 0) {
