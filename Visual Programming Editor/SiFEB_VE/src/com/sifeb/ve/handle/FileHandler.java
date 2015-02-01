@@ -37,7 +37,6 @@ public class FileHandler {
 
 //    private final String CAPABILITY_FOLDER = "src/com/sifeb/ve/files/capabilities/";
 //    private final String DEVICE_FOLDER = "src/com/sifeb/ve/files/devices/";
-
     public static void main(String[] args) {
 
         FileHandler fh = new FileHandler();
@@ -145,8 +144,8 @@ public class FileHandler {
     }
 
     private Device getDevFromElement(Element devElement, String address) {
-        
-        String devId = devElement.getElementsByTagName("Id").item(0).getTextContent();                
+
+        String devId = devElement.getElementsByTagName("Id").item(0).getTextContent();
         NodeList nodeList = devElement.getElementsByTagName("Names").item(0).getChildNodes();
         Map<Locale, String> actNames = new HashMap<>();
 
@@ -161,7 +160,7 @@ public class FileHandler {
         String image = devElement.getElementsByTagName("Image").item(0).getTextContent();
         // create device
         Device device = new Device(devId, actNames, Integer.parseInt(address), type, image);
-        
+
         NodeList capList = devElement.getElementsByTagName("Capabilities").item(0).getChildNodes();
 
         for (int j = 0; j < capList.getLength(); j++) {
@@ -310,7 +309,7 @@ public class FileHandler {
                 Element image = doc.createElement("Image");
                 image.appendChild(doc.createTextNode("Mwheels"));
                 Element text = doc.createElement("Text");
-                text.appendChild(doc.createTextNode("STEP "+i+":\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu."));
+                text.appendChild(doc.createTextNode("STEP " + i + ":\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu."));
                 cap1.appendChild(image);
                 cap1.appendChild(text);
                 stories.appendChild(cap1);
@@ -362,19 +361,26 @@ public class FileHandler {
 
     public void writeToEditorFile(String filePath, Document doc) {
 
+        boolean success = true;
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            File file = new File(filePath + ".xml");
-            StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
-
+            File file = new File(filePath);
+            StreamResult result = new StreamResult(file);
             transformer.transform(source, result);
-            System.out.println("File saved!");
-            FeedBackLogger.sendGoodMessage("File Saved Successfully!!!");
 
         } catch (TransformerException pce) {
+            success = false;
             pce.printStackTrace();
+        } finally {
+
+            if (success) {
+                FeedBackLogger.sendGoodMessage("File Saved Successfully!!!");
+            } else {
+                FeedBackLogger.sendBadMessage("File Didn't Saved!!");
+            }
+
         }
 
     }
@@ -382,22 +388,32 @@ public class FileHandler {
     public Element readFromEditorFile(String filePath) {
         Element element = null;
         File file = new File(filePath);
-        
+        boolean success = true;
+
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(file);
             doc.getDocumentElement().normalize();
             System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-
             NodeList nList = doc.getElementsByTagName("MainEditor");
             Node nNode = nList.item(0);
             element = (Element) nNode;
-            System.out.println("----------------------------");
 
-            System.out.println(element);
         } catch (Exception e) {
+            success = false;
             e.printStackTrace();
+        } finally {
+
+            if (success) {
+                FeedBackLogger.sendGoodMessage("SiFEB File -- " + file.getName() + " -- Loaded Successfully!!!");
+
+            } else {
+                FeedBackLogger.sendBadMessage("SiFEB File -- " + file.getName() + " -- Couldn't Load!!");
+                element = null;
+
+            }
+
         }
 
         return element;
@@ -415,7 +431,7 @@ public class FileHandler {
             //optional, but recommended
             doc.getDocumentElement().normalize();
 
-            NodeList nList = doc.getElementsByTagName("Level"+level);
+            NodeList nList = doc.getElementsByTagName("Level" + level);
             Node nNode = nList.item(0);
             eElement = (Element) nNode;
 

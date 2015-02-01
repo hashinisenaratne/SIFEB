@@ -32,8 +32,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -166,6 +169,9 @@ public class RootController implements Initializable {
         saveFile.setOnAction((ActionEvent event) -> {
 
             FileChooser fileChooser = new FileChooser();
+            ExtensionFilter xmlFilter = new FileChooser.ExtensionFilter("SiFEB Files (*.sifeb)", "*.sifeb");
+            fileChooser.setTitle("Save File");
+            fileChooser.getExtensionFilters().add(xmlFilter);
             File file = fileChooser.showSaveDialog(rootPane.getScene().getWindow());
 
             if (file != null) {
@@ -180,6 +186,9 @@ public class RootController implements Initializable {
         loadFile.setOnAction((ActionEvent event) -> {
 
             FileChooser fileChooser = new FileChooser();
+            ExtensionFilter xmlFilter = new FileChooser.ExtensionFilter("SiFEB Files (*.sifeb)", "*.sifeb");
+            fileChooser.setTitle("Open File");
+            fileChooser.getExtensionFilters().add(xmlFilter);
             File file = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
             if (file != null) {
                 if (editorHandler == null) {
