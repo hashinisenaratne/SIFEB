@@ -67,7 +67,7 @@ public class MainEditorController implements Initializable {
     @FXML
     Button addHolderBtn;
     @FXML
-    Button runBtn;
+    Button runBtn, clearBtn;
     @FXML
     VBox devicesBox;
     @FXML
@@ -101,7 +101,7 @@ public class MainEditorController implements Initializable {
 
 //    ArrayList<Holder> holders;
     Holder lastHolder;
-    Image playImg;
+    Image playImg,clearImg;
     //temp
     ArrayList<Device> devices;
     ArrayList<Capability> capabilities;
@@ -162,6 +162,7 @@ public class MainEditorController implements Initializable {
         img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/bubbleMid.png"));
         fbText.setBackground(new Background(new BackgroundImage(img, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
         playImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/play.png"));
+        clearImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/clear.png"));
         FeedBackLogger.sendWelcomeMessage();
     }
 
@@ -175,6 +176,7 @@ public class MainEditorController implements Initializable {
 
     public void setTextStrings() {
         runBtn.setText(Strings.getString("btn.run"));
+        clearBtn.setText(Strings.getString("btn.clear"));
         haveLabel.setText(Strings.getString("label.have"));
         doLabel.setText(Strings.getString("label.do"));
 
@@ -294,6 +296,30 @@ public class MainEditorController implements Initializable {
                     runProgram();
                 }
             });
+        });
+
+        clearBtn.setOnAction((ActionEvent event) -> {
+
+            Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
+            dlg.setResizable(false);
+            dlg.setIconifiable(false);
+            dlg.setGraphic(new ImageView(clearImg));
+            dlg.setMasthead(Strings.getString("message.cleartheprogram"));
+            Dialog.Actions.YES.textProperty().set(Strings.getString("btn.yes"));
+            Dialog.Actions.NO.textProperty().set(Strings.getString("btn.no"));
+            dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
+
+            Action response = dlg.show();
+
+            if (response == Dialog.Actions.YES) {
+
+                clearEditorVbox();
+                FeedBackLogger.sendGoodMessage("Program is Cleared Successfully!!!");
+            } else {
+                FeedBackLogger.sendGoodMessage("Program is not Cleared!!!");
+
+            }
+
         });
 
         editorPane.setOnDragDropped((DragEvent event) -> {

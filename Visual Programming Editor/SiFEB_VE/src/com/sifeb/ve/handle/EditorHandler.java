@@ -9,6 +9,7 @@ import com.sifeb.ve.Block;
 import com.sifeb.ve.Capability;
 import com.sifeb.ve.ConditionBlock;
 import com.sifeb.ve.Device;
+import com.sifeb.ve.FeedBackLogger;
 import com.sifeb.ve.Holder;
 import com.sifeb.ve.IfBlock;
 import com.sifeb.ve.MainApp;
@@ -384,88 +385,95 @@ public class EditorHandler {
 
     }
 
-    public void loadFile(String fileName,String filePath, MainEditorController meCtrl) {
+    public void loadFile(String fileName, String filePath, MainEditorController meCtrl) {
 
         Element mainFile = fileHandler.readFromEditorFile(filePath);
-        NodeList stepNodes = mainFile.getElementsByTagName("Steps").item(0).getChildNodes();
-        meCtrl.clearEditorVbox();
-        MainApp.appendTitle(fileName);
 
-        for (int i = 0; i < stepNodes.getLength(); i++) {
-            NodeList blockNodes = stepNodes.item(i).getChildNodes();
+        if (mainFile != null) {
+            NodeList stepNodes = mainFile.getElementsByTagName("Steps").item(0).getChildNodes();
+            meCtrl.clearEditorVbox();
+            MainApp.appendTitle(fileName);
 
-            if (blockNodes.getLength() > 0) {
-                Element block = (Element) blockNodes.item(0);
+            for (int i = 0; i < stepNodes.getLength(); i++) {
+                NodeList blockNodes = stepNodes.item(i).getChildNodes();
 
-                if (block.getAttribute("id").equals("ConditionalBlock")) {
+                if (blockNodes.getLength() > 0) {
+                    Element block = (Element) blockNodes.item(0);
 
-                    Block capBlock = checkActionBlock(block, meCtrl);
-                    if (capBlock != null) {
+                    if (block.getAttribute("id").equals("ConditionalBlock")) {
 
+                        Block capBlock = checkActionBlock(block, meCtrl);
+                        if (capBlock != null) {
+
+                            int holderIndex = meCtrl.getEditorBox().getChildren().size() - 1;
+                            Holder holder = (Holder) meCtrl.getEditorBox().getChildren().get(holderIndex);
+                            holder.addToHolder(capBlock);
+
+                            NodeList childNodes = block.getElementsByTagName("Condition");
+                            if (childNodes.getLength() > 0) {
+                                ConditionBlock cb = (ConditionBlock) meCtrl.getEditorBox().getChildren().get(holderIndex);
+                                loadCLBlock(cb, childNodes, meCtrl);
+                            }
+
+                        } else {
+                            //highlight for not available
+                        }
+
+                    } else if (block.getAttribute("id").equals("RepeatBlock")) {
+
+                        String repeatBlkId = "cap_def3";
+                        Capability capBlk = fileHandler.readFromCapabilityFile(repeatBlkId);
                         int holderIndex = meCtrl.getEditorBox().getChildren().size() - 1;
                         Holder holder = (Holder) meCtrl.getEditorBox().getChildren().get(holderIndex);
-                        holder.addToHolder(capBlock);
+                        holder.addToHolder(capBlk.getBlock());
+                        RepeatBlock rb = (RepeatBlock) meCtrl.getEditorBox().getChildren().get(holderIndex);
 
-                        NodeList childNodes = block.getElementsByTagName("Condition");
-                        if (childNodes.getLength() > 0) {
-                            ConditionBlock cb = (ConditionBlock) meCtrl.getEditorBox().getChildren().get(holderIndex);
-                            loadCLBlock(cb, childNodes, meCtrl);
-                        }
+                        Element repeatCondNode = (Element) block.getChildNodes().item(0);
 
-                    } else {
-                        //highlight for not available
-                    }
+                        if (repeatCondNode != null) {
+                            if (repeatCondNode.getAttribute("id").equals("Condition")) {
+                                Capability capabilityBlk = loadCondition(repeatCondNode, meCtrl);
 
-                } else if (block.getAttribute("id").equals("RepeatBlock")) {
-
-                    String repeatBlkId = "cap_def3";
-                    Capability capBlk = fileHandler.readFromCapabilityFile(repeatBlkId);
-                    int holderIndex = meCtrl.getEditorBox().getChildren().size() - 1;
-                    Holder holder = (Holder) meCtrl.getEditorBox().getChildren().get(holderIndex);
-                    holder.addToHolder(capBlk.getBlock());
-                    RepeatBlock rb = (RepeatBlock) meCtrl.getEditorBox().getChildren().get(holderIndex);
-
-                    Element repeatCondNode = (Element) block.getChildNodes().item(0);
-
-                    if (repeatCondNode != null) {
-                        if (repeatCondNode.getAttribute("id").equals("Condition")) {
-                            Capability capabilityBlk = loadCondition(repeatCondNode, meCtrl);
-
-                            if (capabilityBlk != null) {
-                                rb.addCondition(capabilityBlk.getBlock());
+                                if (capabilityBlk != null) {
+                                    rb.addCondition(capabilityBlk.getBlock());
+                                }
                             }
                         }
-                    }
-                    NodeList childNodes = block.getChildNodes();
-                    loadRepeatBlock(rb, childNodes, meCtrl);
+                        NodeList childNodes = block.getChildNodes();
+                        loadRepeatBlock(rb, childNodes, meCtrl);
 
-                } else if (block.getAttribute("id").equals("IfBlock")) {
+                    } else if (block.getAttribute("id").equals("IfBlock")) {
 
-                    String ifBlkId = "cap_def4";
-                    Capability capBlk = fileHandler.readFromCapabilityFile(ifBlkId);
-                    int holderIndex = meCtrl.getEditorBox().getChildren().size() - 1;
-                    Holder holder = (Holder) meCtrl.getEditorBox().getChildren().get(holderIndex);
-                    holder.addToHolder(capBlk.getBlock());
+                        String ifBlkId = "cap_def4";
+                        Capability capBlk = fileHandler.readFromCapabilityFile(ifBlkId);
+                        int holderIndex = meCtrl.getEditorBox().getChildren().size() - 1;
+                        Holder holder = (Holder) meCtrl.getEditorBox().getChildren().get(holderIndex);
+                        holder.addToHolder(capBlk.getBlock());
 
-                    IfBlock ib = (IfBlock) meCtrl.getEditorBox().getChildren().get(holderIndex);
+                        IfBlock ib = (IfBlock) meCtrl.getEditorBox().getChildren().get(holderIndex);
 
-                    Element ifCondNode = (Element) block.getChildNodes().item(0);
+                        Element ifCondNode = (Element) block.getChildNodes().item(0);
 
-                    if (ifCondNode != null) {
-                        if (ifCondNode.getAttribute("id").equals("Condition")) {
-                            Capability capabilityBlk = loadCondition(ifCondNode, meCtrl);
+                        if (ifCondNode != null) {
+                            if (ifCondNode.getAttribute("id").equals("Condition")) {
+                                Capability capabilityBlk = loadCondition(ifCondNode, meCtrl);
 
-                            if (capabilityBlk != null) {
-                                ib.addCondition(capabilityBlk.getBlock());
+                                if (capabilityBlk != null) {
+                                    ib.addCondition(capabilityBlk.getBlock());
+                                }
                             }
                         }
+
+                        NodeList childNodes = block.getChildNodes();
+                        loadIfBlockContent(ib, childNodes, meCtrl);
+
                     }
-
-                    NodeList childNodes = block.getChildNodes();
-                    loadIfBlockContent(ib, childNodes, meCtrl);
-
                 }
             }
+            FeedBackLogger.sendGoodMessage("SiFEB File -- " + fileName + " -- Loaded Successfully!!!");
+
+        } else {
+            FeedBackLogger.sendBadMessage("SiFEB File -- " + fileName + " -- Couldn't Load!!");
         }
 
     }

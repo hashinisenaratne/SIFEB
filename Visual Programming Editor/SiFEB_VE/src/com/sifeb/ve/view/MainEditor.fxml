@@ -124,6 +124,11 @@
                               <Font name="System Bold" size="16.0" />
                            </font>
                         </Button>
+                  <Button fx:id="clearBtn" layoutX="648.0" layoutY="8.0" minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="CLEAR ALL">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Button>
                      </children>
             </AnchorPane>
             </top>

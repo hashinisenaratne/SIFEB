@@ -53,22 +53,16 @@ public class FileHandler {
     public boolean writeToDeviceFile(String devID, Map<Locale, String> devNames, String devType, String[] devCaps, String imgName) {
 
         try {
-
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-
-            // root elements
             Document doc = docBuilder.newDocument();
             Element rootElement = doc.createElement("Sifeb");
             doc.appendChild(rootElement);
-
             Element device = doc.createElement("Device");
             rootElement.appendChild(device);
-
             Element id = doc.createElement("Id");
             id.appendChild(doc.createTextNode(devID));
             device.appendChild(id);
-
             Element names = doc.createElement("Names");
             device.appendChild(names);
 
@@ -88,11 +82,9 @@ public class FileHandler {
             Element type = doc.createElement("Type");
             type.appendChild(doc.createTextNode(devType));
             device.appendChild(type);
-
             Element image = doc.createElement("Image");
             image.appendChild(doc.createTextNode(imgName));
             device.appendChild(image);
-
             Element capabilities = doc.createElement("Capabilities");
             device.appendChild(capabilities);
 
@@ -105,9 +97,7 @@ public class FileHandler {
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
             File file = new File(SifebUtil.DEV_FILE_DIR + devID + ".xml");
-            StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
-
-            // Output to console for testing
+            StreamResult result = new StreamResult(file);            
             transformer.transform(source, result);
 
             return true;
@@ -121,18 +111,12 @@ public class FileHandler {
 
         Element eElement = null;
         File file = new File(SifebUtil.DEV_FILE_DIR + fileName + ".xml");
-
         try {
-
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(file);
-
-            //optional, but recommended
             doc.getDocumentElement().normalize();
-
             System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-
             NodeList nList = doc.getElementsByTagName("Device");
             Node nNode = nList.item(0);
             eElement = (Element) nNode;
@@ -175,22 +159,16 @@ public class FileHandler {
     public boolean writeToCapabilityFile(String capID, Map<Locale, String> capNames, String capType, String command, String imageName, boolean hasTest) {
 
         try {
-
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-
-            // root elements
             Document doc = docBuilder.newDocument();
             Element rootElement = doc.createElement("Sifeb");
             doc.appendChild(rootElement);
-
             Element capability = doc.createElement("Capability");
             rootElement.appendChild(capability);
-
             Element id = doc.createElement("Id");
             id.appendChild(doc.createTextNode(capID));
             capability.appendChild(id);
-
             Element names = doc.createElement("Names");
             capability.appendChild(names);
 
@@ -198,10 +176,8 @@ public class FileHandler {
                 Element name = doc.createElement("Name");
                 Element locale = doc.createElement("Locale");
                 Element nameStr = doc.createElement("Value");
-
                 locale.appendChild(doc.createTextNode(entry.getKey().toString()));
                 nameStr.appendChild(doc.createTextNode(entry.getValue()));
-
                 name.appendChild(locale);
                 name.appendChild(nameStr);
                 names.appendChild(name);
@@ -210,7 +186,6 @@ public class FileHandler {
             Element type = doc.createElement("Type");
             type.appendChild(doc.createTextNode(capType));
             capability.appendChild(type);
-
             Element cmd = doc.createElement("Command");
             cmd.appendChild(doc.createTextNode(command));
             capability.appendChild(cmd);
@@ -218,18 +193,15 @@ public class FileHandler {
             Element button = doc.createElement("HasTestButton");
             button.appendChild(doc.createTextNode(Boolean.toString(hasTest)));
             capability.appendChild(button);
-
             Element image = doc.createElement("Image");
             image.appendChild(doc.createTextNode(imageName));
             capability.appendChild(image);
 
-            // write the content into xml file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
             File file = new File(SifebUtil.CAP_FILE_DIR + capID + ".xml");
-            StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
-
+            StreamResult result = new StreamResult(file);           
             transformer.transform(source, result);
             return true;
 
@@ -246,10 +218,7 @@ public class FileHandler {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(file);
-
-            //optional, but recommended
             doc.getDocumentElement().normalize();
-
             NodeList nList = doc.getElementsByTagName("Capability");
             Node nNode = nList.item(0);
             eElement = (Element) nNode;
@@ -272,7 +241,6 @@ public class FileHandler {
             String name = nameNodes.item(1).getTextContent();
             actNames.put(new Locale(locale.split("_")[0], locale.split("_")[1]), name);
         }
-
         String command = el.getElementsByTagName("Command").item(0).getTextContent();
         String type = el.getElementsByTagName("Type").item(0).getTextContent();
         String image = el.getElementsByTagName("Image").item(0).getTextContent();
@@ -283,28 +251,23 @@ public class FileHandler {
     }
 
     public void writeToGameFile(String fileName) {
+        
         try {
-
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-
-            // root elements
             Document doc = docBuilder.newDocument();
             Element rootElement = doc.createElement("Sifeb");
             doc.appendChild(rootElement);
-
             Element game = doc.createElement("Game");
             rootElement.appendChild(game);
 
             Element id = doc.createElement("Id");
             id.appendChild(doc.createTextNode("001"));
             game.appendChild(id);
-
             Element stories = doc.createElement("Stories");
             game.appendChild(stories);
 
             for (int i = 1; i < 10; i++) {
-
                 Element cap1 = doc.createElement("story");
                 Element image = doc.createElement("Image");
                 image.appendChild(doc.createTextNode("Mwheels"));
@@ -315,15 +278,11 @@ public class FileHandler {
                 stories.appendChild(cap1);
             }
 
-            // write the content into xml file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
             File file = new File(SifebUtil.GAME_FILE_DIR + fileName + ".xml");
-            StreamResult result = new StreamResult(file);            //new File("C:\\file.xml"));
-
-            // Output to console for testing
-            // StreamResult result = new StreamResult(System.out);
+            StreamResult result = new StreamResult(file);            
             transformer.transform(source, result);
 
             System.out.println("File saved!");
@@ -335,24 +294,22 @@ public class FileHandler {
     }
 
     public Element readFromGameFile(String fileName) {
-        Element element = null;
 
+        Element element = null;
         File file = new File(SifebUtil.GAME_FILE_DIR + fileName + ".xml");
 
         try {
-
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(file);
             doc.getDocumentElement().normalize();
-
             System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
             NodeList nList = doc.getElementsByTagName("Game");
             Node nNode = nList.item(0);
             element = (Element) nNode;
-            System.out.println("----------------------------");
 
         } catch (Exception e) {
+            element = null;
             e.printStackTrace();
         }
 
@@ -388,7 +345,6 @@ public class FileHandler {
     public Element readFromEditorFile(String filePath) {
         Element element = null;
         File file = new File(filePath);
-        boolean success = true;
 
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -401,19 +357,8 @@ public class FileHandler {
             element = (Element) nNode;
 
         } catch (Exception e) {
-            success = false;
+            element = null;
             e.printStackTrace();
-        } finally {
-
-            if (success) {
-                FeedBackLogger.sendGoodMessage("SiFEB File -- " + file.getName() + " -- Loaded Successfully!!!");
-
-            } else {
-                FeedBackLogger.sendBadMessage("SiFEB File -- " + file.getName() + " -- Couldn't Load!!");
-                element = null;
-
-            }
-
         }
 
         return element;
