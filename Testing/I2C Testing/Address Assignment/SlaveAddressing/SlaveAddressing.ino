@@ -24,6 +24,7 @@ void setup()
   while (digitalRead(SELECT_IN) == LOW) {
     delay(10);    //change accordingly
   }
+  
   //NEED TO TAKE CARE AT MASTER. WARNNING: I2C POWER UP MAY NOT FINISHED WHEN MASTER BIGIN COMMUNICATION
   Wire.begin(11);                  // selected
   Wire.onReceive(receiveEvent);   // register events
@@ -41,6 +42,7 @@ void loop()
     digitalWrite(LED, LOW);
     ledshow = false;
   }
+  
 }
 
 // function that executes whenever data is received from master
@@ -76,12 +78,13 @@ void receiveEvent(int howMany)
       digitalWrite(SELECT_OUT, LOW); //Off selectout
     }
     
-    else if(command == 'R'){          // Reset in order to do addressing 
-      Wire.begin(10);                  // unconfigured
-      Wire.onReceive(receiveEvent);   // register events
-      Wire.onRequest(requestEvent);  
-      digitalWrite(SELECT_OUT, LOW); //Off selectout
-    }
+    //NO NEED TO RESET AS ADDRESSING IS DONE BRANCH WISE
+//    else if(command == 'R'){          // Reset in order to do addressing ??? NOT RESETING CORRECTLY
+//      Wire.begin(10);                  // unconfigured
+//      Wire.onReceive(receiveEvent);   // register events
+//      Wire.onRequest(requestEvent);  
+//      digitalWrite(SELECT_OUT, LOW); //Off selectout
+//    }
       
     //if got one byte
     else if (howMany == 1){    
@@ -117,10 +120,9 @@ void requestEvent()
 {
   Serial.println("write");
   switch (mode) {
-    case 1://asks whether the module is present
-      Wire.write(1);      
+    case 1:     
       break;
-    case 2://
+    case 2:
       break;
     default:
       break;
