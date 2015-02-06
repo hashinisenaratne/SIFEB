@@ -12,14 +12,16 @@ NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 int led = 13;
 int i2c1 = A4;
 int i2c2 = A5;
-int sensor = 7;
+int SelectIn = 7;
+int SelectOut = 8;
 
 // the setup routine runs once when you press reset:
 void setup() {                
   pinMode(led, OUTPUT); 
   pinMode(i2c1, OUTPUT); 
-  pinMode(i2c2, OUTPUT); 
-  pinMode(sensor, INPUT); 
+  pinMode(i2c2, OUTPUT);   
+  pinMode(SelectOut, OUTPUT);
+  pinMode(SelectIn, INPUT);  
   Serial.begin(9600); 
 }
 
@@ -40,6 +42,11 @@ void loop() {
   Serial.print(uS / US_ROUNDTRIP_CM); // Convert ping time to distance in cm and print result (0 = outside set distance range)
   Serial.println("cm");
   
-  Serial.print(digitalRead(sensor)); // get sensor reading and print
+  Serial.print(digitalRead(SelectIn)); // get sensor reading and print
   Serial.println();
+  
+  digitalWrite(SelectOut, HIGH);   // turn the select out on
+  delay(1000);               // wait for a second
+  digitalWrite(SelectOut, LOW);    // turn the select out off
+  
 }
