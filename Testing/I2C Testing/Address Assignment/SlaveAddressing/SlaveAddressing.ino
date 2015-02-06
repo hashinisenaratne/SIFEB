@@ -4,12 +4,14 @@
 
 #include <Wire.h>
 
-#define LED  10    //change accordingly
-#define SELECT_IN 11    //change accordingly
-#define SELECT_OUT 12    //change accordingly
+#define LED  13    //change accordingly
+#define SELECT_IN 7    //change accordingly
+#define SELECT_OUT 8    //change accordingly
 
 int mode = 1;  //initial mode
 boolean ledshow=false;
+byte type = 1;
+byte address = 0;
 
 void setup()
 {
@@ -17,19 +19,24 @@ void setup()
   pinMode(SELECT_IN, INPUT);
   pinMode(SELECT_OUT, OUTPUT);
   
+  Serial.begin(9600);
+  
   Wire.begin(10);                  // unconfigured
   Wire.onReceive(receiveEvent);   // register events
   Wire.onRequest(requestEvent);
+  Serial.println("address 10");
   
-  while (digitalRead(SELECT_IN) == LOW) {
+  while (digitalRead(SELECT_IN) == HIGH) {
     delay(10);    //change accordingly
+    Serial.println("address 10");
   }
   
   //NEED TO TAKE CARE AT MASTER. WARNNING: I2C POWER UP MAY NOT FINISHED WHEN MASTER BIGIN COMMUNICATION
   Wire.begin(11);                  // selected
   Wire.onReceive(receiveEvent);   // register events
   Wire.onRequest(requestEvent);
-  Serial.begin(9600);
+  Serial.println("address 11");
+  
 }
 
 void loop()
@@ -43,6 +50,7 @@ void loop()
     ledshow = false;
   }
   
+  Serial.println(address);
 }
 
 // function that executes whenever data is received from master
@@ -54,21 +62,19 @@ void receiveEvent(int howMany)
   int id;
   int add;
   
-  if(mode == 1){    
-    if(command == 'A'){
-      mode = 2; //will receive an address soon
-    }
-  }
-  
-  else if(mode == 2){
-    add = Wire.read ();    
+  if(mode == 2){
+    add = Wire.read ();  
+    address = add;  
     Wire.begin(add);                  // set new address
     Wire.onReceive(receiveEvent);   // register events
     Wire.onRequest(requestEvent);
+    Serial.println(address);
     mode = 3;
   }
   
   else if(mode == 3){
+    
+    command = Wire.read ();
     
     if(command == 'B'){
       digitalWrite(SELECT_OUT, HIGH); //On selectout
@@ -87,8 +93,7 @@ void receiveEvent(int howMany)
 //    }
       
     //if got one byte
-    else if (howMany == 1){    
-      command = Wire.read ();
+    else if (howMany == 1){
       if(command == 's'){     // show
            show();
       }
@@ -96,7 +101,6 @@ void receiveEvent(int howMany)
       
     //if got two bytes
     else if (howMany == 2){
-      command = Wire.read ();
       if(command == 't'){     // test
           id= Wire.read ();
           test(id);
@@ -120,9 +124,14 @@ void requestEvent()
 {
   Serial.println("write");
   switch (mode) {
-    case 1:     
+    case 1: 
+      Wire.write(type); 
+      mode = 2; //will receive an address soon      
       break;
     case 2:
+      break;
+    case 3:  
+      Wire.write(address);  // tempory
       break;
     default:
       break;

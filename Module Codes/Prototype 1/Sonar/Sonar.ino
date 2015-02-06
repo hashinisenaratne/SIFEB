@@ -11,6 +11,7 @@ byte distance;
 boolean ledshow=false;
 
 void setup() {
+  pinMode(led, OUTPUT);
   Wire.begin(11);                  // join i2c bus with address #11
   Wire.onReceive(receiveEvent); 
   Wire.onRequest(requestEvent);
