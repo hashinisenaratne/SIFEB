@@ -31,19 +31,39 @@ public class Capability {
     private final Map<Locale, String> capNames;
     private Device device;
     private final String type;
-    private final String command;
+    private final String testCommand;
+    private final String exeCommand;
+    private final String stopCommand;
+    private final String compType;
+    private final String respSize;
+    private final String refValue;
     private final String imageName;
     private Image staticImage;
     private Image dynamicImage;
     private final Block block;
     private final boolean hasTest;
 
-    public Capability(String capID, Map<Locale, String> capNames, Device device, String type, String command, String imageName, boolean hasTest) {
+    public Capability(String capID,
+            Map<Locale, String> capNames,
+            Device device,
+            String type,
+            String testCmd,
+            String exeCommand,
+            String stopCommand,
+            String compType,
+            String respSize,
+            String refValue, String imageName, boolean hasTest) {
+
         this.capID = capID;
         this.capNames = capNames;
         this.device = device;
         this.type = type;
-        this.command = command;
+        this.testCommand = testCmd;
+        this.exeCommand = exeCommand;
+        this.stopCommand = stopCommand;
+        this.compType = compType;
+        this.respSize = respSize;
+        this.refValue = refValue;
         this.imageName = imageName;
 
         this.staticImage = new Image("file:" + SifebUtil.STATIC_IMG_DIR + imageName + ".png");
@@ -90,8 +110,8 @@ public class Capability {
         return block;
     }
 
-    public String getCommand() {
-        return command;
+    public String getTestCommand() {
+        return testCommand;
     }
 
     public boolean isHasTest() {
@@ -102,8 +122,36 @@ public class Capability {
         this.device = device;
     }
 
+    public String getExeCommand() {
+        return exeCommand;
+    }
+
+    public String getStopCommand() {
+        return stopCommand;
+    }
+
+    public String getCompType() {
+        return compType;
+    }
+
+    public String getRespSize() {
+        return respSize;
+    }
+
+    public String getRefValue() {
+        return refValue;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public Map<Locale, String> getCapNames() {
+        return capNames;
+    }   
+
     public Capability cloneCapability() {
-        Capability cap = new Capability(this.capID, this.capNames, this.device, this.type, this.command, this.imageName, true);
+        Capability cap = new Capability(this.capID, this.capNames, this.device, this.type, this.testCommand, this.exeCommand, this.stopCommand, this.compType, this.respSize, this.refValue, this.imageName, true);
         System.out.println(this.block.getParent().getEffect());
         if (this.device != null) {
             this.device.addCapability(cap);

@@ -6,6 +6,7 @@
 package com.sifeb.ve;
 
 import com.sifeb.ve.controller.MainEditorController;
+import com.sifeb.ve.handle.SoundHandler;
 import com.sun.javafx.beans.event.AbstractNotifyListener;
 import javafx.beans.Observable;
 import javafx.geometry.Insets;
@@ -156,7 +157,8 @@ public class RepeatBlock extends Holder {
                 }
             }
             event.setDropCompleted(success);
-            event.consume();
+            event.consume();            
+            SoundHandler.playAudioClip("blockDrop.wav", 1);
         });
 
         this.setOnDragOver((DragEvent event) -> {

@@ -476,7 +476,7 @@ public class MainEditorController implements Initializable {
         }
         Block acBlock = (Block) cb.getActions().getChildren().get(0);
         int address = acBlock.getCapability().getDevice().getAddress();
-        String cmd = acBlock.getCapability().getCommand();
+        String cmd = acBlock.getCapability().getTestCommand();
         sendCmd(address, cmd.toUpperCase());
         Block conBlock = (Block) cb.getCondition().getChildren().get(0);
         executeConstraint(conBlock);
@@ -496,7 +496,7 @@ public class MainEditorController implements Initializable {
         }
         Block acBlock = (Block) h.getActions().getChildren().get(0);
         int address = acBlock.getCapability().getDevice().getAddress();
-        String cmd = acBlock.getCapability().getCommand();
+        String cmd = acBlock.getCapability().getTestCommand();
         sendCmd(address, cmd);
         try {
             Thread.sleep(500);

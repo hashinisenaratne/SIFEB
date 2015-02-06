@@ -6,6 +6,7 @@
 package com.sifeb.ve;
 
 import com.sifeb.ve.controller.MainEditorController;
+import com.sifeb.ve.handle.SoundHandler;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -106,6 +107,7 @@ public class Holder extends Pane {
             }
             event.setDropCompleted(success);
             event.consume();
+            SoundHandler.playAudioClip("blockDrop.wav", 1);
         });
 
         this.setOnDragOver((DragEvent event) -> {

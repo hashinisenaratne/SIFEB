@@ -1,1 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><Sifeb><Capability><Id>cap_001</Id><Names><Name><Locale>en_US</Locale><Value>Go Forward</Value></Name><Name><Locale>si_LK</Locale><Value>ඉදිරියට යන්න</Value></Name></Names><Type>actionC</Type><Command>b</Command><HasTestButton>true</HasTestButton><Image>cap_001</Image></Capability></Sifeb>
