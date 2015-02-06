@@ -27,16 +27,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -48,11 +49,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javax.imageio.ImageIO;
-import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
@@ -151,23 +150,20 @@ public class LibraryEditorController implements Initializable {
     final String[] capTypes = new String[]{Capability.CAP_ACTION, Capability.CAP_ACTION_C, Capability.CAP_SENSE, Capability.CAP_CONDITION};
     final String[] devTypes = new String[]{Device.DEV_ACTUATOR, Device.DEV_SENSOR};
     final String[] compTypes = new String[]{
+        "== (Response Value == Reference Value)",
+        "!= (Response Value != Reference Value)",
         "< (Response Value < Reference Value)",
-        "= (Response Value = Reference Value)",
-        "> (Response Value > Reference Value)"
+        "<= (Response Value <= Reference Value)",
+        "> (Response Value > Reference Value)",
+        ">= (Response Value >= Reference Value)"
     };
     FileHandler fileHandler;
     File capStaticImg;
     File capDynamicImg;
     File devImg;
-    Map<String, Capability> capList;
     ArrayList<Device> devList;
-    boolean capModified;
-    boolean devModified;
     boolean isNewCap;
     boolean isNewDev;
-    String[] devCapIds;
-
-    ArrayList<SelectedEntry> selectedCaps = new ArrayList();
 
     /**
      * Initializes the controller class.
@@ -187,98 +183,46 @@ public class LibraryEditorController implements Initializable {
         compTypeSelect.getItems().addAll(compTypes);
         compTypeSelect.getSelectionModel().selectFirst();
 
-        capList = new HashMap<>();
         devList = new ArrayList<>();
-        capModified = true;
-        devModified = true;
         isNewCap = true;
         isNewDev = true;
-        refreshCapList();
-        refreshSelectedCaps();
+
         refreshDevList();
-        devCapIds = new String[0];
-
-    }
-
-    private void refreshSelectedCaps() {
-        selectedCaps.clear();
-        if (isNewDev) {
-            for (Capability cap : capList.values()) {
-                SelectedEntry se = new SelectedEntry(cap.getCapID(), cap.toString());
-                selectedCaps.add(se);
-            }
-        } else {
-            for (Capability cap : capList.values()) {
-                String id = cap.getCapID();
-                SelectedEntry se = new SelectedEntry(id, cap.toString());
-                if (Arrays.asList(devCapIds).contains(id)) {
-                    se.setSelected(true);
-                }
-                selectedCaps.add(se);
-            }
-        }
-    }
-
-    private void refreshCapList() {
-        if (capModified) {
-            capList.clear();
-            File[] capFiles = CAPABILITY_FOLDER.listFiles();
-
-            for (File capFile : capFiles) {
-                String fileName = capFile.getName();
-                String capID = fileName.substring(0, fileName.length() - 4);
-
-                Capability cap = fileHandler.readFromCapabilityFile(capID);
-                if ((!cap.getType().equals(Capability.CAP_CONTROL)) && (!cap.getType().equals(Capability.CAP_IFELSE))) {
-                    capList.put(capID, cap);
-                }
-            }
-            capModified = false;
-            refreshSelectedCaps();
-        }
     }
 
     private void refreshDevList() {
-        if (devModified) {
-            devList.clear();
-            File[] devFiles = DEVICE_FOLDER.listFiles();
+        devList.clear();
+        File[] devFiles = DEVICE_FOLDER.listFiles();
 
-            devSelect.getItems().clear();
-            for (File devFile : devFiles) {
-                String fileName = devFile.getName();
-                String devID = fileName.substring(0, fileName.length() - 4);
+        devSelect.getItems().clear();
+        for (File devFile : devFiles) {
+            String fileName = devFile.getName();
+            String devID = fileName.substring(0, fileName.length() - 4);
 
-                Device d = fileHandler.readFromDeviceFile(devID, "0");
-                devList.add(d);
-                devSelect.getItems().add(d.toString());
-            }
-            devModified = false;
+            Device d = fileHandler.readFromDeviceFile(devID, "0");
+            devList.add(d);
+            devSelect.getItems().add(d.toString());
         }
     }
 
     private void setEventHandlers() {
         capEditBtn.setOnAction((event) -> {
-            refreshCapList();
-            Optional<Capability> response = Dialogs.create()
-                    .title("Edit capability")
-                    .masthead("Select a capability to Edit")
-                    .message("Select Capability:")
-                    .showChoices(capList.values());
-
-            response.ifPresent(chosen -> fillCapForm(chosen));
+//            refreshCapList();
+//            Optional<Capability> response = Dialogs.create()
+//                    .title("Edit capability")
+//                    .masthead("Select a capability to Edit")
+//                    .message("Select Capability:")
+//                    .showChoices(capList.values());
+//
+//            response.ifPresent(chosen -> fillCapForm(chosen));
 
         });
 
         capDelBtn.setOnAction((event) -> {
-            refreshCapList();
-            Optional<Capability> response = Dialogs.create()
-                    .title("Edit capability")
-                    .masthead("Select a capability to Edit")
-                    .message("Select Capability:")
-                    .showChoices(capList.values());
-
-            response.ifPresent(chosen -> removeCapability(chosen));
-
+            Capability cp = showCapSelector("Select Capability to remove");
+            if (cp != null) {
+                removeCapability(cp);
+            }
         });
 
         capClrBtn.setOnAction((event) -> {
@@ -365,9 +309,6 @@ public class LibraryEditorController implements Initializable {
             clearDevForm();
         });
 
-//        devCapBtn.setOnAction((event) -> {
-//            showCapSelection(isNewDev);
-//        });
         devImgBtn.setOnAction((event) -> {
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter filterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
@@ -490,6 +431,18 @@ public class LibraryEditorController implements Initializable {
                         + "\nCapability Type\t: " + cap.getType())
                 .actions(Dialog.Actions.YES, Dialog.Actions.NO)
                 .showConfirm();
+
+        if (response == Dialog.Actions.YES) {
+            boolean success;
+            success = fileHandler.removeCapabilityFile(cap);
+
+            if (success) {
+                Device d = cap.getDevice();
+                d.removeCapability(cap);
+                fileHandler.writeToDeviceFile(d);
+                showSuccessMessage("Capability Removed", "Capability removed successfully!");
+            }
+        }
     }
 
     private void removeDevice(Device d) {
@@ -633,13 +586,22 @@ public class LibraryEditorController implements Initializable {
 
         switch (compTypeIdx) {
             case 0:
-                compType = "<";
-                break;
-            case 1:
                 compType = "=";
                 break;
+            case 1:
+                compType = "!";
+                break;
             case 2:
+                compType = "<";
+                break;
+            case 3:
+                compType = ",";
+                break;
+            case 4:
                 compType = ">";
+                break;
+            case 5:
+                compType = ".";
                 break;
         }
 
@@ -728,6 +690,49 @@ public class LibraryEditorController implements Initializable {
         } finally {
             setCapWait(false);
         }
+    }
+
+    private Capability showCapSelector(String message) {
+        Dialog dlg = new Dialog(libTabPane.getScene().getWindow(), "Select Capability", true);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(0, 10, 0, 10));
+
+        ChoiceBox<Device> devs = new ChoiceBox<>();
+        ChoiceBox<Capability> caps = new ChoiceBox<>();
+        devs.getItems().addAll(devList);
+        devs.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                caps.getItems().clear();
+                for (Capability cp : devs.getItems().get((int) newValue).getCapabilities()) {
+                    caps.getItems().add(cp);
+                }
+                caps.getSelectionModel().selectFirst();
+            }
+
+        });
+        devs.getSelectionModel().selectFirst();
+
+        grid.add(new Label("Device"), 0, 0);
+        grid.add(devs, 1, 0);
+        grid.add(new Label("Capability"), 0, 1);
+        grid.add(caps, 1, 1);
+
+        dlg.setMasthead(message);
+        dlg.setContent(grid);
+        dlg.getActions().addAll(Dialog.Actions.OK, Dialog.Actions.CANCEL);
+
+        Action response = dlg.show();
+
+        if (response == Dialog.Actions.OK) {
+            return caps.getSelectionModel().getSelectedItem();
+        }
+
+        return null;
     }
 
     private void setCapWait(boolean status) {
@@ -850,49 +855,6 @@ public class LibraryEditorController implements Initializable {
                 .showInformation();
     }
 
-    private void showCapSelection(boolean newDev) {
-        Dialog dlg = new Dialog(null, "Select Capabilities");
-        dlg.setResizable(false);
-        dlg.setMasthead("Select capabilities for the device");
-
-        VBox capCheckList = new VBox();
-        capCheckList.setSpacing(5);
-
-        for (int i = 0; i < selectedCaps.size(); i++) {
-            SelectedEntry se = selectedCaps.get(i);
-            CheckBox cb = new CheckBox(se.getName());
-            cb.setId(Integer.toString(i));
-            cb.setSelected(se.isSelected());
-            cb.setMnemonicParsing(false);
-            capCheckList.getChildren().add(cb);
-        }
-
-        dlg.setContent(capCheckList);
-
-        Action addNewCap = new AbstractAction("Add new ...") {
-
-            @Override
-            public void handle(ActionEvent event) {
-                Dialog d = (Dialog) event.getSource();
-                libTabPane.getSelectionModel().select(capabilityTab);
-                d.hide();
-            }
-
-        };
-
-        dlg.getActions().addAll(addNewCap, Dialog.Actions.OK, Dialog.Actions.CANCEL);
-        Action act = dlg.show();
-        if (act == Dialog.Actions.OK) {
-            ObservableList cbs = capCheckList.getChildren();
-            for (Object cbo : cbs) {
-                CheckBox cb = (CheckBox) cbo;
-                int id = Integer.parseInt(cb.getId());
-                SelectedEntry se = selectedCaps.get(id);
-                se.setSelected(cb.isSelected());
-            }
-        }
-    }
-
     private void fillDevForm(Device dev) {
         clearDevForm();
         isNewDev = false;
@@ -903,11 +865,6 @@ public class LibraryEditorController implements Initializable {
         devNameTextBox.setText(dev.getDeviceName(Locale.US));
         devTypeSelect.getSelectionModel().select(dev.getType());
 
-//        devCapIds = new String[dev.getCapabilities().size()];
-//        for (int i = 0; i < dev.getCapabilities().size(); i++) {
-//            devCapIds[i] = dev.getCapabilities().get(i).getCapID();
-//        }
-//        refreshSelectedCaps();
         devImg = new File(SifebUtil.DEVICE_IMG_DIR + dev.getDeviceID() + ".png");
         if (devImg.exists()) {
             devImgView.setImage(dev.getImage());

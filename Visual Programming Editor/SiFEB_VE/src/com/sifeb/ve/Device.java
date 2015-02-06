@@ -97,6 +97,10 @@ public class Device {
     public void addCapability(Capability cap) {
         this.capabilities.add(cap);
     }
+    
+    public boolean removeCapability(Capability cap){
+        return this.capabilities.remove(cap);
+    }
 
     @Override
     public String toString() {
