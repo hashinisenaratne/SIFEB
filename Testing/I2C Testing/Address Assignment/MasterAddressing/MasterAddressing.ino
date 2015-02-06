@@ -16,12 +16,12 @@ byte decoder[16][4] = {
  {1, 1, 0, 0}, {1, 1, 0, 1}, {1, 1, 1, 0}, {1, 1, 1, 1}
 };
 
-// branch wise structuring {slave1address, slave2address, slave3address}
-byte slaveStructure[15][4] = {
- {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, 
- {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0},  
- {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, 
- {0, 0, 0}, {0, 0, 0}, {0, 0, 0}
+// branch wise structuring {{slave1address,slave1type}, {slave2address,slave2type}, {slave3address,slave3type}}
+byte slaveStructure[15][3][2] = {
+ {{0,0}, {0,0}, {0,0}}, {{0,0}, {0,0}, {0,0}}, {{0,0}, {0,0}, {0,0}}, {{0,0}, {0,0}, {0,0}}, 
+ {{0,0}, {0,0}, {0,0}}, {{0,0}, {0,0}, {0,0}}, {{0,0}, {0,0}, {0,0}}, {{0,0}, {0,0}, {0,0}}, 
+ {{0,0}, {0,0}, {0,0}}, {{0,0}, {0,0}, {0,0}}, {{0,0}, {0,0}, {0,0}}, {{0,0}, {0,0}, {0,0}}, 
+ {{0,0}, {0,0}, {0,0}}, {{0,0}, {0,0}, {0,0}}, {{0,0}, {0,0}, {0,0}}
 };
 
 // {starting address, terminal rank - starting from 1}
@@ -29,7 +29,7 @@ byte slaveStructure[15][4] = {
 byte branchDetails[15][2] = {
   {8,0}, {15,0}, {22,0}, {29,0}, {36,0},
   {43,0}, {50,0}, {57,0}, {64,0}, {71,0},
-  {78,0}, {85,0}, {82,0}, {99,0}, {106,0}
+  {78,0}, {85,0}, {92,0}, {99,0}, {106,0}
 };
 
 byte address_to_assign = 0;
@@ -42,11 +42,23 @@ void setup()
   pinMode(DECODER_4, OUTPUT);
   
   Wire.begin();
+  Serial.begin(9600);
+  addressAllocation();
+  
+  //printStructure();
 }
 
 void loop()
 {
-
+//  while(Serial.available() <= 0){
+//    continue;
+//  }
+  
+  printStructure();
+  
+  updateAddressAllocation();
+  delay(2000); 
+  
 }
 
 /* Functions Related to Address Allocation */
@@ -57,9 +69,10 @@ void addressAllocation(){
   for (int i = 0; i < 15; i++) {
     int address = branchDetails[i][0];
     boolean hasSlave = false;
+    byte type = 0;
     int j =0;                    // slave position along the path i
     decode(i);                  // activate select line of first module of the branch
-    delay(10);                  //change accordingly
+    delay(50);                  //change accordingly
     resetDecoder();             // set low - select pin
     
     Wire.beginTransmission(11);  // check if the module is present
@@ -68,12 +81,15 @@ void addressAllocation(){
     }
     else{
       hasSlave = false;
+      branchDetails[i][1] = 0;
     }
      
     while(hasSlave){
-      Wire.beginTransmission(11); // set device to address setting mode
-      Wire.write('A'); 
-      Wire.endTransmission();
+      Wire.requestFrom(11, 1);    // request type from slave
+      while(Wire.available())
+      { 
+        type = Wire.read();       // receive type
+      }
       
       Wire.beginTransmission(11); // send address to set
       Wire.write(address); 
@@ -83,7 +99,7 @@ void addressAllocation(){
       Wire.write('B'); 
       Wire.endTransmission();
       
-      delay(10);                  //change accordingly      
+      delay(50);                  //change accordingly      
       
       Wire.beginTransmission(address); // set low - select line
       Wire.write('C'); 
@@ -94,7 +110,8 @@ void addressAllocation(){
         hasSlave = true;
       }
       
-      slaveStructure[i][j] = address;
+      slaveStructure[i][j][0] = address;
+      slaveStructure[i][j][1] = type;
       branchDetails[i][1] = j+1;
       address ++;      
       j++;
@@ -108,11 +125,12 @@ void addressAllocation(){
 //void resetAllSlaves(){
 //  for (int i = 0; i < 15; i++) {
 //    for (int i = 0; i < 3; i++) {
-//      if(slaveStructure[i][j] != 0){
-//        Wire.beginTransmission(slaveStructure[i][j]);
+//      if(slaveStructure[i][j][0] != 0){
+//        Wire.beginTransmission(slaveStructure[i][j][0]);
 //        Wire.write('R'); // command to reset to default address
 //        Wire.endTransmission();
-//        slaveStructure[i][j] = 0;
+//        slaveStructure[i][j][0] = 0;
+//        slaveStructure[i][j][1] = 0;
 //      }
 //    }
 //  }
@@ -135,18 +153,16 @@ void updateAddressAllocation(){
     int address = branchDetails[i][0];
     boolean hasSlave = false;
     boolean newSlave = false;
+    byte type = 0;
     int j =0;                    // slave position along the path i
     decode(i);                  // activate select line of first module of the branch
-    delay(10);                  //change accordingly
+    delay(50);                  //change accordingly
     resetDecoder();             // set low - select pin  
     
     Wire.beginTransmission(11);  // check if a new module is present
     if(Wire.endTransmission()==0){
       hasSlave = true;
       newSlave = true;
-    }
-    else{
-      hasSlave = false;
     }
     
     if(!newSlave){
@@ -155,13 +171,19 @@ void updateAddressAllocation(){
           hasSlave = true;
       }
     }
+    
+    if(!hasSlave){
+      branchDetails[i][1] = 0;
+    }
      
     while(hasSlave){
       
       if(newSlave){
-        Wire.beginTransmission(11); // set device to address setting mode
-        Wire.write('A'); 
-        Wire.endTransmission();
+        Wire.requestFrom(11, 1);    // request type from slave
+        while(Wire.available())
+        { 
+          type = Wire.read();       // receive type
+        }
         
         Wire.beginTransmission(11); // send address to set
         Wire.write(address); 
@@ -172,38 +194,38 @@ void updateAddressAllocation(){
       Wire.write('B'); 
       Wire.endTransmission();
       
-      delay(10);                  //change accordingly      
+      delay(50);                  //change accordingly      
       
       Wire.beginTransmission(address); // set low - select line
       Wire.write('C'); 
       Wire.endTransmission(); 
       
       newSlave = false;
+      hasSlave = false;
       
       Wire.beginTransmission(11);  // check if a new module is present
       if(Wire.endTransmission()==0){
         hasSlave = true;
         newSlave = true;
       }
-      else{
-        hasSlave = false;
-      }
       
       if(!newSlave){
-        Wire.beginTransmission(address);  // check if the module is present
+        Wire.beginTransmission(address + 1);  // check if the module is present
         if(Wire.endTransmission()==0){
           hasSlave = true;
         }
       }     
       
-      slaveStructure[i][j] = address;
+      slaveStructure[i][j][0] = address;
+      slaveStructure[i][j][1] = type;
       branchDetails[i][1] = j+1;
       address ++;      
       j++;
     }
     
     for(int k=j; j<sizeof(slaveStructure[i]); j++){
-      slaveStructure[i][j] = 0;
+      slaveStructure[i][j][0] = 0;
+      slaveStructure[i][j][1] = 0;
     }
   }
   resetDecoder();
@@ -231,5 +253,17 @@ void selectDecoderLines(byte line1, byte line2, byte line3, byte line4){
   digitalWrite(DECODER_4, line4); 
 }
 
-
-
+/* Functions to Print Structure */
+void printStructure(){  
+  for(int i=0;i<15;i++){
+    for(int j=0; j<3; j++){      
+      Serial.print(slaveStructure[i][j][0]);
+      Serial.print(" - ");
+      Serial.print(slaveStructure[i][j][0]);
+      Serial.print(" , ");
+    }
+    Serial.print(" terminal ");
+    Serial.println(branchDetails[i][1]);
+  }
+  Serial.println();
+}
