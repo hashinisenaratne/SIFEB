@@ -20,7 +20,7 @@ public class SoundHandler {
     private static boolean musicOn = true;
 
     public static void playWelcome() {
-        AudioClip aud = playAudioClip("welcome.wav", 1);
+//        AudioClip aud = playAudioClip("welcome.wav", 1);
     }
 
     public static void playBackMusic() {

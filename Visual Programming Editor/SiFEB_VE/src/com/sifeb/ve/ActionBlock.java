@@ -134,7 +134,7 @@ public class ActionBlock extends HBox {
 
             if (response == Dialog.Actions.YES) {
                 FeedBackLogger.sendGoodMessage(Strings.getString("message.testing") + " \'" + cp.getCapName() + "\' " + Strings.getString("message.capability") + "...");
-                ComPortController.writeComPort(ComPortController.port, cp.getDevice().getAddress(), cp.getCommand());
+                ComPortController.writeComPort(ComPortController.port, cp.getDevice().getAddress(), cp.getTestCommand());
             } else {
                 FeedBackLogger.sendBadMessage(Strings.getString("message.testlater") + "...");
                 // ... user cancelled, reset form to default

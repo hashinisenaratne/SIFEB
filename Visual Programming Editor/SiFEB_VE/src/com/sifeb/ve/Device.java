@@ -28,6 +28,7 @@ public class Device {
     private final Map<Locale, String> deviceNames;
     private final int address;
     private final String type;
+    private final String imgName;
     private final Image image;
     private final ArrayList<Capability> capabilities;
     private final DeviceBlock deviceBlock;
@@ -37,6 +38,7 @@ public class Device {
         this.deviceNames = deviceNames;
         this.address = address;
         this.type = type;
+        this.imgName = imageName;
         this.image = new Image("file:" + SifebUtil.DEVICE_IMG_DIR + imageName + ".png");
         this.deviceBlock = new DeviceBlock(this);
         this.capabilities = new ArrayList<>();
@@ -61,6 +63,10 @@ public class Device {
     public ArrayList<Capability> getCapabilities() {
         return capabilities;
     }
+    
+    public void addCapabilities(ArrayList<Capability> caps){
+        this.capabilities.addAll(caps);
+    }
 
     public String getDeviceName() {
         Locale currentLocale = Strings.getLocale();
@@ -74,6 +80,15 @@ public class Device {
     public DeviceBlock getDeviceBlock() {
         return deviceBlock;
     }
+
+    public Map<Locale, String> getDeviceNames() {
+        return deviceNames;
+    }
+
+    public String getImgName() {
+        return imgName;
+    }
+    
 
     public void addToPane(Pane parent) {
         parent.getChildren().add(this.deviceBlock);

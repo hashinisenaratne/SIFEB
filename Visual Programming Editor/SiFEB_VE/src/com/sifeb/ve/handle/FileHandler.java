@@ -43,14 +43,14 @@ public class FileHandler {
 //        fh.generateTestDeviceFiles();
 //        fh.generateTestCapabilityFiles();
 //        fh.readFromCapabilityFile("cap_001");
-        fh.writeToGameFile("game_001");
+//        fh.writeToGameFile("game_001");
 //        Element d=fh.readFromGameFile("game_001");
 //        System.out.println(d.getElementsByTagName("Id").item(0).getTextContent());
 
         //fh.writeToDeviceFile("dev_12");
     }
 
-    public boolean writeToDeviceFile(String devID, Map<Locale, String> devNames, String devType, String[] devCaps, String imgName) {
+    public boolean writeToDeviceFile(Device dev) {
 
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -61,12 +61,12 @@ public class FileHandler {
             Element device = doc.createElement("Device");
             rootElement.appendChild(device);
             Element id = doc.createElement("Id");
-            id.appendChild(doc.createTextNode(devID));
+            id.appendChild(doc.createTextNode(dev.getDeviceID()));
             device.appendChild(id);
             Element names = doc.createElement("Names");
             device.appendChild(names);
 
-            for (Map.Entry<Locale, String> entry : devNames.entrySet()) {
+            for (Map.Entry<Locale, String> entry : dev.getDeviceNames().entrySet()) {
                 Element name = doc.createElement("Name");
                 Element locale = doc.createElement("Locale");
                 Element nameStr = doc.createElement("Value");
@@ -80,24 +80,25 @@ public class FileHandler {
             }
 
             Element type = doc.createElement("Type");
-            type.appendChild(doc.createTextNode(devType));
+            type.appendChild(doc.createTextNode(dev.getType()));
             device.appendChild(type);
             Element image = doc.createElement("Image");
-            image.appendChild(doc.createTextNode(imgName));
+            image.appendChild(doc.createTextNode(dev.getImgName()));
             device.appendChild(image);
             Element capabilities = doc.createElement("Capabilities");
             device.appendChild(capabilities);
 
-            for (int j = 0; j < devCaps.length; j++) {
+            for (int j = 0; j < dev.getCapabilities().size(); j++) {
                 Element cap = doc.createElement("capability");
-                cap.appendChild(doc.createTextNode(devCaps[j]));
+                cap.appendChild(doc.createTextNode(dev.getCapabilities().get(j).getCapID()));
                 capabilities.appendChild(cap);
             }
+
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            File file = new File(SifebUtil.DEV_FILE_DIR + devID + ".xml");
-            StreamResult result = new StreamResult(file);            
+            File file = new File(SifebUtil.DEV_FILE_DIR + dev.getDeviceID() + ".xml");
+            StreamResult result = new StreamResult(file);
             transformer.transform(source, result);
 
             return true;
@@ -105,6 +106,11 @@ public class FileHandler {
         } catch (ParserConfigurationException | TransformerException pce) {
             return false;
         }
+    }
+    
+    public boolean removeDeviceFile(Device dev){
+        File file = new File(SifebUtil.DEV_FILE_DIR + dev.getDeviceID() + ".xml");
+        return file.delete();
     }
 
     public Device readFromDeviceFile(String fileName, String address) {
@@ -156,7 +162,7 @@ public class FileHandler {
         return device;
     }
 
-    public boolean writeToCapabilityFile(String capID, Map<Locale, String> capNames, String capType, String command, String imageName, boolean hasTest) {
+    public boolean writeToCapabilityFile(Capability cap) {
 
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -167,12 +173,12 @@ public class FileHandler {
             Element capability = doc.createElement("Capability");
             rootElement.appendChild(capability);
             Element id = doc.createElement("Id");
-            id.appendChild(doc.createTextNode(capID));
+            id.appendChild(doc.createTextNode(cap.getCapID()));
             capability.appendChild(id);
             Element names = doc.createElement("Names");
             capability.appendChild(names);
 
-            for (Map.Entry<Locale, String> entry : capNames.entrySet()) {
+            for (Map.Entry<Locale, String> entry : cap.getCapNames().entrySet()) {
                 Element name = doc.createElement("Name");
                 Element locale = doc.createElement("Locale");
                 Element nameStr = doc.createElement("Value");
@@ -184,30 +190,57 @@ public class FileHandler {
             }
 
             Element type = doc.createElement("Type");
-            type.appendChild(doc.createTextNode(capType));
+            type.appendChild(doc.createTextNode(cap.getType()));
             capability.appendChild(type);
-            Element cmd = doc.createElement("Command");
-            cmd.appendChild(doc.createTextNode(command));
-            capability.appendChild(cmd);
+
+            Element testCmd = doc.createElement("TestCommand");
+            testCmd.appendChild(doc.createTextNode(cap.getTestCommand()));
+            capability.appendChild(testCmd);
 
             Element button = doc.createElement("HasTestButton");
-            button.appendChild(doc.createTextNode(Boolean.toString(hasTest)));
+            button.appendChild(doc.createTextNode(Boolean.toString(cap.isHasTest())));
             capability.appendChild(button);
+
+            Element exeCmd = doc.createElement("ExeCommand");
+            exeCmd.appendChild(doc.createTextNode(cap.getExeCommand()));
+            capability.appendChild(exeCmd);
+
+            Element stopCmd = doc.createElement("StopCommand");
+            stopCmd.appendChild(doc.createTextNode(cap.getStopCommand()));
+            capability.appendChild(stopCmd);
+
+            Element compType = doc.createElement("Comparator");
+            compType.appendChild(doc.createTextNode(cap.getCompType()));
+            capability.appendChild(compType);
+
+            Element respSize = doc.createElement("Response");
+            respSize.appendChild(doc.createTextNode(cap.getRespSize()));
+            capability.appendChild(respSize);
+
+            Element refVal = doc.createElement("Reference");
+            refVal.appendChild(doc.createTextNode(cap.getRefValue()));
+            capability.appendChild(refVal);
+
             Element image = doc.createElement("Image");
-            image.appendChild(doc.createTextNode(imageName));
+            image.appendChild(doc.createTextNode(cap.getImageName()));
             capability.appendChild(image);
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            File file = new File(SifebUtil.CAP_FILE_DIR + capID + ".xml");
-            StreamResult result = new StreamResult(file);           
+            File file = new File(SifebUtil.CAP_FILE_DIR + cap.getCapID() + ".xml");
+            StreamResult result = new StreamResult(file);
             transformer.transform(source, result);
             return true;
 
         } catch (ParserConfigurationException | TransformerException pce) {
             return false;
         }
+    }
+    
+    public boolean removeCapabilityFile(Capability cap){
+        File file = new File(SifebUtil.CAP_FILE_DIR + cap.getCapID() + ".xml");
+        return file.delete();
     }
 
     public Capability readFromCapabilityFile(String capID) {
@@ -241,17 +274,24 @@ public class FileHandler {
             String name = nameNodes.item(1).getTextContent();
             actNames.put(new Locale(locale.split("_")[0], locale.split("_")[1]), name);
         }
-        String command = el.getElementsByTagName("Command").item(0).getTextContent();
+        String testCmd = el.getElementsByTagName("TestCommand").item(0).getTextContent();
+        String exeCmd = el.getElementsByTagName("ExeCommand").item(0).getTextContent();
+        String stopCmd = el.getElementsByTagName("StopCommand").item(0).getTextContent();
+        
+        String compType = el.getElementsByTagName("Comparator").item(0).getTextContent();
+        String resp = el.getElementsByTagName("Response").item(0).getTextContent();
+        String refVal = el.getElementsByTagName("Reference").item(0).getTextContent();
+        
         String type = el.getElementsByTagName("Type").item(0).getTextContent();
         String image = el.getElementsByTagName("Image").item(0).getTextContent();
         boolean hasTestButton = Boolean.parseBoolean(el.getElementsByTagName("HasTestButton").item(0).getTextContent());
-        Capability cap = new Capability(capId, actNames, null, type, command, image, hasTestButton);
+        Capability cap = new Capability(capId,actNames,null,type,testCmd,exeCmd,stopCmd,compType,resp,refVal,image,hasTestButton);
 
         return cap;
     }
 
     public void writeToGameFile(String fileName) {
-        
+
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -282,7 +322,7 @@ public class FileHandler {
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
             File file = new File(SifebUtil.GAME_FILE_DIR + fileName + ".xml");
-            StreamResult result = new StreamResult(file);            
+            StreamResult result = new StreamResult(file);
             transformer.transform(source, result);
 
             System.out.println("File saved!");
@@ -406,7 +446,7 @@ public class FileHandler {
     /////////////////////////////////////////////////////////////
     private void generateTestCapabilityFiles() {
 
-        String[] ids = {"cap_001", "cap_002", "cap_003", "cap_004", "cap_005", "cap_006", "cap_007", "cap_008", "cap_009"};
+        String[] ids = {"cap_10_001", "cap_10_002", "cap_10_003", "cap_10_004", "cap_10_005", "cap_12_001", "cap_12_002", "cap_11_001", "cap_11_002"};
         String[] actionNames_en = {"Go Forward", "Reverse", "Turn Left", "Turn Right", "Stop", "Light ON", "Light OFF", "No Object", "See Object"};
         String[] actionNames_si = {"ඉදිරියට යන්න", "පසුපසට යන්න", "වමට හැරෙන්න", "දකුණට හැරෙන්න", "නවතින්න", "Light ON", "Light OFF", "No Object", "See Object"};
         String[] actionCmd = {"b", "c", "e", "d", "", "l", "", "", ""};
@@ -466,13 +506,33 @@ public class FileHandler {
                 type.appendChild(doc.createTextNode(types));
                 capability.appendChild(type);
 
-                Element cmd = doc.createElement("Command");
-                cmd.appendChild(doc.createTextNode(actionCmd[i]));
-                capability.appendChild(cmd);
+                Element testCmd = doc.createElement("TestCommand");
+                testCmd.appendChild(doc.createTextNode(actionCmd[i]));
+                capability.appendChild(testCmd);
 
                 Element button = doc.createElement("HasTestButton");
                 button.appendChild(doc.createTextNode(buttonList[i]));
                 capability.appendChild(button);
+
+                Element exeCmd = doc.createElement("ExeCommand");
+                exeCmd.appendChild(doc.createTextNode(actionCmd[i]));
+                capability.appendChild(exeCmd);
+
+                Element stopCmd = doc.createElement("StopCommand");
+                stopCmd.appendChild(doc.createTextNode("--"));
+                capability.appendChild(stopCmd);
+
+                Element compType = doc.createElement("Comparator");
+                compType.appendChild(doc.createTextNode("--"));
+                capability.appendChild(compType);
+
+                Element respSize = doc.createElement("Response");
+                respSize.appendChild(doc.createTextNode("--"));
+                capability.appendChild(respSize);
+
+                Element refVal = doc.createElement("Reference");
+                refVal.appendChild(doc.createTextNode("--"));
+                capability.appendChild(refVal);
 
                 Element image = doc.createElement("Image");
                 image.appendChild(doc.createTextNode(ids[i]));
@@ -501,9 +561,9 @@ public class FileHandler {
         String[] deviceNames_en = {"Wheels", "Sonar", "Light"};
         String[] deviceNames_si = {"රෝද", "අතිධ්වනි", "පහන්",};
         String[] types = {Device.DEV_ACTUATOR, Device.DEV_SENSOR, Device.DEV_ACTUATOR};
-        String[][] caps = {{"cap_001", "cap_002", "cap_003", "cap_004", "cap_005"},
-        {"cap_008", "cap_009"},
-        {"cap_006", "cap_007"}
+        String[][] caps = {{"cap_10_001", "cap_10_002", "cap_10_003", "cap_10_004", "cap_10_005"},
+        {"cap_11_001", "cap_11_002"},
+        {"cap_12_001", "cap_12_002"}
         };
 
         try {
