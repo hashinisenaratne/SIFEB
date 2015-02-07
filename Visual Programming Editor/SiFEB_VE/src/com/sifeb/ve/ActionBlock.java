@@ -106,20 +106,6 @@ public class ActionBlock extends HBox {
         });
         btn.setOnAction((ActionEvent event) -> {
             Capability cp = this.block.getCapability();
-//            Window owner = this.getScene().getWindow();
-//            Alert dlg = new Alert(AlertType.CONFIRMATION, "");
-//            dlg.initModality(Modality.APPLICATION_MODAL);
-//            dlg.initOwner(owner); 
-//            
-//            dlg.setTitle("You do want dialogs right?");
-//            dlg.setResizable(false);
-////            dlg.setIconifiable(false);
-//            dlg.setGraphic(new ImageView(cp.getStaticImage()));
-//            String optionalMasthead = "Just Checkin'";
-//            dlg.getDialogPane().setContentText("I was a bit worried that you might not want them, so I wanted to double check.");
-//            dlg.show();
-//            dlg.resultProperty().addListener(o -> System.out.println("Result is: " + dlg.getResult()));
-            
             Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
             dlg.setResizable(false);
             dlg.setIconifiable(false);
@@ -130,7 +116,6 @@ public class ActionBlock extends HBox {
             dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
 
             Action response = dlg.show();
-            System.out.println("response" + response);
 
             if (response == Dialog.Actions.YES) {
                 FeedBackLogger.sendGoodMessage(Strings.getString("message.testing") + " \'" + cp.getCapName() + "\' " + Strings.getString("message.capability") + "...");

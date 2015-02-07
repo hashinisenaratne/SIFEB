@@ -115,9 +115,7 @@ public class Holder extends Pane {
                 String dbStr = event.getDragboard().getString();
                 if (dbStr.contains(Capability.CAP_ACTION) || dbStr.contains(Capability.CAP_CONTROL) || dbStr.contains(Capability.CAP_IFELSE)) {
                     event.acceptTransferModes(TransferMode.COPY);
-                } else {
-                    System.out.println("not allowed");
-                }
+                } 
             }
             event.consume();
         });

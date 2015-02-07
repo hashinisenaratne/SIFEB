@@ -143,7 +143,6 @@ public class IfBlock extends Holder {
     @Override
     public void setEventHandlers() {
         this.setOnDragDropped((DragEvent event) -> {
-            System.out.println("dropped");
             Dragboard db = event.getDragboard();
             Parent p = ((Node) event.getGestureSource()).getParent();
             boolean success = false;

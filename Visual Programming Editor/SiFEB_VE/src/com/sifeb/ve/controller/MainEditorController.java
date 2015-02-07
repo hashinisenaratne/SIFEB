@@ -15,6 +15,7 @@ import com.sifeb.ve.Holder;
 import com.sifeb.ve.IfBlock;
 import com.sifeb.ve.MainApp;
 import com.sifeb.ve.RepeatBlock;
+import com.sifeb.ve.handle.CodeGenerator;
 import com.sifeb.ve.resources.Strings;
 import java.io.IOException;
 import java.io.FileOutputStream;
@@ -102,6 +103,7 @@ public class MainEditorController implements Initializable {
 //    ArrayList<Holder> holders;
     Holder lastHolder;
     Image playImg,clearImg;
+    CodeGenerator codeGenerator;
     //temp
     ArrayList<Device> devices;
     ArrayList<Capability> capabilities;
@@ -131,6 +133,7 @@ public class MainEditorController implements Initializable {
 
         checkConnection(true);
         setTextStrings();
+        codeGenerator = new CodeGenerator();
     }
 
     private void checkConnection(boolean initialCheck) {
@@ -293,7 +296,8 @@ public class MainEditorController implements Initializable {
 
                 @Override
                 public void run() {
-                    runProgram();
+//                    runProgram();
+                    codeGenerator.generateCode(editorBox);
                 }
             });
         });
@@ -430,7 +434,6 @@ public class MainEditorController implements Initializable {
         dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
 
         Action response = dlg.show();
-        System.out.println("response" + response);
 
         if (response == Dialog.Actions.YES) {
             // FeedBackLogger.sendGoodMessage(Strings.getString("message.testing") + " \'" + cp.getCapName() + "\' " + Strings.getString("message.capability") + "...");
@@ -621,7 +624,6 @@ public class MainEditorController implements Initializable {
             case "cap_009": {    //see object
                 hValue = 1000;
                 while (hValue > 20) {
-                    System.out.println("h value is - " + hValue);
                     sendCmd(10, "h");
                     try {
                         Thread.sleep(50);

@@ -152,7 +152,6 @@ public class Capability {
 
     public Capability cloneCapability() {
         Capability cap = new Capability(this.capID, this.capNames, this.device, this.type, this.testCommand, this.exeCommand, this.stopCommand, this.compType, this.respSize, this.refValue, this.imageName, true);
-        System.out.println(this.block.getParent().getEffect());
         if (this.device != null) {
             this.device.addCapability(cap);
         }

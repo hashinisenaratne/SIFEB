@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -173,6 +174,7 @@ public class LibraryEditorController implements Initializable {
 
         fileHandler = new FileHandler();
         setEventHandlers();
+        setInputHandlers();
 
         capTypeSelect.getItems().addAll(capTypes);
         capTypeSelect.getSelectionModel().selectFirst();
@@ -203,6 +205,54 @@ public class LibraryEditorController implements Initializable {
             devList.add(d);
             devSelect.getItems().add(d.toString());
         }
+    }
+
+    private void setInputHandlers() {
+        capTestTextBox.lengthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable,
+                    Number oldValue, Number newValue) {
+                if (newValue.intValue() > oldValue.intValue()) {
+                    if (capTestTextBox.getText().length() >= 1) {
+                        capTestTextBox.setText(capTestTextBox.getText().substring(0, 1));
+                    }
+                }
+            }
+        });
+        capCmdTextBox.lengthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable,
+                    Number oldValue, Number newValue) {
+                if (newValue.intValue() > oldValue.intValue()) {
+                    if (capCmdTextBox.getText().length() >= 1) {
+                        capCmdTextBox.setText(capCmdTextBox.getText().substring(0, 1));
+                    }
+                }
+            }
+        });
+        capStopCmdTextBox.lengthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable,
+                    Number oldValue, Number newValue) {
+                if (newValue.intValue() > oldValue.intValue()) {
+                    if (capStopCmdTextBox.getText().length() >= 1) {
+                        capStopCmdTextBox.setText(capStopCmdTextBox.getText().substring(0, 1));
+                    }
+                }
+            }
+        });
+//        capRespSizeTextBox.textProperty().addListener(new ChangeListener<String>() {
+//
+//            @Override
+//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//                try {
+//                    Integer.parseInt(newValue);
+//                } catch (NumberFormatException e) {
+//                    capRespSizeTextBox.setText(oldValue);
+//                }
+//            }
+//
+//        });
     }
 
     private void setEventHandlers() {
@@ -633,13 +683,37 @@ public class LibraryEditorController implements Initializable {
             showErrorMessage(ERROR_TITLE, "Please enter a valid termination command");
             return;
         }
-        if (capType.equals(Capability.CAP_SENSE) && (capRefVal.isEmpty())) {
-            showErrorMessage(ERROR_TITLE, "Please enter a valid reference value");
-            return;
+        
+        if (capType.equals(Capability.CAP_SENSE) || capType.equals(Capability.CAP_CONDITION)) {
+            if (capRespSize.isEmpty()) {
+                showErrorMessage(ERROR_TITLE, "Please enter a valid response size");
+                return;
+            } else {
+                try {
+                    int respVal = Short.parseShort(capRespSize);
+                    if (respVal < 0) {
+                        showErrorMessage(ERROR_TITLE, "Response size should be positive");
+                        return;
+                    }
+                } catch (NumberFormatException ex) {
+                    showErrorMessage(ERROR_TITLE, "Response size should be a 16-bit integer");
+                    return;
+                }
+            }
         }
-        if ((capType.equals(Capability.CAP_SENSE) || capType.equals(Capability.CAP_CONDITION)) && (capRespSize.isEmpty())) {
-            showErrorMessage(ERROR_TITLE, "Please enter a valid response size");
-            return;
+        if (capType.equals(Capability.CAP_SENSE)) {
+            if (capRefVal.isEmpty()) {
+                showErrorMessage(ERROR_TITLE, "Please enter a valid reference value");
+                return;
+            }else {
+                try {
+                    int refVal = Integer.parseInt(capRefVal);
+                } catch (NumberFormatException ex) {
+                    showErrorMessage(ERROR_TITLE, "Reference value should be an integer");
+                    return;
+                }
+            }
+
         }
 
         boolean imgValid;

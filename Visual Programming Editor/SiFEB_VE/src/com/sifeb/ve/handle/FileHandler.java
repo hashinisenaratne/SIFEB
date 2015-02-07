@@ -41,7 +41,7 @@ public class FileHandler {
 
         FileHandler fh = new FileHandler();
 //        fh.generateTestDeviceFiles();
-//        fh.generateTestCapabilityFiles();
+        fh.generateTestCapabilityFiles();
 //        fh.readFromCapabilityFile("cap_001");
 //        fh.writeToGameFile("game_001");
 //        Element d=fh.readFromGameFile("game_001");
@@ -519,19 +519,19 @@ public class FileHandler {
                 capability.appendChild(exeCmd);
 
                 Element stopCmd = doc.createElement("StopCommand");
-                stopCmd.appendChild(doc.createTextNode("--"));
+                stopCmd.appendChild(doc.createTextNode("-"));
                 capability.appendChild(stopCmd);
 
                 Element compType = doc.createElement("Comparator");
-                compType.appendChild(doc.createTextNode("--"));
+                compType.appendChild(doc.createTextNode("="));
                 capability.appendChild(compType);
 
                 Element respSize = doc.createElement("Response");
-                respSize.appendChild(doc.createTextNode("--"));
+                respSize.appendChild(doc.createTextNode("1"));
                 capability.appendChild(respSize);
 
                 Element refVal = doc.createElement("Reference");
-                refVal.appendChild(doc.createTextNode("--"));
+                refVal.appendChild(doc.createTextNode("100"));
                 capability.appendChild(refVal);
 
                 Element image = doc.createElement("Image");
