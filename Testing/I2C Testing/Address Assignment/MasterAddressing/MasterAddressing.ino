@@ -49,104 +49,25 @@ void setup()
   Wire.begin();
   Serial.begin(9600);
   
-  while(Serial.available() <= 0){
-    continue;
-  }
+//  while(Serial.available() <= 0){
+//    continue;
+//  }
+//  Serial.read();
   updateAddressAllocation();
   printStructure();
 }
 
 void loop()
 {
-//  while(Serial.available() <= 0){
-//    continue;
-//  }
-//  Serial.read();
   printStructure();
   updateAddressAllocation();
   if(!updatedPC){
     sendStructure();
   }
   delay(2000); 
-  
 }
 
 /* Functions Related to Address Allocation */
-
-// address allocation for the whole slave system
-//void addressAllocation(){
-//  
-//  for (int i = 0; i < 15; i++) {
-//    int address = branchDetails[i][0];
-//    boolean hasSlave = false;
-//    byte type = 0;
-//    int j =0;                    // slave position along the path i
-//    decode(i);                  // activate select line of first module of the branch
-//    delay(50);                  //change accordingly
-//    resetDecoder();             // set low - select pin
-//    
-//    Wire.beginTransmission(11);  // check if the module is present
-//    if(Wire.endTransmission()==0){
-//      hasSlave = true;
-//    }
-//    else{
-//      hasSlave = false;
-//      branchDetails[i][1] = 0;
-//    }
-//     
-//    while(hasSlave){
-//      Wire.requestFrom(11, 1);    // request type from slave
-//      while(Wire.available())
-//      { 
-//        type = Wire.read();       // receive type
-//      }
-//      
-//      Wire.beginTransmission(11); // send address to set
-//      Wire.write(address); 
-//      Wire.endTransmission(); 
-//      
-//      Wire.beginTransmission(address); // activate the select line of next module
-//      Wire.write('B'); 
-//      Wire.endTransmission();
-//      
-//      delay(50);                  //change accordingly      
-//      
-//      Wire.beginTransmission(address); // set low - select line
-//      Wire.write('C'); 
-//      Wire.endTransmission(); 
-//      
-//      Wire.beginTransmission(11);  // check if the module is present
-//      if(Wire.endTransmission()==0){
-//        hasSlave = true;
-//      }
-//      
-//      updatedPC = false;
-//      slaveStructure[i][j][0] = address;
-//      slaveStructure[i][j][1] = type;
-//      slaveStructure[i][j][2] = 1;
-//      branchDetails[i][1] = j+1;
-//      address ++;      
-//      j++;
-//    }
-//  }
-//  resetDecoder();
-//}
-
-//NO NEED TO RESET AS ADDRESSING IS DONE BRANCH WISE
-// reset all the slaves in the system to default addresses
-//void resetAllSlaves(){
-//  for (int i = 0; i < 15; i++) {
-//    for (int i = 0; i < 3; i++) {
-//      if(slaveStructure[i][j][0] != 0){
-//        Wire.beginTransmission(slaveStructure[i][j][0]);
-//        Wire.write('R'); // command to reset to default address
-//        Wire.endTransmission();
-//        slaveStructure[i][j][0] = 0;
-//        slaveStructure[i][j][1] = 0;
-//      }
-//    }
-//  }
-//}
 
 // check whether there are new slaves added in run time
 boolean checkForNewSlaves(){
@@ -247,7 +168,7 @@ void updateAddressAllocation(){
     for(int k=j; k<slavesPerBranch; k++){
       if(slaveStructure[i][k][0] != 0){
         updatedPC = false;
-        slaveStructure[i][k][2] = slaveStructure[i][j][0];
+        slaveStructure[i][k][2] = slaveStructure[i][k][0];
       }
       else{           
         slaveStructure[i][k][2] = 0;
@@ -323,30 +244,4 @@ void sendStructure(){
   updatedPC = true;
   }
   
-//   if(slaveStructure[0][0][0] == 8){
-//    Wire.beginTransmission(8); // set low - select line
-//    Wire.write('s'); 
-//    Wire.endTransmission(); 
-//    
-//    delay(10000);
-//    
-//    Wire.beginTransmission(8); // set low - select line
-//    Wire.write('a1'); 
-//    Wire.endTransmission(); 
-//    
-//    delay(3000);
-//    
-//    Wire.beginTransmission(8); // set low - select line
-//    Wire.write('a2'); 
-//    Wire.endTransmission();
-//    
-//    delay(100);
-//    
-//    Wire.requestFrom(8, 1);    // request type from slave
-//    while(Wire.available())
-//    { 
-//      Serial.println(Wire.read());       // receive type
-//    }
-//    
-//  }
 }
