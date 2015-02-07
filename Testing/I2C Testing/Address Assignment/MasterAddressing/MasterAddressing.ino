@@ -158,13 +158,13 @@ void updateAddressAllocation(){
     decode(i);                  // activate select line of first module of the branch
     delay(50);                  //change accordingly
     resetDecoder();             // set low - select pin  
-    
+
     Wire.beginTransmission(11);  // check if a new module is present
     if(Wire.endTransmission()==0){
       hasSlave = true;
       newSlave = true;
     }
-    
+   
     if(!newSlave){
       Wire.beginTransmission(address);  // check if the module is present
       if(Wire.endTransmission()==0){
@@ -177,25 +177,28 @@ void updateAddressAllocation(){
     }
      
     while(hasSlave){
-      
+     
       if(newSlave){
         Wire.requestFrom(11, 1);    // request type from slave
         while(Wire.available())
         { 
           type = Wire.read();       // receive type
         }
-        
+        Serial.println(type);
         Wire.beginTransmission(11); // send address to set
         Wire.write(address); 
-        Wire.endTransmission(); 
+        Wire.endTransmission();
+       
+        slaveStructure[i][j][0] = address;
+        slaveStructure[i][j][1] = type; 
       }
       
       Wire.beginTransmission(address); // activate the select line of next module
       Wire.write('B'); 
       Wire.endTransmission();
-      
+     
       delay(50);                  //change accordingly      
-      
+       
       Wire.beginTransmission(address); // set low - select line
       Wire.write('C'); 
       Wire.endTransmission(); 
@@ -216,8 +219,6 @@ void updateAddressAllocation(){
         }
       }     
       
-      slaveStructure[i][j][0] = address;
-      slaveStructure[i][j][1] = type;
       branchDetails[i][1] = j+1;
       address ++;      
       j++;
@@ -259,11 +260,15 @@ void printStructure(){
     for(int j=0; j<3; j++){      
       Serial.print(slaveStructure[i][j][0]);
       Serial.print(" - ");
-      Serial.print(slaveStructure[i][j][0]);
+      Serial.print(slaveStructure[i][j][1]);
       Serial.print(" , ");
     }
     Serial.print(" terminal ");
     Serial.println(branchDetails[i][1]);
   }
   Serial.println();
+}
+
+/* Send Address Structure updates to PC */
+void sendStructure(){
 }
