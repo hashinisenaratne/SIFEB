@@ -1,10 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><Sifeb><Game><Id>001</Id><Stories><story><Image>Mwheels</Image><Text>STEP 1:
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu.</Text></story><story><Image>Mwheels</Image><Text>STEP 2:
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu.</Text></story><story><Image>Mwheels</Image><Text>STEP 3:
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu.</Text></story><story><Image>Mwheels</Image><Text>STEP 4:
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu.</Text></story><story><Image>Mwheels</Image><Text>STEP 5:
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu.</Text></story><story><Image>Mwheels</Image><Text>STEP 6:
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu.</Text></story><story><Image>Mwheels</Image><Text>STEP 7:
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu.</Text></story><story><Image>Mwheels</Image><Text>STEP 8:
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu.</Text></story><story><Image>Mwheels</Image><Text>STEP 9:
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu.</Text></story></Stories></Game></Sifeb>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><Sifeb><Game><Id>001</Id><Stories><story><Image>TreasureHunt</Image><Text>STEP 1:
+Hi! We are going for a treasure hunt. Treasure is very close to the bird. Let's get started...</Text><Image>game1</Image></story><story><Image>learn_002</Image><Text>Step 2:
+First of all check whether you have plugged the base module to the main module. You should be able to see 'Wheels' module under 'I Have' column.</Text><Image>game1</Image></story><story><Image>cap_004</Image><Text>STEP 3:
+Bird needs to turn right to see the treasure. Drag and drop 'Turn Right' block.</Text><Image>game1</Image></story><story><Image>treasure</Image><Text>Congratulations!!! You have completed Challenge - 1 successfully!</Text><Image>game1</Image></story></Stories></Game></Sifeb>

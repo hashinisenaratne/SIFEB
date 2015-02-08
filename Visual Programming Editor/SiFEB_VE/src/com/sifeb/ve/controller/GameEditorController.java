@@ -10,11 +10,14 @@ import com.sifeb.ve.handle.FileHandler;
 import com.sifeb.ve.resources.SifebUtil;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -23,7 +26,15 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -37,13 +48,13 @@ public class GameEditorController extends MainEditorController {
     @FXML
     Button prevBtn, nextBtn, learnBtn, challengeBtn;
     @FXML
-    ImageView gameImg;
-    @FXML
     TextArea gameText;
     @FXML
     Label progressLabel;
     @FXML
     ProgressBar progressBar;
+    @FXML
+    StackPane stackPane1, stackPane2;
     NodeList nodeList;
     FileHandler fileHandler;
     int storyCount, totalStories;
@@ -70,8 +81,6 @@ public class GameEditorController extends MainEditorController {
     }
 
     public Node getStory(int storyNumber) {
-        //  System.out.println(nodeList.item(3).getChildNodes().item(1).getTextContent());
-        //  System.out.println(nodeList.item(3).getChildNodes().item(0).getTextContent());
         return (Node) nodeList.item(storyNumber);
     }
 
@@ -89,11 +98,15 @@ public class GameEditorController extends MainEditorController {
         prevBtn.setDisable(true);
         String imgText = nodeList.item(storyCount - 1).getChildNodes().item(0).getTextContent();
         String storyText = nodeList.item(storyCount - 1).getChildNodes().item(1).getTextContent();
+        String gameImgText = nodeList.item(storyCount - 1).getChildNodes().item(2).getTextContent();
         gameText.setText(storyText);
         gameText.setWrapText(true);
+        gameImgText += ".png";
         imgText += ".png";
+        Image topImage = new Image("file:" + SifebUtil.GAME_IMG_DIR + gameImgText);
         Image img = new Image("file:" + SifebUtil.GAME_IMG_DIR + imgText);
-        gameImg.setImage(img);
+        stackPane1.setBackground(new Background(new BackgroundImage(topImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+        stackPane2.setBackground(new Background(new BackgroundImage(img, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
         gameText.setEditable(false);
 
     }
@@ -115,7 +128,9 @@ public class GameEditorController extends MainEditorController {
                     gameText.setText(storyText);
                     imgText += ".png";
                     Image img = new Image("file:" + SifebUtil.GAME_IMG_DIR + imgText);
-                    gameImg.setImage(img);
+                    //   stackPane1.setBackground(new Background(new BackgroundImage(img, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+                    stackPane2.setBackground(new Background(new BackgroundImage(img, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+
                     setProgressBar(storyCount);
 
                     if (storyCount - 1 == 0) {
@@ -144,7 +159,9 @@ public class GameEditorController extends MainEditorController {
                     gameText.setText(storyText);
                     imgText += ".png";
                     Image img = new Image("file:" + SifebUtil.GAME_IMG_DIR + imgText);
-                    gameImg.setImage(img);
+                    // stackPane1.setBackground(new Background(new BackgroundImage(img, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+                    stackPane2.setBackground(new Background(new BackgroundImage(img, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+
                     setProgressBar(storyCount);
 
                     if (storyCount == totalStories) {

@@ -5,6 +5,7 @@
  */
 package com.sifeb.ve;
 
+import com.sifeb.ve.handle.SoundHandler;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.scene.control.Label;
@@ -54,6 +55,7 @@ public class FeedBackLogger {
     public static void sendBadMessage(String message) {
         fbFace.setImage(sadFace);
         sendMessage(message);
+        SoundHandler.playErrorMusic();
 //        timer.schedule(new TimerTask() {
 //
 //            @Override

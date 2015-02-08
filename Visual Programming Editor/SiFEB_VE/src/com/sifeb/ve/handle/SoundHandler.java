@@ -55,5 +55,9 @@ public class SoundHandler {
         SoundHandler.musicOn = musicOn;
     }
     
+    public static void playErrorMusic() {
+        AudioClip aud = playAudioClip("error.wav", 1);
+    }
+    
     
 }
