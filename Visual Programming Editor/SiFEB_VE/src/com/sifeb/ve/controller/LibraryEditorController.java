@@ -75,6 +75,8 @@ public class LibraryEditorController implements Initializable {
     @FXML
     TextField capNameTextBox;
     @FXML
+    TextField capName2TextBox;
+    @FXML
     CheckBox capHasTest;
     @FXML
     TextField capTestTextBox;
@@ -113,6 +115,8 @@ public class LibraryEditorController implements Initializable {
     TextField devIdTextBox;
     @FXML
     TextField devNameTextBox;
+    @FXML
+    TextField devName2TextBox;
     @FXML
     Button devEditBtn;
     @FXML
@@ -246,7 +250,7 @@ public class LibraryEditorController implements Initializable {
     private void setEventHandlers() {
         capEditBtn.setOnAction((event) -> {
             Capability cp = showCapSelector("Select Capability to edit");
-            if(cp!=null){
+            if (cp != null) {
                 fillCapForm(cp);
             }
         });
@@ -551,6 +555,7 @@ public class LibraryEditorController implements Initializable {
         capIdTextBox.setDisable(true);
 
         capNameTextBox.setText(cap.getCapName(Locale.US));
+        capName2TextBox.setText(cap.getCapName(new Locale("si", "LK")));
         capTypeSelect.getSelectionModel().select(cap.getType());
 
         capHasTest.setSelected(cap.isHasTest());
@@ -603,6 +608,7 @@ public class LibraryEditorController implements Initializable {
         devSelect.setDisable(false);
         capIdTextBox.setText("");
         capNameTextBox.setText("");
+        capName2TextBox.setText("");
         capTypeSelect.getSelectionModel().selectFirst();
 
         capHasTest.setSelected(false);
@@ -635,6 +641,7 @@ public class LibraryEditorController implements Initializable {
 
         String capID = capIdTextBox.getText();
         String capName = capNameTextBox.getText();
+        String capName2 = capName2TextBox.getText();
         String capType = capTypeSelect.getValue();
         boolean hasTest = capHasTest.isSelected();
         String capTestCmd = "";
@@ -757,13 +764,26 @@ public class LibraryEditorController implements Initializable {
                 Files.copy(capDynamicImg.toPath(), new File(SifebUtil.DYNAMIC_IMG_DIR + capIDFull + ".gif").toPath(), StandardCopyOption.REPLACE_EXISTING);
             }
             names.put(Locale.US, capName);
+            if (capName2.isEmpty()) {
+                names.put(new Locale("si", "LK"), capName);
+            } else {
+                names.put(new Locale("si", "LK"), capName2);
+            }
             Capability newCap = new Capability(capIDFull, names, null, capType, capTestCmd, capCmd, capStopCmd, compType, capRespSize, capRefVal, capIDFull, hasTest);
             boolean isSuccess = fileHandler.writeToCapabilityFile(newCap);
 
-            if (isNewEntry) {
-                Device d = devList.get(devIdx);
-                d.addCapability(newCap);
+            Device d = devList.get(devIdx);
+            d.addCapability(newCap);
+            newCap.setDevice(d);
+            if (isNewEntry) {               
                 isSuccess = fileHandler.writeToDeviceFile(d);
+            } else {                
+                for (Capability cp : d.getCapabilities()) {
+                    if (cp.getCapID().equals(newCap.getCapID())) {
+                        d.removeCapability(cp);
+                        break;
+                    }
+                }
             }
 
             if (isSuccess) {
@@ -843,6 +863,7 @@ public class LibraryEditorController implements Initializable {
 
         String devID = devIdTextBox.getText();
         String devName = devNameTextBox.getText();
+        String devName2 = devName2TextBox.getText();
         String devType = devTypeSelect.getValue();
 
         if (isNewEntry) {
@@ -883,6 +904,11 @@ public class LibraryEditorController implements Initializable {
             //uploading images to the relevant directories
             Files.copy(devImg.toPath(), new File(SifebUtil.DEVICE_IMG_DIR + devIDFull + ".png").toPath(), StandardCopyOption.REPLACE_EXISTING);
             names.put(Locale.US, devName);
+            if (devName2.isEmpty()) {
+                names.put(new Locale("si", "LK"), devName);
+            } else {
+                names.put(new Locale("si", "LK"), devName2);
+            }
 
             Device newDev = new Device(devIDFull, names, 0, devType, devIDFull);
             if (!isNewEntry) {
@@ -920,6 +946,7 @@ public class LibraryEditorController implements Initializable {
         devIdTextBox.setEditable(true);
 
         devNameTextBox.setText("");
+        devName2TextBox.setText("");
         devTypeSelect.getSelectionModel().selectFirst();
 
         devImg = null;
@@ -951,6 +978,7 @@ public class LibraryEditorController implements Initializable {
         devIdTextBox.setDisable(true);
 
         devNameTextBox.setText(dev.getDeviceName(Locale.US));
+        devName2TextBox.setText(dev.getDeviceName(new Locale("si", "LK")));
         devTypeSelect.getSelectionModel().select(dev.getType());
 
         devImg = new File(SifebUtil.DEVICE_IMG_DIR + dev.getDeviceID() + ".png");
