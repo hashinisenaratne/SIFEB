@@ -7,12 +7,12 @@
 #define LED  15    //change accordingly
 #define SELECT_IN A3    //change accordingly
 #define SELECT_OUT A2    //change accordingly
-#define MOTOR1_1 = 8;
-#define MOTOR1_2 = 9;
-#define MOTOR1_PWM = 5; 
-#define MOTOR2_1 = 10;
-#define MOTOR2_2 = 11;
-#define MOTOR2_PWM = 6; 
+#define MOTOR1_1 8
+#define MOTOR1_2 9
+#define MOTOR1_PWM 5
+#define MOTOR2_1 10
+#define MOTOR2_2 11
+#define MOTOR2_PWM 6
 
 int mode = 1;  //initial mode
 boolean ledshow=false;
@@ -23,7 +23,8 @@ void setup()
 {
   pinMode(LED, OUTPUT);
   pinMode(SELECT_IN, INPUT);
-  pinMode(SELECT_OUT, OUTPUT);
+  pinMode(SELECT_OUT, OUTPUT);  
+  
   pinMode(MOTOR1_1,OUTPUT);
   pinMode(MOTOR1_2,OUTPUT);
   pinMode(MOTOR1_PWM,OUTPUT);
