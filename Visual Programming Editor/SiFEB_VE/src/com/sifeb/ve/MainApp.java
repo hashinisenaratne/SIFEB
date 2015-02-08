@@ -73,7 +73,6 @@ public class MainApp extends Application {
     public static void main(String[] args) {
 
         try {
-            System.out.println("iii " + 6);
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex1) {
             Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex1);

@@ -241,31 +241,14 @@ public class LibraryEditorController implements Initializable {
                 }
             }
         });
-//        capRespSizeTextBox.textProperty().addListener(new ChangeListener<String>() {
-//
-//            @Override
-//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//                try {
-//                    Integer.parseInt(newValue);
-//                } catch (NumberFormatException e) {
-//                    capRespSizeTextBox.setText(oldValue);
-//                }
-//            }
-//
-//        });
     }
 
     private void setEventHandlers() {
         capEditBtn.setOnAction((event) -> {
-//            refreshCapList();
-//            Optional<Capability> response = Dialogs.create()
-//                    .title("Edit capability")
-//                    .masthead("Select a capability to Edit")
-//                    .message("Select Capability:")
-//                    .showChoices(capList.values());
-//
-//            response.ifPresent(chosen -> fillCapForm(chosen));
-
+            Capability cp = showCapSelector("Select Capability to edit");
+            if(cp!=null){
+                fillCapForm(cp);
+            }
         });
 
         capDelBtn.setOnAction((event) -> {
@@ -561,6 +544,9 @@ public class LibraryEditorController implements Initializable {
         clearCapForm();
         isNewCap = false;
 
+        int devIdx = devList.indexOf(cap.getDevice());
+        devSelect.getSelectionModel().select(devIdx);
+        devSelect.setDisable(true);
         capIdTextBox.setText(cap.getCapID().substring(4));
         capIdTextBox.setDisable(true);
 
@@ -569,6 +555,33 @@ public class LibraryEditorController implements Initializable {
 
         capHasTest.setSelected(cap.isHasTest());
         capTestTextBox.setText(cap.getTestCommand());
+
+        capCmdTextBox.setText(cap.getExeCommand());
+        capStopCmdTextBox.setText(cap.getStopCommand());
+        capRefValTextBox.setText(cap.getRefValue());
+        capRespSizeTextBox.setText(cap.getRespSize());
+
+        String compType = cap.getCompType();
+        switch (compType) {
+            case "=":
+                compTypeSelect.getSelectionModel().select(0);
+                break;
+            case "!":
+                compTypeSelect.getSelectionModel().select(1);
+                break;
+            case "<":
+                compTypeSelect.getSelectionModel().select(2);
+                break;
+            case ",":
+                compTypeSelect.getSelectionModel().select(3);
+                break;
+            case ">":
+                compTypeSelect.getSelectionModel().select(4);
+                break;
+            case ".":
+                compTypeSelect.getSelectionModel().select(5);
+                break;
+        }
 
         capStaticImg = new File(SifebUtil.STATIC_IMG_DIR + cap.getCapID() + ".png");
         if (capStaticImg.exists()) {
@@ -587,6 +600,7 @@ public class LibraryEditorController implements Initializable {
 
     private void clearCapForm() {
         devSelect.getSelectionModel().clearSelection();
+        devSelect.setDisable(false);
         capIdTextBox.setText("");
         capNameTextBox.setText("");
         capTypeSelect.getSelectionModel().selectFirst();
@@ -683,7 +697,7 @@ public class LibraryEditorController implements Initializable {
             showErrorMessage(ERROR_TITLE, "Please enter a valid termination command");
             return;
         }
-        
+
         if (capType.equals(Capability.CAP_SENSE) || capType.equals(Capability.CAP_CONDITION)) {
             if (capRespSize.isEmpty()) {
                 showErrorMessage(ERROR_TITLE, "Please enter a valid response size");
@@ -705,7 +719,7 @@ public class LibraryEditorController implements Initializable {
             if (capRefVal.isEmpty()) {
                 showErrorMessage(ERROR_TITLE, "Please enter a valid reference value");
                 return;
-            }else {
+            } else {
                 try {
                     int refVal = Integer.parseInt(capRefVal);
                 } catch (NumberFormatException ex) {
