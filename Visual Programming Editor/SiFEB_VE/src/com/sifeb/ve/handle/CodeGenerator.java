@@ -174,7 +174,7 @@ public class CodeGenerator {
         //checking condition or sense
         instruction = 'c';
         address = conBlock.getCapability().getDevice().getAddress();
-        cmdChar = conBlock.getCapability().getStopCommand().charAt(0);
+        cmdChar = conBlock.getCapability().getExeCommand().charAt(0);
         char compType = conBlock.getCapability().getCompType().charAt(0);
         cmdArr2.add((byte) instruction);
         cmdArr2.add((byte) address);
@@ -186,16 +186,17 @@ public class CodeGenerator {
         }
         short respSize = Short.parseShort(conBlock.getCapability().getRespSize());
         byte[] respArr = shortToByteArray(respSize);
-        for(byte b:respArr){
-            cmdArr2.add(b);
-        }
+        cmdArr2.add(respArr[0]);
+//        for(byte b:respArr){
+//            cmdArr2.add(b);
+//        }
         int refVal = Integer.parseInt(conBlock.getCapability().getRefValue());
         if(conBlock.getCapability().getType().equals(Capability.CAP_CONDITION)){
             refVal = Integer.parseInt(conBlock.getTextField().getText());
         }
         byte[] refArr = intToByteArray(refVal);
-        for(byte b:refArr){
-            cmdArr2.add(b);
+        for(int i=0;i<respSize;i++){
+            cmdArr2.add(refArr[i]);
         }
         cmdArr2.add((byte) cmdChar);
         //prepending command length parameter
@@ -229,7 +230,7 @@ public class CodeGenerator {
         //checking condition or sense
         char instruction = 'c';
         int address = conBlock.getCapability().getDevice().getAddress();
-        char cmdChar = conBlock.getCapability().getStopCommand().charAt(0);
+        char cmdChar = conBlock.getCapability().getExeCommand().charAt(0);
         char compType = conBlock.getCapability().getCompType().charAt(0);
         cmdArr.add((byte) instruction);
         cmdArr.add((byte) address);
@@ -241,16 +242,17 @@ public class CodeGenerator {
         }
         short respSize = Short.parseShort(conBlock.getCapability().getRespSize());
         byte[] respArr = shortToByteArray(respSize);
-        for(byte b:respArr){
-            cmdArr.add(b);
-        }
+        cmdArr.add(respArr[0]);
+//        for(byte b:respArr){
+//            cmdArr.add(b);
+//        }
         int refVal = Integer.parseInt(conBlock.getCapability().getRefValue());
         if(conBlock.getCapability().getType().equals(Capability.CAP_CONDITION)){
             refVal = Integer.parseInt(conBlock.getTextField().getText());
         }
         byte[] refArr = intToByteArray(refVal);
-        for(byte b:refArr){
-            cmdArr.add(b);
+        for(int i=0;i<respSize;i++){
+            cmdArr.add(refArr[i]);
         }
         cmdArr.add((byte) cmdChar);
         //prepending command length parameter
@@ -289,7 +291,7 @@ public class CodeGenerator {
         //checking condition or sense
         char instruction = 'c';
         int address = conBlock.getCapability().getDevice().getAddress();
-        char cmdChar = conBlock.getCapability().getStopCommand().charAt(0);
+        char cmdChar = conBlock.getCapability().getExeCommand().charAt(0);
         char compType = conBlock.getCapability().getCompType().charAt(0);
         cmdArr.add((byte) instruction);
         cmdArr.add((byte) address);
@@ -301,16 +303,17 @@ public class CodeGenerator {
         }
         short respSize = Short.parseShort(conBlock.getCapability().getRespSize());
         byte[] respArr = shortToByteArray(respSize);
-        for(byte b:respArr){
-            cmdArr.add(b);
-        }
+        cmdArr.add(respArr[0]);
+//        for(byte b:respArr){
+//            cmdArr.add(b);
+//        }
         int refVal = Integer.parseInt(conBlock.getCapability().getRefValue());
         if(conBlock.getCapability().getType().equals(Capability.CAP_CONDITION)){
             refVal = Integer.parseInt(conBlock.getTextField().getText());
         }
         byte[] refArr = intToByteArray(refVal);
-        for(byte b:refArr){
-            cmdArr.add(b);
+        for(int i=0;i<respSize;i++){
+            cmdArr.add(refArr[i]);
         }
         cmdArr.add((byte) cmdChar);
         //prepending command length parameter
