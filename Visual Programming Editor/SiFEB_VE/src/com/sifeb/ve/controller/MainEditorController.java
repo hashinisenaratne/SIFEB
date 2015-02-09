@@ -18,8 +18,8 @@ import com.sifeb.ve.RepeatBlock;
 import static com.sifeb.ve.controller.ComPortController.serialPort;
 import com.sifeb.ve.handle.CodeGenerator;
 import com.sifeb.ve.resources.Strings;
-import java.io.IOException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -38,6 +38,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -102,10 +103,12 @@ public class MainEditorController implements Initializable {
     Label connectedText;
     @FXML
     ImageView connectedImg;
+    @FXML
+    ToolBar toolBar;
 
 //    ArrayList<Holder> holders;
     Holder lastHolder;
-    Image playImg, clearImg;
+    Image playImg, clearImg, uploadImg;
     CodeGenerator codeGenerator;
     //temp
     ArrayList<Device> devices;
@@ -169,6 +172,7 @@ public class MainEditorController implements Initializable {
         fbText.setBackground(new Background(new BackgroundImage(img, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
         playImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/play.png"));
         clearImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/clear.png"));
+        uploadImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/upload.png"));
         FeedBackLogger.sendWelcomeMessage();
     }
 
@@ -181,9 +185,13 @@ public class MainEditorController implements Initializable {
     }
 
     public void setTextStrings() {
+        toolBar.setMinWidth(440);
+        runBtn.setMinWidth(140);
         runBtn.setText(Strings.getString("btn.run"));
-        //  uploadBtn.setText(Strings.getString("btn.upload"));
+        uploadBtn.setMinWidth(140);
+        uploadBtn.setText(Strings.getString("btn.upload"));
         clearBtn.setText(Strings.getString("btn.clear"));
+        clearBtn.setMinWidth(140);
         haveLabel.setText(Strings.getString("label.have"));
         doLabel.setText(Strings.getString("label.do"));
 
@@ -316,7 +324,7 @@ public class MainEditorController implements Initializable {
                         FeedBackLogger.sendGoodMessage("Program is running!");
                         ComPortController.writeComPort("r");
                     } else {
-                        FeedBackLogger.sendBadMessage(Strings.getString("message.testlater") + "...");
+                        FeedBackLogger.sendBadMessage("We will check later!!!");
                         // ... user cancelled, reset form to default
                     }
 
@@ -335,8 +343,8 @@ public class MainEditorController implements Initializable {
                     Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
                     dlg.setResizable(false);
                     dlg.setIconifiable(false);
-                    dlg.setGraphic(new ImageView(playImg));
-                    dlg.setMasthead(Strings.getString("message.runtheprogram"));
+                    dlg.setGraphic(new ImageView(uploadImg));
+                    dlg.setMasthead(Strings.getString("message.uploadtheprogram"));
                     Dialog.Actions.YES.textProperty().set(Strings.getString("btn.yes"));
                     Dialog.Actions.NO.textProperty().set(Strings.getString("btn.no"));
                     dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
@@ -375,7 +383,7 @@ public class MainEditorController implements Initializable {
                         }
 
                     } else {
-                        FeedBackLogger.sendBadMessage(Strings.getString("message.testlater") + "...");
+                        FeedBackLogger.sendBadMessage("We will upload later!!!");
                         // ... user cancelled, reset form to default
                     }
 

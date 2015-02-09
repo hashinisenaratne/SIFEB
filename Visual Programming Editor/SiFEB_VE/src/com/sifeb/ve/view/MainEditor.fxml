@@ -119,21 +119,25 @@
                               <Font name="Arial Bold" size="22.0" />
                            </font>
                         </Button>
-                  <Button fx:id="clearBtn" layoutX="397.0" layoutY="11.0" minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="CLEAR ALL">
-                     <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="uploadBtn" layoutX="528.0" layoutY="12.0" minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="UPLOAD">
-                     <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font>
-                  </Button>
-                        <Button fx:id="runBtn" layoutX="657.0" layoutY="12.0" minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="RUN">
+                  <ToolBar fx:id="toolBar" layoutX="404.0" prefHeight="60.0" prefWidth="325.0">
+                    <items>
+                        <Button fx:id="clearBtn" minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="CLEAR ALL">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
                         </Button>
+                        <Button fx:id="uploadBtn" minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="UPLOAD">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Button>
+                              <Button fx:id="runBtn" minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="RUN">
+                                 <font>
+                                    <Font name="System Bold" size="16.0" />
+                                 </font>
+                              </Button>
+                    </items>
+                  </ToolBar>
                      </children>
             </AnchorPane>
             </top>

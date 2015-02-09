@@ -25,11 +25,11 @@ public class ComPortController {
 
     public static void main(String[] args) {
 
-        listComPorts();
-        // getBluetooth();
-        System.out.println("sssssss - ");
-        //checkConnectedPort();
-        System.out.println(checkConnectedPort());
+//        listComPorts();
+        //        // getBluetooth();
+        //        System.out.println("sssssss - ");
+        //        //checkConnectedPort();
+        //        System.out.println(checkConnectedPort());
     }
 
     public static void setBlockCreator(BlockCreator blkCreator) {
@@ -247,6 +247,24 @@ public class ComPortController {
             this.blkC = blkC;
         }
 
+        public String processByteArray(byte[] readByte) {
+
+            String readValue = "";
+
+            String command = Byte.toString(readByte[0]);
+            readValue += command + ",";
+            int address = Byte.toUnsignedInt(readByte[1]);
+            String addressValue = Integer.toString(address);
+            readValue += addressValue + ",";
+            int type = Byte.toUnsignedInt(readByte[2]);
+            String typeValue = Integer.toString(type);
+            readValue += typeValue + ",";
+            String endHash = new String(readByte, 2, 2);
+            readValue += endHash;
+
+            return readValue;
+        }
+
         @Override
         public void serialEvent(SerialPortEvent event) {
 
@@ -276,21 +294,20 @@ public class ComPortController {
                 try {
 
                     byte[] readByte = serialPort.readBytes(5);
-                    System.out.println(readByte);
-                    String readValue = new String(readByte);
 
-                    System.out.println("read val1 - " + readValue);
+                    String readValue = processByteArray(readByte);
+                    //  System.out.println("read val1 - " + readValue);
 
                     while (!readValue.contains("#")) {
 
                         System.out.println("innnnnn");
                         //System.out.println("read val1 - " + readValue);
-                       blkC.addMessagetoQueue(readValue);
+                        blkC.addMessagetoQueue(readValue);
 
                         System.out.println("added to queue");
                         //  readByte = serialPort.readBytes(5);
-                        readValue = serialPort.readString(5);//new String(readBytes);
-
+                        readByte = serialPort.readBytes(5);//new String(readBytes);
+                        readValue = processByteArray(readByte);
                         System.out.println("read val while loop - " + readValue);
                     }
 

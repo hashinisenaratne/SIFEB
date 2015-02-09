@@ -103,49 +103,36 @@ public class BlockCreator {
 
         while (messageQueue.size() > 0) {
 
-            String readValue = messageQueue.get(0);
+            String[] readValue = messageQueue.get(0).split(",");
 
             System.out.println("process Msg - " + readValue);
-            if (readValue.contains("#")) {
-                char r = readValue.charAt(0);
-//                if (r == '0') {
-//                    mainEditor.ackReceived = true;
-//                } else {
-//                    Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
-//                    dlg.setResizable(false);
-//                    dlg.setIconifiable(false);
-//                    dlg.setMasthead("Something went wrong!!!");
-//                    dlg.setContent("I2C returned status " + r);
-//                    dlg.getActions().add(Dialog.Actions.CLOSE);
-//                }
-            } else {
-                //  System.out.println(readValue);
-                char command = readValue.charAt(0);
 
-                String address = Integer.toString((int) readValue.charAt(1));
-                String type = Integer.toString((int) readValue.charAt(2));
+            char command = readValue[0].charAt(0);
 
-                System.out.println("address is - " + address);
+            //  String address = Integer.toString((int) readValue.charAt(1));
+            // String type = Integer.toString((int) readValue.charAt(2));
+            // System.out.println("address is - " + address);
+            //       System.out.println("command - " + command + " add - " + address);
+            switch (command) {
+                case 'c':
+                    String address = readValue[1];
+                    String type = readValue[2];
+                    if (!mainEditor.checkDeviceAddress(address)) {
+                        this.createDeviceBlock(type, address);
+                    }
+                    break;
+                case 'd':
+                    String disAddress = readValue[1];
+                    this.removeBlock(disAddress);
+                    break;
+                case 'h':
+//                    int tmpVl = Integer.parseInt(address);
+//                    System.out.println("tmpVl - " + tmpVl);
+//                    this.mainEditor.hValue = tmpVl;
 
-                //       System.out.println("command - " + command + " add - " + address);
-                switch (command) {
-                    case 'c':
-                        if (!mainEditor.checkDeviceAddress(address)) {
-                            this.createDeviceBlock(type, address);
-                        }
-                        break;
-                    case 'd':
-                        this.removeBlock(address);
-                        break;
-                    case 'h':
-                        int tmpVl = Integer.parseInt(address);
-                        System.out.println("tmpVl - " + tmpVl);
-                        this.mainEditor.hValue = tmpVl;
-
-                        break;
-                }
-
+                    break;
             }
+
             messageQueue.remove(0);
         }
 
