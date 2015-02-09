@@ -6,7 +6,9 @@
 package com.sifeb.ve;
 
 import com.sifeb.ve.controller.ComPortController;
+import com.sifeb.ve.handle.CodeGenerator;
 import com.sifeb.ve.resources.Strings;
+import java.util.Arrays;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -110,7 +112,7 @@ public class ActionBlock extends HBox {
             dlg.setResizable(false);
             dlg.setIconifiable(false);
             dlg.setGraphic(new ImageView(cp.getStaticImage()));
-            dlg.setMasthead(Strings.getString("message.liketocheck")+" \'"+cp.getCapName()+"\'?");
+            dlg.setMasthead(Strings.getString("message.liketocheck") + " \'" + cp.getCapName() + "\'?");
             Dialog.Actions.YES.textProperty().set(Strings.getString("btn.yes"));
             Dialog.Actions.NO.textProperty().set(Strings.getString("btn.no"));
             dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
@@ -119,7 +121,12 @@ public class ActionBlock extends HBox {
 
             if (response == Dialog.Actions.YES) {
                 FeedBackLogger.sendGoodMessage(Strings.getString("message.testing") + " \'" + cp.getCapName() + "\' " + Strings.getString("message.capability") + "...");
-                ComPortController.writeComPort(ComPortController.port, cp.getDevice().getAddress(), cp.getTestCommand());
+
+                CodeGenerator codeGenerator = new CodeGenerator();
+                byte[] sendingData = codeGenerator.generateTestBlockCode(cp.getBlock());
+                ComPortController.writeComPort("d");
+                ComPortController.writeProgram(sendingData);
+
             } else {
                 FeedBackLogger.sendBadMessage(Strings.getString("message.testlater") + "...");
                 // ... user cancelled, reset form to default
@@ -130,7 +137,7 @@ public class ActionBlock extends HBox {
     public void addToPane(Pane parent) {
         parent.getChildren().add(this);
     }
-    
+
     public void removeMe() {
         Pane node = (Pane) this.getParent();
         node.getChildren().remove(this);

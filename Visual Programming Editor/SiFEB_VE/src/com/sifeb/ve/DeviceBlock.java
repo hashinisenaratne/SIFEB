@@ -6,7 +6,9 @@
 package com.sifeb.ve;
 
 import com.sifeb.ve.controller.ComPortController;
+import com.sifeb.ve.handle.CodeGenerator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
@@ -50,7 +52,7 @@ public final class DeviceBlock extends Pane {
     public DeviceBlock(Device device) {
 
         this.device = device;
-        
+
         switch (this.device.getType()) {
             case Device.DEV_ACTUATOR:
                 bckImg = new Image(ACTUATOR_BCK);
@@ -141,7 +143,12 @@ public final class DeviceBlock extends Pane {
         });
         btn.setOnAction((ActionEvent event) -> {
             FeedBackLogger.sendGoodMessage("We are showing the " + this.device.getDeviceName());
-            ComPortController.writeComPort(ComPortController.port, this.device.getAddress(), DeviceBlock.SHOW_COMMAND);
+
+            CodeGenerator codeGenerator = new CodeGenerator();
+            byte[] sendingData = codeGenerator.generateTestDeviceCode(this.device);
+            ComPortController.writeComPort("d");
+            ComPortController.writeProgram(sendingData);
+
         });
     }
 

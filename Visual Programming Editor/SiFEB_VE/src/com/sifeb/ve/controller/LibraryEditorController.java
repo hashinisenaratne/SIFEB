@@ -217,8 +217,8 @@ public class LibraryEditorController implements Initializable {
             public void changed(ObservableValue<? extends Number> observable,
                     Number oldValue, Number newValue) {
                 if (newValue.intValue() > oldValue.intValue()) {
-                    if (capTestTextBox.getText().length() >= 1) {
-                        capTestTextBox.setText(capTestTextBox.getText().substring(0, 1));
+                    if (capTestTextBox.getText().length() >= 2) {
+                        capTestTextBox.setText(capTestTextBox.getText().substring(0, 2));
                     }
                 }
             }
@@ -228,8 +228,8 @@ public class LibraryEditorController implements Initializable {
             public void changed(ObservableValue<? extends Number> observable,
                     Number oldValue, Number newValue) {
                 if (newValue.intValue() > oldValue.intValue()) {
-                    if (capCmdTextBox.getText().length() >= 1) {
-                        capCmdTextBox.setText(capCmdTextBox.getText().substring(0, 1));
+                    if (capCmdTextBox.getText().length() >= 2) {
+                        capCmdTextBox.setText(capCmdTextBox.getText().substring(0, 2));
                     }
                 }
             }
@@ -239,8 +239,8 @@ public class LibraryEditorController implements Initializable {
             public void changed(ObservableValue<? extends Number> observable,
                     Number oldValue, Number newValue) {
                 if (newValue.intValue() > oldValue.intValue()) {
-                    if (capStopCmdTextBox.getText().length() >= 1) {
-                        capStopCmdTextBox.setText(capStopCmdTextBox.getText().substring(0, 1));
+                    if (capStopCmdTextBox.getText().length() >= 2) {
+                        capStopCmdTextBox.setText(capStopCmdTextBox.getText().substring(0, 2));
                     }
                 }
             }
