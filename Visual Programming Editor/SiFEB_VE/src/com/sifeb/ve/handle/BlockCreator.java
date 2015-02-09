@@ -62,7 +62,7 @@ public class BlockCreator {
             mainEditor.addCapabilityBlock(cap);
         }
     }
-    
+
     public void addLevel2Capabilities() {
         String[] level2Caps = {"cap_def3"};
         for (String capId : level2Caps) {
@@ -70,7 +70,7 @@ public class BlockCreator {
             mainEditor.addCapabilityBlock(cap);
         }
     }
-    
+
     public void addLevel3Capabilities() {
         String[] level3Caps = {"cap_def3", "cap_def4"};
         for (String capId : level3Caps) {
@@ -82,10 +82,10 @@ public class BlockCreator {
     // sends an integer value
     public void createDeviceBlock(String id, String address) {
         String fileName = "dev_" + id;
-        Device device = fileHandler.readFromDeviceFile(fileName,address);
+        Device device = fileHandler.readFromDeviceFile(fileName, address);
         mainEditor.addDeviceBlock(device);
 
-        for(Capability cap:device.getCapabilities()){
+        for (Capability cap : device.getCapabilities()) {
             mainEditor.addCapabilityBlock(cap);
         }
 
@@ -123,12 +123,16 @@ public class BlockCreator {
                 char command = readValue.charAt(0);
 
                 String address = Integer.toString((int) readValue.charAt(1));
+                String type = Integer.toString((int) readValue.charAt(2));
+
                 System.out.println("address is - " + address);
 
                 //       System.out.println("command - " + command + " add - " + address);
                 switch (command) {
                     case 'c':
-                        this.createDeviceBlock(address, address);
+                        if (!mainEditor.checkDeviceAddress(address)) {
+                            this.createDeviceBlock(type, address);
+                        }
                         break;
                     case 'd':
                         this.removeBlock(address);

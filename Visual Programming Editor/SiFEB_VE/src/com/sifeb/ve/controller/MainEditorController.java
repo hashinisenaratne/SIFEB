@@ -71,7 +71,7 @@ public class MainEditorController implements Initializable {
     @FXML
     Button addHolderBtn;
     @FXML
-    Button runBtn, clearBtn;
+    Button runBtn, clearBtn, uploadBtn;
     @FXML
     VBox devicesBox;
     @FXML
@@ -182,6 +182,7 @@ public class MainEditorController implements Initializable {
 
     public void setTextStrings() {
         runBtn.setText(Strings.getString("btn.run"));
+        //  uploadBtn.setText(Strings.getString("btn.upload"));
         clearBtn.setText(Strings.getString("btn.clear"));
         haveLabel.setText(Strings.getString("label.have"));
         doLabel.setText(Strings.getString("label.do"));
@@ -299,32 +300,84 @@ public class MainEditorController implements Initializable {
 
                 @Override
                 public void run() {
-//                    runProgram();
-                    byte[] sendingData = codeGenerator.generateCode(editorBox);
 
-                    ComPortController.removeEventListener();
+                    Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
+                    dlg.setResizable(false);
+                    dlg.setIconifiable(false);
+                    dlg.setGraphic(new ImageView(playImg));
+                    dlg.setMasthead(Strings.getString("message.runtheprogram"));
+                    Dialog.Actions.YES.textProperty().set(Strings.getString("btn.yes"));
+                    Dialog.Actions.NO.textProperty().set(Strings.getString("btn.no"));
+                    dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
 
-                    for (int i = 0; i < 5; i++) {
+                    Action response = dlg.show();
 
-                        try {
-                            ComPortController.writeComPort("u");
-                            int size = sendingData.length;
-                            serialPort.writeByte((byte) size);
-                            ComPortController.writeProgram(sendingData);
-                            byte[] receivedData = ComPortController.read(size);
-
-                            if (Arrays.equals(receivedData, sendingData)) {
-                                System.out.println("done");
-                                System.out.println(i);
-                                break;
-                            }
-                        } catch (SerialPortException ex) {
-                            Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-
+                    if (response == Dialog.Actions.YES) {
+                        FeedBackLogger.sendGoodMessage("Program is running!");
+                        ComPortController.writeComPort("r");
+                    } else {
+                        FeedBackLogger.sendBadMessage(Strings.getString("message.testlater") + "...");
+                        // ... user cancelled, reset form to default
                     }
 
-                    ComPortController.setEventListener();
+                }
+            });
+        });
+
+        uploadBtn.setOnAction((ActionEvent event) -> {
+
+            Platform.runLater(new Runnable() {
+
+                @Override
+                public void run() {
+//                    runProgram();
+
+                    Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
+                    dlg.setResizable(false);
+                    dlg.setIconifiable(false);
+                    dlg.setGraphic(new ImageView(playImg));
+                    dlg.setMasthead(Strings.getString("message.runtheprogram"));
+                    Dialog.Actions.YES.textProperty().set(Strings.getString("btn.yes"));
+                    Dialog.Actions.NO.textProperty().set(Strings.getString("btn.no"));
+                    dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
+
+                    Action response = dlg.show();
+
+                    if (response == Dialog.Actions.YES) {
+
+                        byte[] sendingData = codeGenerator.generateCode(editorBox);
+                        ComPortController.removeEventListener();
+                        boolean success = false;
+
+                        for (int i = 0; i < 5; i++) {
+                            try {
+                                ComPortController.writeComPort("u");
+                                int size = sendingData.length;
+                                serialPort.writeByte((byte) size);
+                                ComPortController.writeProgram(sendingData);
+                                byte[] receivedData = ComPortController.read(size);
+
+                                if (Arrays.equals(receivedData, sendingData)) {
+                                    success = true;
+                                    break;
+                                }
+                            } catch (SerialPortException ex) {
+                                Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
+                        }
+                        ComPortController.setEventListener();
+
+                        if (success) {
+                            FeedBackLogger.sendGoodMessage("Program is sucessfully uploaded to SiFEB!");
+                        } else {
+                            FeedBackLogger.sendBadMessage("Program did not upload successfully!");
+                        }
+
+                    } else {
+                        FeedBackLogger.sendBadMessage(Strings.getString("message.testlater") + "...");
+                        // ... user cancelled, reset form to default
+                    }
 
                 }
             });
@@ -753,5 +806,18 @@ public class MainEditorController implements Initializable {
 
     public VBox getEditorBox() {
         return editorBox;
+    }
+
+    public boolean checkDeviceAddress(String address) {
+
+        boolean isSameAddress = false;
+        for (Device device : devices) {
+            String devAd = Integer.toString(device.getAddress());
+            if (devAd.equals(address)) {
+                isSameAddress = true;
+                break;
+            }
+        }
+        return isSameAddress;
     }
 }

@@ -10,6 +10,7 @@ package com.sifeb.ve.controller;
  * @author Hashini Senaratne
  */
 import com.sifeb.ve.handle.BlockCreator;
+import java.util.Arrays;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -252,58 +253,50 @@ public class ComPortController {
             System.out.println("%%%%%%%%%%%%% - event is - " + event);
 
             if (event.isRXCHAR()) {//If data is available
-/*
-                 if (event.getEventValue() == 10) {//Check bytes count in the input buffer
+
+                // int bufferSize = event.getEventValue();
+                /*
+                 if (bufferSize > 0) {//Check bytes count in the input buffer
                  //Read data, if 10 bytes available 
                  try {
-                 byte buffer[] = serialPort.readBytes(10);
+                 byte buffer[] = serialPort.readBytes(bufferSize);
+
+                 System.out.println("Buffer received");
+
+                 for (int i = 0; i < buffer.length; i++) {
+                 System.out.println((char) buffer[i]);
+                 }
+                 // System.out.println(buffer);
+
                  } catch (SerialPortException ex) {
                  System.out.println(ex);
                  }
-                 } */
+                 }
+                 */
+                try {
 
-                int bufferSize = event.getEventValue();
+                    byte[] readByte = serialPort.readBytes(5);
+                    System.out.println(readByte);
+                    String readValue = new String(readByte);
 
-                if (bufferSize > 0) {//Check bytes count in the input buffer
-                    //Read data, if 10 bytes available 
-                    try {
-                        byte buffer[] = serialPort.readBytes(bufferSize);
+                    System.out.println("read val1 - " + readValue);
 
-                        System.out.println("Buffer received");
+                    while (!readValue.contains("#")) {
 
-                        for (int i = 0; i < buffer.length; i++) {
-                            System.out.println((char)buffer[i]);
-                        }
-                        // System.out.println(buffer);
+                        System.out.println("innnnnn");
+                        //System.out.println("read val1 - " + readValue);
+                       blkC.addMessagetoQueue(readValue);
 
-                    } catch (SerialPortException ex) {
-                        System.out.println(ex);
+                        System.out.println("added to queue");
+                        //  readByte = serialPort.readBytes(5);
+                        readValue = serialPort.readString(5);//new String(readBytes);
+
+                        System.out.println("read val while loop - " + readValue);
                     }
-                }
 
-//                try {
-//
-//                    byte[] readByte = serialPort.readBytes(4);
-//                    String readValue = new String(readByte);
-//                    System.out.println("read val - " + readValue);
-//
-//                    while (!readValue.contains("#")) {
-//
-//                        if (readValue.charAt(0) == 'h') {
-//                            int gh = readByte[1] & 0xFF;
-//                            blkC.mainEditor.hValue = gh;
-//                            System.out.println("gggggg- " + gh);
-//                        } else {
-//                            blkC.addMessagetoQueue(readValue);
-//                        }
-//
-//                        System.out.println("added to queue");
-//                        readValue = serialPort.readString(4);
-//                    }
-//
-//                } catch (SerialPortException ex) {
-//                    System.out.println(ex);
-//                }
+                } catch (SerialPortException ex) {
+                    System.out.println(ex);
+                }
             } else if (event.isCTS()) {//If CTS line has changed state
                 if (event.getEventValue() == 1) {//If line is ON
                     System.out.println("CTS - ON");
