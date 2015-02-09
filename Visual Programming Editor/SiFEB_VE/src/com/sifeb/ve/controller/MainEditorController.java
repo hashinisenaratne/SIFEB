@@ -15,6 +15,7 @@ import com.sifeb.ve.Holder;
 import com.sifeb.ve.IfBlock;
 import com.sifeb.ve.MainApp;
 import com.sifeb.ve.RepeatBlock;
+import static com.sifeb.ve.controller.ComPortController.serialPort;
 import com.sifeb.ve.handle.CodeGenerator;
 import com.sifeb.ve.resources.Strings;
 import java.io.IOException;
@@ -22,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,6 +53,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import jssc.SerialPortException;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 
@@ -102,7 +105,7 @@ public class MainEditorController implements Initializable {
 
 //    ArrayList<Holder> holders;
     Holder lastHolder;
-    Image playImg,clearImg;
+    Image playImg, clearImg;
     CodeGenerator codeGenerator;
     //temp
     ArrayList<Device> devices;
@@ -297,7 +300,32 @@ public class MainEditorController implements Initializable {
                 @Override
                 public void run() {
 //                    runProgram();
-                    codeGenerator.generateCode(editorBox);
+                    byte[] sendingData = codeGenerator.generateCode(editorBox);
+
+                    ComPortController.removeEventListener();
+
+                    for (int i = 0; i < 5; i++) {
+
+                        try {
+                            ComPortController.writeComPort("u");
+                            int size = sendingData.length;
+                            serialPort.writeByte((byte) size);
+                            ComPortController.writeProgram(sendingData);
+                            byte[] receivedData = ComPortController.read(size);
+
+                            if (Arrays.equals(receivedData, sendingData)) {
+                                System.out.println("done");
+                                System.out.println(i);
+                                break;
+                            }
+                        } catch (SerialPortException ex) {
+                            Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                    }
+
+                    ComPortController.setEventListener();
+
                 }
             });
         });
@@ -571,7 +599,7 @@ public class MainEditorController implements Initializable {
 
     public void sendCmd(int address, String message) {
         ackReceived = false;
-        ComPortController.writeComPort(ComPortController.port, address, message);
+        ComPortController.writeComPort(message);
         //    while(!ackReceived){}
 //        try {
 //            Thread.sleep(1500);

@@ -17,7 +17,7 @@ import jssc.*;
 
 public class ComPortController {
 
-    public static String port = "COM18";
+    public static String port = "COM20";
     public static SerialPort serialPort = new SerialPort(port);
     public static BlockCreator blkCreator;
     private static Semaphore writeLock = new Semaphore(1);
@@ -27,8 +27,8 @@ public class ComPortController {
         listComPorts();
         // getBluetooth();
         System.out.println("sssssss - ");
-        // checkConnectedPort();
-        // System.out.println(checkConnectedPort());
+        //checkConnectedPort();
+        System.out.println(checkConnectedPort());
     }
 
     public static void setBlockCreator(BlockCreator blkCreator) {
@@ -74,7 +74,14 @@ public class ComPortController {
                 String msg = "AreYouSiFEB?";
                 int inputByteSize = 1;
 
-                sport.writeBytes(msg.getBytes());
+                //sport.writeBytes(msg.getBytes());
+                //  sport.writeByte((byte) 'f');
+                System.out.println("openeddddd the port");
+
+                if (sport.isDSR()) {
+                    System.out.println("dsr have ");
+                    //read data
+                }
                 // byte[] buffer = serialPort.readBytes(inputByteSize);
 
 //                if (buffer.toString().equals("YesIamSiFEB")) {
@@ -95,6 +102,7 @@ public class ComPortController {
 
     public static void listComPorts() {
         String[] portNames = SerialPortList.getPortNames();
+
         for (int i = 0; i < portNames.length; i++) {
             System.out.println(portNames[i]);
         }
@@ -105,7 +113,7 @@ public class ComPortController {
         try {
             if (!serialPort.isOpened()) {
                 serialPort.openPort();
-                setEventListener(serialPort);
+                setEventListener();
                 System.out.println("opened the port");
                 serialPort.setParams(SerialPort.BAUDRATE_9600,
                         SerialPort.DATABITS_8,
@@ -135,22 +143,28 @@ public class ComPortController {
         }
     }
 
-    public static void setEventListener(SerialPort sport) {
+    public static void setEventListener() {
         try {
-            // openPort();
-
             int mask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR;//Prepare mask
-            sport.setEventsMask(mask);//Set mask
-            // ComPortEventListener listener=new ComPortEventListener();
+            serialPort.setEventsMask(mask);//Set mask
+            serialPort.addEventListener(new ComPortController.SerialPortReader(blkCreator));//Add SerialPortEventListener
 
-            sport.addEventListener(new ComPortController.SerialPortReader(blkCreator));//Add SerialPortEventListener
         } catch (SerialPortException ex) {
             Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public static String read(String port, int bytes) {
+    public static void removeEventListener() {
+        try {
+            serialPort.removeEventListener();
+        } catch (SerialPortException ex) {
+            Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static byte[] read(int bytes) {
         //  SerialPort serialPort = new SerialPort(port);
+
         try {
             //Open port
             openPort();
@@ -163,17 +177,28 @@ public class ComPortController {
             //Read the data of 10 bytes. Be careful with the method readBytes(), if the number of bytes in the input buffer
             //is less than you need, then the method will wait for the right amount. Better to use it in conjunction with the
             //interface SerialPortEventListener.
+            boolean data = serialPort.isDSR();
+            System.out.println("dataddd - " + data);
             byte[] buffer = serialPort.readBytes(bytes);
-            //Closing the port
-            // serialPort.closePort();
-            return buffer.toString();
+
+            System.out.println("Buffer received in serial read");
+
+            for (int i = 0; i < buffer.length; i++) {
+                System.out.println(buffer[i]);
+            }
+
+            data = serialPort.isDSR();
+
+            System.out.println("dataddd - " + data);
+
+            return buffer;
         } catch (SerialPortException ex) {
             System.out.println(ex);
         }
         return null;
     }
 
-    public static void writeComPort(String port, int address, String msg) {
+    public static void writeComPort(String msg) {
         try {
             // serialPort = new SerialPort(port);
             writeLock.acquire();
@@ -183,18 +208,8 @@ public class ComPortController {
         try {
             //Open port
             openPort();
-            //We expose the settings. You can also use this line - serialPort.setParams(9600, 8, 1, 0);
-//            serialPort.setParams(SerialPort.BAUDRATE_9600,
-//                    SerialPort.DATABITS_8,
-//                    SerialPort.STOPBITS_1,
-//                    SerialPort.PARITY_NONE);
-            //Writes data to port
             serialPort.writeBytes(msg.getBytes());
-            //serialPort.writeBytes((address + ":" + msg).getBytes());  // write to the port
-            //(10 + ":" + "t,1\n")
 
-            //Closing the port
-            // serialPort.closePort();
             System.out.println("wrote to the port");
         } catch (SerialPortException ex) {
             System.out.println(ex);
@@ -214,19 +229,7 @@ public class ComPortController {
         try {
             //Open port
             openPort();
-            //We expose the settings. You can also use this line - serialPort.setParams(9600, 8, 1, 0);
-//            serialPort.setParams(SerialPort.BAUDRATE_9600,
-//                    SerialPort.DATABITS_8,
-//                    SerialPort.STOPBITS_1,
-//                    SerialPort.PARITY_NONE);
-            //Writes data to port
-            // serialPort.writeBytes(msg.getBytes());
             serialPort.writeBytes(byteArray);
-            //serialPort.writeBytes((address + ":" + msg).getBytes());  // write to the port
-            //(10 + ":" + "t,1\n")
-
-            //Closing the port
-            // serialPort.closePort();
             System.out.println("wrote to the port");
         } catch (SerialPortException ex) {
             System.out.println(ex);
@@ -249,40 +252,58 @@ public class ComPortController {
             System.out.println("%%%%%%%%%%%%% - event is - " + event);
 
             if (event.isRXCHAR()) {//If data is available
+/*
+                 if (event.getEventValue() == 10) {//Check bytes count in the input buffer
+                 //Read data, if 10 bytes available 
+                 try {
+                 byte buffer[] = serialPort.readBytes(10);
+                 } catch (SerialPortException ex) {
+                 System.out.println(ex);
+                 }
+                 } */
 
-                if (event.getEventValue() == 10) {//Check bytes count in the input buffer
+                int bufferSize = event.getEventValue();
+
+                if (bufferSize > 0) {//Check bytes count in the input buffer
                     //Read data, if 10 bytes available 
                     try {
-                        byte buffer[] = serialPort.readBytes(10);
+                        byte buffer[] = serialPort.readBytes(bufferSize);
+
+                        System.out.println("Buffer received");
+
+                        for (int i = 0; i < buffer.length; i++) {
+                            System.out.println((char)buffer[i]);
+                        }
+                        // System.out.println(buffer);
+
                     } catch (SerialPortException ex) {
                         System.out.println(ex);
                     }
                 }
 
-                try {
-
-                    byte[] readByte = serialPort.readBytes(4);
-                    String readValue = new String(readByte);
-                    System.out.println("read val - " + readValue);
-
-                    while (!readValue.contains("#")) {
-
-                        if (readValue.charAt(0) == 'h') {
-                            int gh = readByte[1] & 0xFF;
-                            blkC.mainEditor.hValue = gh;
-                            System.out.println("gggggg- " + gh);
-                        } else {
-                            blkC.addMessagetoQueue(readValue);
-                        }
-
-                        System.out.println("added to queue");
-                        readValue = serialPort.readString(4);
-                    }
-
-                } catch (SerialPortException ex) {
-                    System.out.println(ex);
-                }
-
+//                try {
+//
+//                    byte[] readByte = serialPort.readBytes(4);
+//                    String readValue = new String(readByte);
+//                    System.out.println("read val - " + readValue);
+//
+//                    while (!readValue.contains("#")) {
+//
+//                        if (readValue.charAt(0) == 'h') {
+//                            int gh = readByte[1] & 0xFF;
+//                            blkC.mainEditor.hValue = gh;
+//                            System.out.println("gggggg- " + gh);
+//                        } else {
+//                            blkC.addMessagetoQueue(readValue);
+//                        }
+//
+//                        System.out.println("added to queue");
+//                        readValue = serialPort.readString(4);
+//                    }
+//
+//                } catch (SerialPortException ex) {
+//                    System.out.println(ex);
+//                }
             } else if (event.isCTS()) {//If CTS line has changed state
                 if (event.getEventValue() == 1) {//If line is ON
                     System.out.println("CTS - ON");
