@@ -46,13 +46,14 @@ void setup()
   pinMode(DECODER_3, OUTPUT);
   pinMode(DECODER_4, OUTPUT);
   
+  resetDecoder();
+  
   Wire.begin();
   Serial.begin(9600);
-  
-//  while(Serial.available() <= 0){
-//    continue;
-//  }
-//  Serial.read();
+  while(Serial.available() <= 0){
+    continue;
+  }
+  Serial.read();
   updateAddressAllocation();
   printStructure();
 }

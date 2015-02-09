@@ -26,6 +26,8 @@ void setup()
   Wire.onRequest(requestEvent);
   Serial.println("address 10");
   
+  delay(5000);
+  
   while (digitalRead(SELECT_IN) == HIGH) {
     delay(10);    //change accordingly
     Serial.println("address 10");
