@@ -16,7 +16,7 @@
 
 int mode = 1;  //initial mode
 boolean ledshow=false;
-byte type = 1;
+byte type = '1';
 byte address = 0;
 
 void setup()
@@ -38,6 +38,8 @@ void setup()
   Wire.onReceive(receiveEvent);   // register events
   Wire.onRequest(requestEvent);
   Serial.println("address 10");
+  
+  delay(5000);
   
   while (digitalRead(SELECT_IN) == HIGH) {
     delay(10);    //change accordingly
@@ -135,8 +137,7 @@ void requestEvent()
       break;
     case 2:
       break;
-    case 3:  
-      Wire.write(address);  // tempory
+    case 3:
       break;
     default:
       break;
@@ -231,11 +232,11 @@ void turnLeft(){
 }
 
 void stopMotors(){
-  digitalWrite(MOTOR1_PWM, LOW);
-  digitalWrite(MOTOR1_1, LOW);    
-  digitalWrite(MOTOR1_2, LOW);
-  digitalWrite(MOTOR2_PWM, LOW);
-  digitalWrite(MOTOR2_1, LOW);    
-  digitalWrite(MOTOR2_2, LOW);
+  digitalWrite(MOTOR1_PWM, HIGH);
+  digitalWrite(MOTOR1_1, HIGH);    
+  digitalWrite(MOTOR1_2, HIGH);
+  digitalWrite(MOTOR2_PWM, HIGH);
+  digitalWrite(MOTOR2_1, HIGH);    
+  digitalWrite(MOTOR2_2, HIGH);
 }
 
