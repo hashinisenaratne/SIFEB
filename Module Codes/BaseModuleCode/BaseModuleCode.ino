@@ -152,19 +152,19 @@ void show(){
 // action
 void act(int id){
     switch (id) {
-    case 1: forward();
+    case '1': forward();
       break;
-    case 2: reverse();
+    case '2': reverse();
       break;
-    case 3: turnRight();
+    case '3': turnRight();
       delay(3000);
       stopMotors();
       break;
-    case 4:  turnLeft();
+    case '4':  turnLeft();
       delay(3000);
       stopMotors();
       break;
-    case 5:  stopMotors();
+    case '5':  stopMotors();
       break;
     default:
       break;
@@ -174,19 +174,19 @@ void act(int id){
 // test
 void test(int id){
     switch (id) {
-    case 1: forward();
+    case '1': forward();
       delay(3000);
       stopMotors();
       break;
-    case 2: reverse();
+    case '2': reverse();
       delay(3000);
       stopMotors();
       break;
-    case 3: turnRight();
+    case '3': turnRight();
       delay(3000);
       stopMotors();
       break;
-    case 4:  turnLeft();
+    case '4':  turnLeft();
       delay(3000);
       stopMotors();
       break;
