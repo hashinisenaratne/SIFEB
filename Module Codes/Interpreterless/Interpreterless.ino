@@ -384,6 +384,7 @@ void runProgramme()
     {
      break;
     }
+    delay(10); //create a delay between I2C commands
   }
 }
 
