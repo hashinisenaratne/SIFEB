@@ -300,7 +300,7 @@ void loop() {
 
     case 'r':
       {
-        Serial.println("programme running");
+        //Serial.println("programme running");//Test
         runProgramme();
         break;
       }
@@ -367,7 +367,7 @@ void runProgramme()
     {
       instructionRegister[i] = program[instructionStartPositionCounter + i];
     }
-    Serial.print("IR :");
+    /*Serial.print("IR :");
     for(int i=0; i<20; i++)
     {
       Serial.print(instructionRegister[i]);
@@ -378,7 +378,7 @@ void runProgramme()
     {
       Serial.write(responseRegister[i]);
     }
-    Serial.println();
+    Serial.println();*/
     executeInstruction();
     if(!isProgrammeRunning)
     {
@@ -394,22 +394,22 @@ void executeInstruction()
   {
   case BasicInstruction : 
     {
-      Serial.println("Basic");
+      //Serial.println("Basic");//Test
       executeI2CForBasic();
       instructionStartPositionCounter+=instructionRegister[0];
       break; 
     }
   case ConditionalInstruction : 
     {
-      Serial.println("Conditional");
+      //Serial.println("Conditional");//Test
       if(executeI2CForConditional())
       {
-        Serial.println("TRUE");
+        //Serial.println("TRUE");//Test
         instructionStartPositionCounter+=instructionRegister[0];
       }
       else
       {
-        Serial.println("FALSE");
+        //Serial.println("FALSE");//Test
         int* jump = (int*)&instructionRegister[4];
         instructionStartPositionCounter += *jump;
       }
@@ -417,14 +417,14 @@ void executeInstruction()
     }
   case JumpInstruction : 
     {
-      Serial.println("Jump");
+      //Serial.println("Jump");//Test
       int* jump = (int*)&instructionRegister[2];
       instructionStartPositionCounter += *jump;
       break; 
     }
   case EndInstruction : 
     {
-      Serial.println("End");
+      //Serial.println("End");//Test
       isProgrammeRunning = false;
       break; 
     }
@@ -454,7 +454,7 @@ boolean executeI2CForConditional()
     responseRegister[i] = Wire.read();       // receive a byte
     i++;    
   }
-  Serial.println((int)responseRegister[1]);//test
+  //Serial.println((int)responseRegister[1]);//test
   return evaluateComparison();
 }
 
@@ -464,7 +464,7 @@ boolean evaluateComparison()
   {
   case Equal:
     {
-      Serial.println("Equal Check");
+      //Serial.println("Equal Check");//Test
       for(int i=responseRegister[0]; i>0; i--)
       {
         if(responseRegister[i] != instructionRegister[6+i])
@@ -476,7 +476,7 @@ boolean evaluateComparison()
     }
   case Inequal:
     {
-      Serial.println("Inequal Check");
+      //Serial.println("Inequal Check");//Test
       for(int i=responseRegister[0]; i>0; i--)
       {
         if(responseRegister[i] == instructionRegister[6+i])
@@ -488,7 +488,7 @@ boolean evaluateComparison()
     } 
   case GreaterThanOrEqual:
     {
-      Serial.println(">= Check");
+      //Serial.println(">= Check");//Test
       for(int i=responseRegister[0]; i>0; i--)
       {
         if((byte)responseRegister[i] < (byte)instructionRegister[6+i])
@@ -500,7 +500,7 @@ boolean evaluateComparison()
     } 
   case Greater:
     {
-      Serial.println("> Check");
+      //Serial.println("> Check");//Test
       for(int i=responseRegister[0]; i>0; i--)
       {
         if((byte)responseRegister[i] <= (byte)instructionRegister[6+i])
@@ -512,7 +512,7 @@ boolean evaluateComparison()
     }
   case LesserThanOrEqual:
     {
-      Serial.println("<= Check");
+      //Serial.println("<= Check");//Test
       for(int i=responseRegister[0]; i>0; i--)
       {
         if((byte)responseRegister[i] > (byte)instructionRegister[6+i])
@@ -524,7 +524,7 @@ boolean evaluateComparison()
     }
   case Lesser:
     {
-      Serial.println("< Check");
+      //Serial.println("< Check");//Test
       for(int i=responseRegister[0]; i>0; i--)
       {
         if((byte)responseRegister[i] >= (byte)instructionRegister[6+i])
