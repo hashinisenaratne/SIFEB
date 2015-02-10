@@ -16,8 +16,9 @@ NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
 int mode = 1;  //initial mode
 boolean ledshow=false;
-byte type = 1;
+byte type = '2';
 byte address = 0;
+byte distance;
 
 void setup()
 {
@@ -47,7 +48,11 @@ void setup()
 
 void loop()
 {
-  delay(10);    //change accordingly
+  delay(50);                      // Wait 50ms between pings (about 20 pings/sec). 29ms should be the shortest delay between pings.
+  unsigned int uS = sonar.ping(); // Send ping, get ping time in microseconds (uS).
+  distance = (byte)(uS / US_ROUNDTRIP_CM); // Convert ping time to distance in cm and print result (0 = outside set distance range)
+    //Serial.print(distance); // TESTING
+     // Serial.println("cm"); // TESTING
   
   if(ledshow == true){        //handling show command
     digitalWrite(LED, HIGH);
@@ -56,7 +61,7 @@ void loop()
     ledshow = false;
   }
   
-  Serial.println(address); // TESTING
+  //Serial.println(address); // TESTING
 }
 
 // function that executes whenever data is received from master
@@ -129,7 +134,6 @@ void receiveEvent(int howMany)
 void requestEvent()
 {
   Serial.println("write");
-  unsigned int uS;
   switch (mode) {
     case 1: 
       Wire.write(type); 
@@ -138,8 +142,11 @@ void requestEvent()
     case 2:
       break;
     case 3:    
-      uS = sonar.ping();  
-      Wire.write(uS / US_ROUNDTRIP_CM);  //sending distance 
+      if(distance == 0)
+      {
+      distance = 200;
+      }
+    Wire.write(distance);  //sending distance 
       break;
     default:
       break;
