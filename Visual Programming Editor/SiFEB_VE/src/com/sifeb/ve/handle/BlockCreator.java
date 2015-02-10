@@ -62,7 +62,7 @@ public class BlockCreator {
             mainEditor.addCapabilityBlock(cap);
         }
     }
-    
+
     public void addLevel2Capabilities() {
         String[] level2Caps = {"cap_def3"};
         for (String capId : level2Caps) {
@@ -70,7 +70,7 @@ public class BlockCreator {
             mainEditor.addCapabilityBlock(cap);
         }
     }
-    
+
     public void addLevel3Capabilities() {
         String[] level3Caps = {"cap_def3", "cap_def4"};
         for (String capId : level3Caps) {
@@ -82,10 +82,10 @@ public class BlockCreator {
     // sends an integer value
     public void createDeviceBlock(String id, String address) {
         String fileName = "dev_" + id;
-        Device device = fileHandler.readFromDeviceFile(fileName,address);
+        Device device = fileHandler.readFromDeviceFile(fileName, address);
         mainEditor.addDeviceBlock(device);
 
-        for(Capability cap:device.getCapabilities()){
+        for (Capability cap : device.getCapabilities()) {
             mainEditor.addCapabilityBlock(cap);
         }
 
@@ -103,45 +103,36 @@ public class BlockCreator {
 
         while (messageQueue.size() > 0) {
 
-            String readValue = messageQueue.get(0);
+            String[] readValue = messageQueue.get(0).split(",");
 
             System.out.println("process Msg - " + readValue);
-            if (readValue.contains("#")) {
-                char r = readValue.charAt(0);
-//                if (r == '0') {
-//                    mainEditor.ackReceived = true;
-//                } else {
-//                    Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
-//                    dlg.setResizable(false);
-//                    dlg.setIconifiable(false);
-//                    dlg.setMasthead("Something went wrong!!!");
-//                    dlg.setContent("I2C returned status " + r);
-//                    dlg.getActions().add(Dialog.Actions.CLOSE);
-//                }
-            } else {
-                //  System.out.println(readValue);
-                char command = readValue.charAt(0);
 
-                String address = Integer.toString((int) readValue.charAt(1));
-                System.out.println("address is - " + address);
+            char command = readValue[0].charAt(0);
 
-                //       System.out.println("command - " + command + " add - " + address);
-                switch (command) {
-                    case 'c':
-                        this.createDeviceBlock(address, address);
-                        break;
-                    case 'd':
-                        this.removeBlock(address);
-                        break;
-                    case 'h':
-                        int tmpVl = Integer.parseInt(address);
-                        System.out.println("tmpVl - " + tmpVl);
-                        this.mainEditor.hValue = tmpVl;
+            //  String address = Integer.toString((int) readValue.charAt(1));
+            // String type = Integer.toString((int) readValue.charAt(2));
+            // System.out.println("address is - " + address);
+            //       System.out.println("command - " + command + " add - " + address);
+            switch (command) {
+                case 'c':
+                    String address = readValue[1];
+                    String type = readValue[2];
+                    if (!mainEditor.checkDeviceAddress(address)) {
+                        this.createDeviceBlock(type, address);
+                    }
+                    break;
+                case 'd':
+                    String disAddress = readValue[1];
+                    this.removeBlock(disAddress);
+                    break;
+                case 'h':
+//                    int tmpVl = Integer.parseInt(address);
+//                    System.out.println("tmpVl - " + tmpVl);
+//                    this.mainEditor.hValue = tmpVl;
 
-                        break;
-                }
-
+                    break;
             }
+
             messageQueue.remove(0);
         }
 

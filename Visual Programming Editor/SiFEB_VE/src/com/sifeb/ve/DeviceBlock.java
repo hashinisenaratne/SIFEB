@@ -6,22 +6,25 @@
 package com.sifeb.ve;
 
 import com.sifeb.ve.controller.ComPortController;
+import com.sifeb.ve.controller.MainEditorController;
+import com.sifeb.ve.handle.BlockCreator;
 import com.sifeb.ve.handle.CodeGenerator;
 import java.util.ArrayList;
-import java.util.Arrays;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -42,12 +45,13 @@ public final class DeviceBlock extends Pane {
     private final Device device;
     private final Image bckImg;
     private Label name;
+    private Label devNum;
 
     private static final String ACTUATOR_BTN = "/com/sifeb/ve/images/MAPlay.png";
     private static final String ACTUATOR_BCK = "/com/sifeb/ve/images/MABackground.png";
     private static final String SENSOR_BTN = "/com/sifeb/ve/images/MSPlay.png";
     private static final String SENSOR_BCK = "/com/sifeb/ve/images/MSBackground.png";
-    private static final String SHOW_COMMAND = "g";
+    private static final String NUM_DEV_BCK = "/com/sifeb/ve/images/red-circle.png";
 
     public DeviceBlock(Device device) {
 
@@ -75,9 +79,12 @@ public final class DeviceBlock extends Pane {
         super.getChildren().add(this.btn);
 
         name = new Label();
+        devNum = new Label();
         setBlockText();
         setBlockLabel();
+        initDevNum();
         setEventHandlers();
+
     }
 
     public void setEventHandlers() {
@@ -98,6 +105,25 @@ public final class DeviceBlock extends Pane {
         name.relocate((bckImg.getWidth() * 0.3), 30);
         name.setAlignment(Pos.CENTER_RIGHT);
         super.getChildren().add(name);
+    }
+
+    private void initDevNum() {
+        devNum.setFont(new Font(16));
+        devNum.setTextFill(Color.web("#ffffff"));
+        devNum.setMinHeight(30);
+        devNum.setMinWidth(30);
+        devNum.relocate(bckImg.getWidth() - 10, (bckImg.getHeight() / 2) - 15);
+        Image img = new Image(getClass().getResourceAsStream(DeviceBlock.NUM_DEV_BCK));
+        BackgroundImage bImg = new BackgroundImage(img, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        devNum.setBackground(new Background(bImg));
+        devNum.setAlignment(Pos.CENTER);
+        devNum.setVisible(false);
+        super.getChildren().add(devNum);
+    }
+
+    public void setDevNum(int val, boolean show) {
+        devNum.setText(Integer.toString(val));
+        devNum.setVisible(show);
     }
 
     public Button setButton(String type, double width, double height) {

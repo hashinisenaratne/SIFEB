@@ -221,6 +221,7 @@ public class RootController implements Initializable {
             BlockCreator blkCreator = new BlockCreator(meCtrl);
 
             ComPortController.setBlockCreator(blkCreator);
+            ComPortController.writeComPort("s");
             // ComPortController.setEventListener();
             blkCreator.addDefaultCapabilities();
             if (ProgramLevel == 2) {
@@ -251,9 +252,9 @@ public class RootController implements Initializable {
             AnchorPane gameEditor = (AnchorPane) loader.load();
             geCtrl = loader.getController();
             BlockCreator blkCreator = new BlockCreator(geCtrl);
-
-            ComPortController.setBlockCreator(blkCreator);
             ComPortController.openPort();
+            ComPortController.setBlockCreator(blkCreator);
+            ComPortController.writeComPort("s");
             // ComPortController.setEventListener();
             blkCreator.addDefaultCapabilities();
             if (TutorialLevel == 2) {

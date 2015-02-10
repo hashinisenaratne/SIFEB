@@ -135,21 +135,30 @@
                                 <Font name="Arial Bold" size="22.0" />
                             </font>
                         </Button>
-                        <Button fx:id="runBtn" layoutX="442.0" layoutY="14.0" minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="RUN" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="442.0">
-                            <font>
-                                <Font name="System Bold" size="16.0" />
-                            </font>
-                        </Button>
                         <Button fx:id="challengeBtn" layoutX="262.0" layoutY="9.0" mnemonicParsing="false" onAction="#goToChallenge" prefHeight="46.0" prefWidth="163.0" styleClass="breadcrumbs" text="Challenge - 1">
                             <font>
                                 <Font name="Arial Bold" size="22.0" />
                             </font>
                         </Button>
-                  <Button fx:id="clearBtn" layoutX="550.0" layoutY="14.0" minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="CLEAR ALL">
-                     <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font>
-                  </Button>
+                  <ToolBar fx:id="toolBar" layoutX="433.0" layoutY="7.0" prefHeight="40.0" prefWidth="200.0">
+                     <items>
+                        <Button fx:id="clearBtn" minWidth="32.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="50.0" text="CLEAR ALL">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="uploadBtn" minWidth="41.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="41.0" text="UPLOAD">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Button>
+                              <Button fx:id="runBtn" minWidth="41.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="41.0" text="RUN">
+                                  <font>
+                                      <Font name="System Bold" size="16.0" />
+                                  </font>
+                              </Button>
+                     </items>
+                  </ToolBar>
                     </children>
                 </AnchorPane>
             </top>

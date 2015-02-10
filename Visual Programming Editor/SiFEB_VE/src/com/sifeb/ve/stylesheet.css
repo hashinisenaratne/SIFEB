@@ -82,6 +82,19 @@ and open the template in the editor.
      -fx-background-color: linear-gradient(#0A0008, #61a2b1);
 }
 
+#uploadBtn {
+    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-cursor: hand;
+}
+#uploadBtn:hover {
+     -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+}
+#uploadBtn:pressed {
+     -fx-background-color: linear-gradient(#0A0008, #61a2b1);
+}
+
 #refreshConnBtn{
     -fx-background-radius: 15px;    
 }
