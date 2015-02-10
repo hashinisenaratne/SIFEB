@@ -235,6 +235,7 @@ char responseRegister[10]; //first byte contains the valid length
 char program[1000];
 int programLength;
 int instructionStartPositionCounter = 0;
+boolean isProgrammeRunning=false;
 
 void setup() {
   Wire.begin();
@@ -358,6 +359,7 @@ void receiveAndStoreProgram()
 
 void runProgramme()
 {
+  isProgrammeRunning = true;
   instructionStartPositionCounter = 0;
   while(true)
   {
@@ -378,6 +380,10 @@ void runProgramme()
     }
     Serial.println();
     executeInstruction();
+    if(!isProgrammeRunning)
+    {
+     break;
+    }
   }
 }
 
@@ -419,10 +425,7 @@ void executeInstruction()
   case EndInstruction : 
     {
       Serial.println("End");
-      while(true)
-      {
-        continue;
-      }
+      isProgrammeRunning = false;
       break; 
     }
   } 
@@ -443,14 +446,15 @@ void executeI2CForBasic()
 
 boolean executeI2CForConditional()
 {
-  Wire.requestFrom(instructionRegister[2], instructionRegister[5]);
+  Wire.requestFrom(instructionRegister[2], instructionRegister[6]);
   int i=1;
-  responseRegister[0] = instructionRegister[5];
+  responseRegister[0] = instructionRegister[6];
   while(Wire.available())    // slave may send less than requested
-  {     
+  {
     responseRegister[i] = Wire.read();       // receive a byte
     i++;    
   }
+  Serial.println((int)responseRegister[1]);//test
   return evaluateComparison();
 }
 
@@ -463,7 +467,7 @@ boolean evaluateComparison()
       Serial.println("Equal Check");
       for(int i=responseRegister[0]; i>0; i--)
       {
-        if(responseRegister[i] != instructionRegister[5+i])
+        if(responseRegister[i] != instructionRegister[6+i])
         {
           return false;
         }
@@ -475,7 +479,7 @@ boolean evaluateComparison()
       Serial.println("Inequal Check");
       for(int i=responseRegister[0]; i>0; i--)
       {
-        if(responseRegister[i] == instructionRegister[5+i])
+        if(responseRegister[i] == instructionRegister[6+i])
         {
           return false;
         }
@@ -487,7 +491,7 @@ boolean evaluateComparison()
       Serial.println(">= Check");
       for(int i=responseRegister[0]; i>0; i--)
       {
-        if(responseRegister[i] < instructionRegister[5+i])
+        if((byte)responseRegister[i] < (byte)instructionRegister[6+i])
         {
           return false;
         }
@@ -499,7 +503,7 @@ boolean evaluateComparison()
       Serial.println("> Check");
       for(int i=responseRegister[0]; i>0; i--)
       {
-        if(responseRegister[i] <= instructionRegister[5+i])
+        if((byte)responseRegister[i] <= (byte)instructionRegister[6+i])
         {
           return false;
         }
@@ -511,7 +515,7 @@ boolean evaluateComparison()
       Serial.println("<= Check");
       for(int i=responseRegister[0]; i>0; i--)
       {
-        if(responseRegister[i] > instructionRegister[5+i])
+        if((byte)responseRegister[i] > (byte)instructionRegister[6+i])
         {
           return false;
         }
@@ -523,7 +527,7 @@ boolean evaluateComparison()
       Serial.println("< Check");
       for(int i=responseRegister[0]; i>0; i--)
       {
-        if(responseRegister[i] >= instructionRegister[5+i])
+        if((byte)responseRegister[i] >= (byte)instructionRegister[6+i])
         {
           return false;
         }

@@ -1,0 +1,6 @@
+sonar check single including 'd'
+100 8 99 8 60 0 0 1 50
+
+sonar loop including 'u'
+117 10 8 99 8 60 0 0 1 50 2 101
+
