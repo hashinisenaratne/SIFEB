@@ -9,6 +9,7 @@ package com.sifeb.ve.controller;
  *
  * @author Hashini Senaratne
  */
+import com.sifeb.ve.MainApp;
 import com.sifeb.ve.handle.BlockCreator;
 import java.util.Arrays;
 import java.util.concurrent.Semaphore;
@@ -114,7 +115,7 @@ public class ComPortController {
         try {
             if (!serialPort.isOpened()) {
                 serialPort.openPort();
-                setEventListener();
+                //setEventListener();
                 System.out.println("opened the port");
                 serialPort.setParams(SerialPort.BAUDRATE_9600,
                         SerialPort.DATABITS_8,
@@ -146,57 +147,65 @@ public class ComPortController {
 
     public static void setEventListener() {
         try {
-            int mask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR;//Prepare mask
-            serialPort.setEventsMask(mask);//Set mask
-            serialPort.addEventListener(new ComPortController.SerialPortReader(blkCreator));//Add SerialPortEventListener
+            serialPort.removeEventListener();
 
         } catch (SerialPortException ex) {
             Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+
+                int mask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR;//Prepare mask
+                serialPort.setEventsMask(mask);//Set mask
+                System.out.println("block creator id" + blkCreator);
+
+                ComPortController.SerialPortReader reader = new ComPortController.SerialPortReader(ComPortController.blkCreator);
+                serialPort.addEventListener(reader);//Add SerialPortEventListener
+
+            } catch (SerialPortException ex) {
+                Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
     }
 
     public static void removeEventListener() {
         try {
             serialPort.removeEventListener();
+            System.out.println(" removed eventlisterner");
         } catch (SerialPortException ex) {
             Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public static byte[] read(int bytes) {
-        //  SerialPort serialPort = new SerialPort(port);
 
+        byte[] buffer = null;
         try {
-            //Open port
+            writeLock.acquire();
             openPort();
-
-            //We expose the settings. You can also use this line - serialPort.setParams(9600, 8, 1, 0);
             serialPort.setParams(SerialPort.BAUDRATE_9600,
                     SerialPort.DATABITS_8,
                     SerialPort.STOPBITS_1,
                     SerialPort.PARITY_NONE);
-            //Read the data of 10 bytes. Be careful with the method readBytes(), if the number of bytes in the input buffer
-            //is less than you need, then the method will wait for the right amount. Better to use it in conjunction with the
-            //interface SerialPortEventListener.
             boolean data = serialPort.isDSR();
             System.out.println("dataddd - " + data);
-            byte[] buffer = serialPort.readBytes(bytes);
-
+            buffer = serialPort.readBytes(bytes);
             System.out.println("Buffer received in serial read");
 
             for (int i = 0; i < buffer.length; i++) {
                 System.out.println(buffer[i]);
             }
-
             data = serialPort.isDSR();
-
             System.out.println("dataddd - " + data);
-
-            return buffer;
+            serialPort.purgePort(bytes);
         } catch (SerialPortException ex) {
             System.out.println(ex);
+        } finally {
+            writeLock.release();
+            return buffer;
+
         }
-        return null;
+
     }
 
     public static void writeComPort(String msg) {
@@ -241,27 +250,33 @@ public class ComPortController {
 
     static class SerialPortReader implements SerialPortEventListener {
 
-        public BlockCreator blkC;
+        public  BlockCreator blkC;
 
         public SerialPortReader(BlockCreator blkC) {
             this.blkC = blkC;
+
         }
 
         public String processByteArray(byte[] readByte) {
 
             String readValue = "";
 
-            String command = Byte.toString(readByte[0]);
+            String command = new String(new byte[]{readByte[0]});//Byte.toString(readByte[0]);
             readValue += command + ",";
             int address = Byte.toUnsignedInt(readByte[1]);
             String addressValue = Integer.toString(address);
             readValue += addressValue + ",";
-            int type = Byte.toUnsignedInt(readByte[2]);
-            String typeValue = Integer.toString(type);
-            readValue += typeValue + ",";
-            String endHash = new String(readByte, 2, 2);
-            readValue += endHash;
 
+            if (command.equals("c")) {
+                char type = (char) readByte[2];
+                System.out.println("dddddddd " + type);
+                // String typeValue = Integer.toString(type);
+                readValue += type + ",";
+            }
+
+            // String endHash = new String(readByte, 2, 2);
+            // readValue += endHash;
+            System.out.println("readValue after process00000 - " + readValue);
             return readValue;
         }
 
@@ -295,19 +310,22 @@ public class ComPortController {
 
                     byte[] readByte = serialPort.readBytes(5);
 
-                    String readValue = processByteArray(readByte);
                     //  System.out.println("read val1 - " + readValue);
+                    String command = new String(new byte[]{readByte[0]});// Byte.toString(readByte[0]);
+                    String readValue = "";
+                    // readValue = "c,34,4";
+                    while (!command.contains("#")) {
 
-                    while (!readValue.contains("#")) {
-
+                        readValue = processByteArray(readByte);
                         System.out.println("innnnnn");
-                        //System.out.println("read val1 - " + readValue);
-                        blkC.addMessagetoQueue(readValue);
+                        System.out.println("read val1 - " + readValue);
+                        System.out.println("blockcccccc - " + blkC);
+                        MainApp.blockCreator.addMessagetoQueue(readValue);
 
                         System.out.println("added to queue");
                         //  readByte = serialPort.readBytes(5);
                         readByte = serialPort.readBytes(5);//new String(readBytes);
-                        readValue = processByteArray(readByte);
+                        command = new String(new byte[]{readByte[0]});
                         System.out.println("read val while loop - " + readValue);
                     }
 

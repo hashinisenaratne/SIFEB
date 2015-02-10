@@ -6,6 +6,7 @@
 package com.sifeb.ve;
 
 import com.sifeb.ve.controller.ComPortController;
+import com.sifeb.ve.handle.BlockCreator;
 import com.sifeb.ve.handle.SoundHandler;
 import com.sifeb.ve.resources.Strings;
 import java.io.IOException;
@@ -42,6 +43,8 @@ public class MainApp extends Application {
     public static int InitialScreenWidth = 800;
     public static int InitialScreenHeight = 600;
     public static String appName = "SiFEB Visual Programming Editor";
+    public static BlockCreator blockCreator;
+   
 
     @Override
     public void start(Stage primaryStage) {

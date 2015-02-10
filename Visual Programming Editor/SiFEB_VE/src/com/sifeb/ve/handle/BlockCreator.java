@@ -116,6 +116,7 @@ public class BlockCreator {
             switch (command) {
                 case 'c':
                     String address = readValue[1];
+                    System.out.println("add"+address);
                     String type = readValue[2];
                     if (!mainEditor.checkDeviceAddress(address)) {
                         this.createDeviceBlock(type, address);

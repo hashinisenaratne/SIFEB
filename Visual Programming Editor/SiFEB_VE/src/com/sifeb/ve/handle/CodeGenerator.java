@@ -75,6 +75,7 @@ public class CodeGenerator {
 //    }
     public byte[] generateCode(VBox editorBox) {
         ArrayList<Byte> bytes = generateByteList(editorBox);
+        bytes.add((byte) 2);
         bytes.add((byte) 'e');
         byte[] byteArray = new byte[bytes.size()];
 

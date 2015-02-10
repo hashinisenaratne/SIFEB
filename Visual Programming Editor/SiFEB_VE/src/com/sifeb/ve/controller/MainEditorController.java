@@ -294,6 +294,7 @@ public class MainEditorController implements Initializable {
                 ComPortController.closePort();
                 Thread.sleep(2000);
                 ComPortController.openPort();
+                ComPortController.setEventListener();
                 checkConnection(false);
             } catch (InterruptedException ex) {
                 Logger.getLogger(RootController.class.getName()).log(Level.SEVERE, null, ex);
@@ -354,27 +355,40 @@ public class MainEditorController implements Initializable {
                     if (response == Dialog.Actions.YES) {
                         
                         byte[] sendingData = codeGenerator.generateCode(editorBox);
+                        System.out.println("byte array------");
+
+                        for (int i = 0; i < sendingData.length; i++) {
+                            System.out.println(sendingData[i]);
+                        }
+                        System.out.println(sendingData.toString());
                         ComPortController.removeEventListener();
                         boolean success = false;
                         
-                        for (int i = 0; i < 5; i++) {
+                        for (int i = 0; i < 1; i++) {
                             try {
+                                System.out.println("try - " + i);
                                 ComPortController.writeComPort("u");
                                 int size = sendingData.length;
                                 serialPort.writeByte((byte) size);
                                 ComPortController.writeProgram(sendingData);
-                                byte[] receivedData = ComPortController.read(size);
                                 
+                                try {
+                                    Thread.sleep(5000);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                /*byte[] receivedData = ComPortController.read(size);
+
                                 if (Arrays.equals(receivedData, sendingData)) {
                                     success = true;
                                     break;
-                                }
+                                 } */
                             } catch (SerialPortException ex) {
                                 Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             
                         }
-                        ComPortController.setEventListener();
+                        //  ComPortController.setEventListener();
                         
                         if (success) {
                             FeedBackLogger.sendGoodMessage("Program is sucessfully uploaded to SiFEB!");
@@ -853,6 +867,8 @@ public class MainEditorController implements Initializable {
     
     public boolean checkDeviceAddress(String address) {
         
+        System.out.println("from check method");
+        System.out.println(this);
         boolean isSameAddress = false;
         for (Device device : devices) {
             String devAd = Integer.toString(device.getAddress());
