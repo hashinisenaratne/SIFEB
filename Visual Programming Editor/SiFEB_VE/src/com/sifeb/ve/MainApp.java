@@ -24,7 +24,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
- *
+ * This holds the application
  * @author Udith Arosha
  * @author Hashini Senaratne
  */

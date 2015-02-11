@@ -33,6 +33,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
+ * This class is used to hold any block which is used in dragging
  *
  * @author Pubudu
  */
@@ -115,7 +116,7 @@ public class Holder extends Pane {
                 String dbStr = event.getDragboard().getString();
                 if (dbStr.contains(Capability.CAP_ACTION) || dbStr.contains(Capability.CAP_CONTROL) || dbStr.contains(Capability.CAP_IFELSE)) {
                     event.acceptTransferModes(TransferMode.COPY);
-                } 
+                }
             }
             event.consume();
         });
@@ -218,10 +219,8 @@ public class Holder extends Pane {
         this.mainCtrl.addHolderAfterMe(this, (VBox) this.getParent(), false);
         if (draggedBlock.getCapability().getType().equals(Capability.CAP_ACTION)) {
             this.addElementToVbox(draggedBlock);
-            //  success = true;
         } else {
             this.mainCtrl.changeHolderType(this, (VBox) this.getParent(), draggedBlock);
-            //success = true;
         }
 
     }

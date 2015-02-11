@@ -14,7 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
 /**
- *
+ * This is the Device Class which is used for implementing any device module
  * @author Udith Arosha
  */
 public class Device {
@@ -44,14 +44,17 @@ public class Device {
         this.capabilities = new ArrayList<>();
     }
 
+    // returns the device Id
     public String getDeviceID() {
         return deviceID;
     }
 
+    // returns the device address
     public int getAddress() {
         return address;
     }
 
+    // returns the device type
     public String getType() {
         return type;
     }
@@ -108,10 +111,9 @@ public class Device {
     }
 
     public Block getCapabilityBlock(String capId) {
-        for (int i = 0; i < capabilities.size(); i++) {
-            if (capabilities.get(i).getCapID().equals(capId)) {
-                
-                return capabilities.get(i).cloneCapability().getBlock();
+        for (Capability capabilitie : capabilities) {
+            if (capabilitie.getCapID().equals(capId)) {
+                return capabilitie.cloneCapability().getBlock();
             }
         }
 

@@ -8,7 +8,6 @@ package com.sifeb.ve;
 import com.sifeb.ve.controller.ComPortController;
 import com.sifeb.ve.handle.CodeGenerator;
 import com.sifeb.ve.resources.Strings;
-import java.util.Arrays;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -24,12 +23,12 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Window;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 
 /**
+ * ActionBlock is an integration of a capability. This class allows to handle
+ * capability features such as testing capability.
  *
  * @author Pubudu
  */
@@ -61,20 +60,7 @@ public class ActionBlock extends HBox {
 
     }
 
-//    public void setShape(String type, Image fullBImg) {
-//        switch (type) {
-//            case "action":
-//            case "actionC":
-//            case "condition":
-//            case "sense":
-//                Rectangle r = new Rectangle(fullBImg.getWidth(), fullBImg.getHeight(), new ImagePattern(fullBImg));
-//                r.setArcHeight(20);
-//                r.setArcWidth(20);
-//                super.getChildren().add(r);
-//                break;
-//        }
-//
-//    }
+//set Test button configuration in Action Block
     public Button setTestButton(double width, double height) {
         Image btnImg = new Image(getClass().getResourceAsStream(ActionBlock.TEST_BTN));
 
@@ -92,6 +78,7 @@ public class ActionBlock extends HBox {
         return button;
     }
 
+    //Set events for buttons and testing the capability 
     public void setButtonEvents(Button btn, ImageView imgView) {
 
         btn.setOnMouseEntered((MouseEvent mouseEvent) -> {
@@ -129,7 +116,6 @@ public class ActionBlock extends HBox {
 
             } else {
                 FeedBackLogger.sendBadMessage(Strings.getString("message.testlater") + "...");
-                // ... user cancelled, reset form to default
             }
         });
     }

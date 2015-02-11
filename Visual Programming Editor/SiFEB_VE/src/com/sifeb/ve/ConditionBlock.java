@@ -19,6 +19,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 /**
+ * This is the ConditionalBlock which handles an Action with a termination
+ * condition
  *
  * @author Pubudu
  */
@@ -48,14 +50,17 @@ public class ConditionBlock extends Holder {
         addListeners();
     }
 
+    // adds a conditon
     public void addCondition(Node node) {
         condition.getChildren().add(node);
     }
 
+    // checks the condition
     public boolean hasCondition() {
         return (condition.getChildren().size() > 0);
     }
 
+    // remove current condition
     public void removeCurrentCondition() {
         condition.getChildren().remove(0);
     }

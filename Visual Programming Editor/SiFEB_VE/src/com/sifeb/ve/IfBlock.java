@@ -27,6 +27,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 /**
+ * This is used for If Block in the Visual Programming Editor
  *
  * @author Hashini
  */
@@ -218,25 +219,6 @@ public class IfBlock extends Holder {
             }
         });
 
-//        elseHolders.heightProperty().addListener(new ChangeListener<Number>() {
-//
-//            @Override
-//            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-//                ifHolders.setMinHeight((double) newValue);
-//                ifHolders.autosize();
-//            }
-//
-//        });
-//        
-//        ifHolders.heightProperty().addListener(new ChangeListener<Number>() {
-//
-//            @Override
-//            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-//                elseHolders.setMinHeight((double) newValue);
-//                elseHolders.autosize();
-//            }
-//
-//        });
     }
 
     private void changeBackToHolder() {

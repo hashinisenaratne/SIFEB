@@ -8,7 +8,7 @@ package com.sifeb.ve;
 import java.util.ArrayList;
 
 /**
- *
+ * This class is used to handle the game list in the system
  * @author Hashini Senaratne
  */
 public class GameList {
@@ -21,10 +21,12 @@ public class GameList {
         this.games = new ArrayList();
     }
 
+    // for adding a game
     public void addGame(String id, String file) {
         games.add(new Game(id, file));
     }
 
+    // return the game list
     public ArrayList<Game> getGames() {
         return games;
     }

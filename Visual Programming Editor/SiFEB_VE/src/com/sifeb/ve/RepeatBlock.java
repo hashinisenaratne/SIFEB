@@ -26,6 +26,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 /**
+ * This class is used for handling Repeat Blocks in the VPE
  *
  * @author Hashini
  */
@@ -77,7 +78,6 @@ public class RepeatBlock extends Holder {
         this.holders.setBackground(new Background(bckImg2, bckImg1));
         this.holders.relocate(0, 94);
         ((Pane) this.holders).getChildren().add(new Holder(mainCtrl));
-        //this.mainCtrl.addHolderAfterMe(this,false);
         super.getChildren().add(this.holders);
     }
 
@@ -156,7 +156,7 @@ public class RepeatBlock extends Holder {
                 }
             }
             event.setDropCompleted(success);
-            event.consume();            
+            event.consume();
             SoundHandler.playAudioClip("blockDrop.wav", 1);
         });
 
