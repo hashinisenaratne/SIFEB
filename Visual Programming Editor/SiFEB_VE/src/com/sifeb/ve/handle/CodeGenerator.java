@@ -303,14 +303,33 @@ public class CodeGenerator {
         char cmdChar = conBlock.getCapability().getExeCommand().charAt(0);
         char cmdChar1 = conBlock.getCapability().getExeCommand().charAt(1);
         char compType = conBlock.getCapability().getCompType().charAt(0);
+
+        switch (conBlock.getCapability().getCompType().charAt(0)) {
+
+            case '=':
+                compType = '!';
+                break;
+            case '!':
+                compType = '=';
+                break;
+            case '<':
+                compType = '.';
+                break;
+            case '>':
+                compType = ',';
+                break;
+            case '.':
+                compType = '<';
+                break;
+            case ',':
+                compType = '>';
+                break;
+        }
+
         cmdArr.add((byte) instruction);
         cmdArr.add((byte) address);
         cmdArr.add((byte) compType);
-        short jumpAdd = (short) (childArr.size() + 3);
-        byte[] jumpArr = shortToByteArray(jumpAdd);
-        for (byte b : jumpArr) {
-            cmdArr.add(b);
-        }
+
         short respSize = Short.parseShort(conBlock.getCapability().getRespSize());
         byte[] respArr = shortToByteArray(respSize);
         cmdArr.add(respArr[0]);
@@ -327,13 +346,19 @@ public class CodeGenerator {
         }
         cmdArr.add((byte) cmdChar);
         cmdArr.add((byte) cmdChar1);
+        short jumpAdd = (short) (childArr.size() + 4 + cmdArr.size() + 3);
+        byte[] jumpArr = shortToByteArray(jumpAdd);
+        int counter = 3;
+        for (byte b : jumpArr) {
+            cmdArr.add(counter++, b);
+        }
         //prepending command length parameter
         cmdArr.add(0, (byte) (cmdArr.size() + 1));
 
         //jump back instruction
         ArrayList<Byte> jumpBytes = new ArrayList<>();
         instruction = 'j';
-        jumpAdd = (short) (-childArr.size() - 13);
+        jumpAdd = (short) (-childArr.size() - cmdArr.size());
         jumpBytes.add((byte) instruction);
         jumpArr = shortToByteArray(jumpAdd);
         for (byte b : jumpArr) {
@@ -370,11 +395,11 @@ public class CodeGenerator {
         cmdArr.add((byte) instruction);
         cmdArr.add((byte) address);
         cmdArr.add((byte) compType);
-        short jumpAdd = (short) (ifArr.size() + 3);
-        byte[] jumpArr = shortToByteArray(jumpAdd);
-        for (byte b : jumpArr) {
-            cmdArr.add(b);
-        }
+//        short jumpAdd = (short) (ifArr.size() + 4);
+//        byte[] jumpArr = shortToByteArray(jumpAdd);
+//        for (byte b : jumpArr) {
+//            cmdArr.add(b);
+//        }
         short respSize = Short.parseShort(conBlock.getCapability().getRespSize());
         byte[] respArr = shortToByteArray(respSize);
         cmdArr.add(respArr[0]);
@@ -391,13 +416,20 @@ public class CodeGenerator {
         }
         cmdArr.add((byte) cmdChar);
         cmdArr.add((byte) cmdChar1);
+        short jumpAdd = (short) (ifArr.size() + 4 + cmdArr.size() + 3);
+        byte[] jumpArr = shortToByteArray(jumpAdd);
+        int counter = 3;
+        for (byte b : jumpArr) {
+            cmdArr.add(counter++, b);
+
+        }
         //prepending command length parameter
         cmdArr.add(0, (byte) (cmdArr.size() + 1));
 
         //jump forward instruction
         ArrayList<Byte> jumpBytes = new ArrayList<>();
         instruction = 'j';
-        jumpAdd = (short) (elseArr.size());
+        jumpAdd = (short) (elseArr.size() + 4);
         jumpBytes.add((byte) instruction);
         jumpArr = shortToByteArray(jumpAdd);
         for (byte b : jumpArr) {

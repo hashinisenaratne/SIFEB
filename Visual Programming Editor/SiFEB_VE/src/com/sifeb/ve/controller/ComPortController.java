@@ -250,7 +250,7 @@ public class ComPortController {
 
     static class SerialPortReader implements SerialPortEventListener {
 
-        public  BlockCreator blkC;
+        public BlockCreator blkC;
 
         public SerialPortReader(BlockCreator blkC) {
             this.blkC = blkC;

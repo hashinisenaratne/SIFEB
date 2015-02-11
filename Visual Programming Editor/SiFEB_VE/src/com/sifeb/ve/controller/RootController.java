@@ -113,6 +113,7 @@ public class RootController implements Initializable {
                 ComPortController.closePort();
                 Thread.sleep(2000);
                 ComPortController.openPort();
+                ComPortController.setEventListener();
             } catch (InterruptedException ex) {
                 Logger.getLogger(RootController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -226,7 +227,6 @@ public class RootController implements Initializable {
             ComPortController.setBlockCreator(MainApp.blockCreator);
             ComPortController.setEventListener();
             ComPortController.writeComPort("s");
-            // ComPortController.setEventListener();
             MainApp.blockCreator.addDefaultCapabilities();
             if (ProgramLevel == 2) {
                 MainApp.blockCreator.addLevel2Capabilities();
