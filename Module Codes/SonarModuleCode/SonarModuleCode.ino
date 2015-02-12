@@ -146,7 +146,7 @@ void requestEvent()
       {
       distance = 200;
       }
-    Wire.write(distance);  //sending distance 
+      Wire.write(distance);  //sending distance 
       break;
     default:
       break;
@@ -161,10 +161,10 @@ void show(){
 // action
 void act(int id){
     switch (id) {
-    case 1:      
+    case '1':      
       digitalWrite(LED, HIGH);
       break;
-    case 2:    
+    case '2':    
       digitalWrite(LED, LOW);
       break;
     default:
@@ -175,9 +175,8 @@ void act(int id){
 // test
 void test(int id){
     switch (id) {
-    case 1: 
-      break;
-    case 2:
+    case '1':      
+      show();
       break;
     default:
       break;
