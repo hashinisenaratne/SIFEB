@@ -56,7 +56,7 @@ void loop()
   
   if(ledshow == true){        //handling show command
     digitalWrite(LED, HIGH);
-    delay(5000);               // wait for 5 seconds
+    delay(3000);               // wait for 5 seconds
     digitalWrite(LED, LOW);
     ledshow = false;
   }

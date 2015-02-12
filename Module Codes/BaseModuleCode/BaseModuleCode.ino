@@ -61,7 +61,7 @@ void loop()
   
   if(ledshow == true){        //handling show command
     digitalWrite(LED, HIGH);
-    delay(5000);               // wait for 5 seconds
+    delay(3000);               // wait for 5 seconds
     digitalWrite(LED, LOW);
     ledshow = false;
   }
@@ -199,9 +199,8 @@ void test(int id){
       break;
     case '5':  stopMotors();
       break;
-    case '6':
-      digitalWrite(LED, HIGH);      
-      needToStop = true;
+    case '6':      
+      show();
       break;
     default:
       break;
