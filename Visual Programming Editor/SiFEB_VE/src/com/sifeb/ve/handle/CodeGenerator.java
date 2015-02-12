@@ -12,74 +12,45 @@ import com.sifeb.ve.Device;
 import com.sifeb.ve.Holder;
 import com.sifeb.ve.IfBlock;
 import com.sifeb.ve.RepeatBlock;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 
 /**
+ * This class generates code for visual programming blocks
  *
  * @author Udith Arosha
  */
 public class CodeGenerator {
 
-    /*
-     #define BasicInstruction 'b'
-     #define ConditionalInstruction 'c'
-     #define JumpInstruction 'j'
-     #define EndInstruction 'e'
-     #define Equal '='
-     #define Inequal '!'
-     #define GreaterThanOrEqual '.'
-     #define Greater '>'
-     #define LesserThanOrEqual ','
-     #define Lesser '<'
+    /* INSTRUCTION DEFINITIONS
+     *
+     * BasicInstruction 'b'
+     * ConditionalInstruction 'c'
+     * JumpInstruction 'j'
+     * EndInstruction 'e'
+     * Equal '='
+     * Inequal '!'
+     * GreaterThanOrEqual '.'
+     * Greater '>'
+     * LesserThanOrEqual ','
+     * Lesser '<'
      */
     Image playImg;
 
-    public CodeGenerator() {
-//        playImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/play.png"));
-    }
-
-//    public static void main(String[] args) {
-//        CodeGenerator cg = new CodeGenerator();
-//        short i = 25;        
-//        byte[] bs = cg.shortToByteArray(i);
-//        
-//        for (int j = 0; j < bs.length; j++) {
-//            System.out.println(Byte.toUnsignedInt(bs[j]));            
-//        }
-//        
-//        i = 256;        
-//        bs = cg.shortToByteArray(i);
-//        
-//        for (int j = 0; j < bs.length; j++) {
-//            System.out.println(Byte.toUnsignedInt(bs[j]));            
-//        }
-//        i = -100;        
-//        bs = cg.shortToByteArray(i);
-//        
-//        for (int j = 0; j < bs.length; j++) {
-//            System.out.println(Byte.toUnsignedInt(bs[j]));            
-//        }
-////        System.out.println(Integer.toBinaryString(100));
-////        System.out.println(Integer.toBinaryString(-100));
-//    }
+    /*
+     * Returns the final code as an byte array
+     */
     public byte[] generateCode(VBox editorBox) {
         ArrayList<Byte> bytes = generateByteList(editorBox);
+        bytes.add((byte) 2);
         bytes.add((byte) 'e');
         byte[] byteArray = new byte[bytes.size()];
 
         for (int i = 0; i < bytes.size(); i++) {
-            byteArray[i] = bytes.get(i).byteValue();
+            byteArray[i] = bytes.get(i);
         }
 
         return byteArray;
@@ -105,6 +76,10 @@ public class CodeGenerator {
 //        }
     }
 
+    /*
+     * Calls the relevant code generation method
+     * based on holder type
+     */
     public ArrayList<Byte> generateByteList(VBox editorBox) {
 
         int numSteps = editorBox.getChildren().size();
@@ -134,6 +109,10 @@ public class CodeGenerator {
         return byteList;
     }
 
+    /*
+     * Generates code for normal holder and 
+     * returns as an ArrayList of bytes
+     */
     public ArrayList<Byte> generateBlockCode(Holder h) {
         if (h.getActions().getChildren().size() == 0) {
             return null;
@@ -157,59 +136,10 @@ public class CodeGenerator {
         return cmdArr;
     }
 
-    public byte[] generateTestBlockCode(Block acBlock) {
-
-        ArrayList<Byte> cmdArr = new ArrayList<>();
-
-        //executing action
-        char instruction = 'b';
-        int address = acBlock.getCapability().getDevice().getAddress();
-        char cmdChar = acBlock.getCapability().getTestCommand().charAt(0);
-        char cmdChar1 = acBlock.getCapability().getTestCommand().charAt(1);
-
-        cmdArr.add((byte) instruction);
-        cmdArr.add((byte) address);
-        cmdArr.add((byte) cmdChar);
-        cmdArr.add((byte) cmdChar1);
-
-        //prepending command length parameter
-        cmdArr.add(0, (byte) (cmdArr.size() + 1));
-
-        byte[] byteArray = new byte[cmdArr.size()];
-
-        for (int i = 0; i < cmdArr.size(); i++) {
-            byteArray[i] = cmdArr.get(i).byteValue();
-        }
-
-        return byteArray;
-
-    }
-
-    public byte[] generateTestDeviceCode(Device device) {
-
-        ArrayList<Byte> cmdArr = new ArrayList<>();
-
-        //executing action
-        char instruction = 'b';
-        int address = device.getAddress();
-        char cmdChar = 's';
-        cmdArr.add((byte) instruction);
-        cmdArr.add((byte) address);
-        cmdArr.add((byte) cmdChar);
-
-        //prepending command length parameter
-        cmdArr.add(0, (byte) (cmdArr.size() + 1));
-
-        byte[] byteArray = new byte[cmdArr.size()];
-
-        for (int i = 0; i < cmdArr.size(); i++) {
-            byteArray[i] = cmdArr.get(i).byteValue();
-        }
-
-        return byteArray;
-
-    }
-
+    /*
+     * Generates code for conditioned holder and 
+     * returns as an ArrayList of bytes
+     */
     public ArrayList<Byte> generateConditionBlockCode(ConditionBlock cb) {
         if ((cb.getActions().getChildren().size() == 0) || (cb.getCondition().getChildren().size() == 0)) {
             return null;
@@ -287,6 +217,10 @@ public class CodeGenerator {
         return cmdArr1;
     }
 
+    /*
+     * Recursively generates code for repeat holder and 
+     * returns as an ArrayList of bytes
+     */
     public ArrayList<Byte> generateRepeatBlockCode(RepeatBlock rb) {
         if ((rb.getActions().getChildren().size() == 0) || (rb.getCondition().getChildren().size() == 0)
                 || rb.getHolders().getChildren().size() == 0) {
@@ -302,14 +236,33 @@ public class CodeGenerator {
         char cmdChar = conBlock.getCapability().getExeCommand().charAt(0);
         char cmdChar1 = conBlock.getCapability().getExeCommand().charAt(1);
         char compType = conBlock.getCapability().getCompType().charAt(0);
+
+        switch (conBlock.getCapability().getCompType().charAt(0)) {
+
+            case '=':
+                compType = '!';
+                break;
+            case '!':
+                compType = '=';
+                break;
+            case '<':
+                compType = '.';
+                break;
+            case '>':
+                compType = ',';
+                break;
+            case '.':
+                compType = '<';
+                break;
+            case ',':
+                compType = '>';
+                break;
+        }
+
         cmdArr.add((byte) instruction);
         cmdArr.add((byte) address);
         cmdArr.add((byte) compType);
-        short jumpAdd = (short) (childArr.size() + 3);
-        byte[] jumpArr = shortToByteArray(jumpAdd);
-        for (byte b : jumpArr) {
-            cmdArr.add(b);
-        }
+
         short respSize = Short.parseShort(conBlock.getCapability().getRespSize());
         byte[] respArr = shortToByteArray(respSize);
         cmdArr.add(respArr[0]);
@@ -326,13 +279,19 @@ public class CodeGenerator {
         }
         cmdArr.add((byte) cmdChar);
         cmdArr.add((byte) cmdChar1);
+        short jumpAdd = (short) (childArr.size() + 4 + cmdArr.size() + 3);
+        byte[] jumpArr = shortToByteArray(jumpAdd);
+        int counter = 3;
+        for (byte b : jumpArr) {
+            cmdArr.add(counter++, b);
+        }
         //prepending command length parameter
         cmdArr.add(0, (byte) (cmdArr.size() + 1));
 
         //jump back instruction
         ArrayList<Byte> jumpBytes = new ArrayList<>();
         instruction = 'j';
-        jumpAdd = (short) (-childArr.size() - 13);
+        jumpAdd = (short) (-childArr.size() - cmdArr.size());
         jumpBytes.add((byte) instruction);
         jumpArr = shortToByteArray(jumpAdd);
         for (byte b : jumpArr) {
@@ -348,6 +307,10 @@ public class CodeGenerator {
         return cmdArr;
     }
 
+    /*
+     * Recursively generates code for If-Else holder and 
+     * returns as an ArrayList of bytes
+     */
     public ArrayList<Byte> generateIfBlockCode(IfBlock ib) {
         if ((ib.getActions().getChildren().size() == 0) || (ib.getCondition().getChildren().size() == 0)
                 || ib.getIfHolders().getChildren().size() == 0) {
@@ -369,17 +332,9 @@ public class CodeGenerator {
         cmdArr.add((byte) instruction);
         cmdArr.add((byte) address);
         cmdArr.add((byte) compType);
-        short jumpAdd = (short) (ifArr.size() + 3);
-        byte[] jumpArr = shortToByteArray(jumpAdd);
-        for (byte b : jumpArr) {
-            cmdArr.add(b);
-        }
         short respSize = Short.parseShort(conBlock.getCapability().getRespSize());
         byte[] respArr = shortToByteArray(respSize);
         cmdArr.add(respArr[0]);
-//        for(byte b:respArr){
-//            cmdArr.add(b);
-//        }
         int refVal = Integer.parseInt(conBlock.getCapability().getRefValue());
         if (conBlock.getCapability().getType().equals(Capability.CAP_CONDITION)) {
             refVal = Integer.parseInt(conBlock.getTextField().getText());
@@ -390,13 +345,20 @@ public class CodeGenerator {
         }
         cmdArr.add((byte) cmdChar);
         cmdArr.add((byte) cmdChar1);
+        short jumpAdd = (short) (ifArr.size() + 4 + cmdArr.size() + 3);
+        byte[] jumpArr = shortToByteArray(jumpAdd);
+        int counter = 3;
+        for (byte b : jumpArr) {
+            cmdArr.add(counter++, b);
+
+        }
         //prepending command length parameter
         cmdArr.add(0, (byte) (cmdArr.size() + 1));
 
         //jump forward instruction
         ArrayList<Byte> jumpBytes = new ArrayList<>();
         instruction = 'j';
-        jumpAdd = (short) (elseArr.size());
+        jumpAdd = (short) (elseArr.size() + 4);
         jumpBytes.add((byte) instruction);
         jumpArr = shortToByteArray(jumpAdd);
         for (byte b : jumpArr) {
@@ -412,7 +374,71 @@ public class CodeGenerator {
 
         return cmdArr;
     }
+    
+    /*
+     * Generates code for real-time capability demostration
+     */
+    public byte[] generateTestBlockCode(Block acBlock) {
 
+        ArrayList<Byte> cmdArr = new ArrayList<>();
+
+        //executing action
+        char instruction = 'b';
+        int address = acBlock.getCapability().getDevice().getAddress();
+        char cmdChar = acBlock.getCapability().getTestCommand().charAt(0);
+        char cmdChar1 = acBlock.getCapability().getTestCommand().charAt(1);
+
+        cmdArr.add((byte) instruction);
+        cmdArr.add((byte) address);
+        cmdArr.add((byte) cmdChar);
+        cmdArr.add((byte) cmdChar1);
+
+        //prepending command length parameter
+        cmdArr.add(0, (byte) (cmdArr.size() + 1));
+
+        byte[] byteArray = new byte[cmdArr.size()];
+
+        for (int i = 0; i < cmdArr.size(); i++) {
+            byteArray[i] = cmdArr.get(i);
+        }
+
+        return byteArray;
+
+    }
+
+    /*
+     * Generates code for device identification
+     */
+    public byte[] generateTestDeviceCode(Device device) {
+
+        ArrayList<Byte> cmdArr = new ArrayList<>();
+
+        //executing action
+        char instruction = 'b';
+        int address = device.getAddress();
+        char cmdChar = 's';
+        cmdArr.add((byte) instruction);
+        cmdArr.add((byte) address);
+        cmdArr.add((byte) cmdChar);
+
+        //prepending command length parameter
+        cmdArr.add(0, (byte) (cmdArr.size() + 1));
+
+        byte[] byteArray = new byte[cmdArr.size()];
+
+        for (int i = 0; i < cmdArr.size(); i++) {
+            byteArray[i] = cmdArr.get(i);
+        }
+
+        return byteArray;
+
+    }
+
+    /////////// SUPPORT FUNCTIONS //////////////
+    
+    /*
+     * Converts a short into 2-byte array
+     */
     private byte[] shortToByteArray(short i) {
         ByteBuffer bbf = ByteBuffer.allocate(2)
                 .order(ByteOrder.LITTLE_ENDIAN)
@@ -420,6 +446,9 @@ public class CodeGenerator {
         return bbf.array();
     }
 
+    /*
+     * Converts an integer into 4-byte array
+     */
     private byte[] intToByteArray(int i) {
         ByteBuffer bbf = ByteBuffer.allocate(4)
                 .order(ByteOrder.LITTLE_ENDIAN)

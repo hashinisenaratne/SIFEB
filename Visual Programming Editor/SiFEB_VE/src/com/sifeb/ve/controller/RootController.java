@@ -113,6 +113,7 @@ public class RootController implements Initializable {
                 ComPortController.closePort();
                 Thread.sleep(2000);
                 ComPortController.openPort();
+                ComPortController.setEventListener();
             } catch (InterruptedException ex) {
                 Logger.getLogger(RootController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -217,24 +218,27 @@ public class RootController implements Initializable {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/MainEditor.fxml"));
             AnchorPane mainEditor = (AnchorPane) loader.load();
-            meCtrl = loader.getController();
-            BlockCreator blkCreator = new BlockCreator(meCtrl);
 
-            ComPortController.setBlockCreator(blkCreator);
+            meCtrl = loader.getController();
+            System.out.println("from init");
+            System.out.println(meCtrl);
+            MainApp.blockCreator = new BlockCreator(meCtrl);
+
+            ComPortController.setBlockCreator(MainApp.blockCreator);
+            ComPortController.setEventListener();
             ComPortController.writeComPort("s");
-            // ComPortController.setEventListener();
-            blkCreator.addDefaultCapabilities();
+            MainApp.blockCreator.addDefaultCapabilities();
             if (ProgramLevel == 2) {
-                blkCreator.addLevel2Capabilities();
+                MainApp.blockCreator.addLevel2Capabilities();
                 meCtrl.programBtn.setText("Program - Level 2");
             } else if (ProgramLevel == 3) {
-                blkCreator.addLevel3Capabilities();
+                MainApp.blockCreator.addLevel3Capabilities();
                 meCtrl.programBtn.setText("Program - Level 3");
             }
 
             //for test only
-            blkCreator.createDeviceBlock("10", "10");
-            blkCreator.createDeviceBlock("11", "11");
+            MainApp.blockCreator.createDeviceBlock("1", "1");
+            MainApp.blockCreator.createDeviceBlock("2", "2");
             rootPane.setCenter(mainEditor);
         } catch (IOException e) {
             e.printStackTrace();
@@ -251,23 +255,25 @@ public class RootController implements Initializable {
             loader.setLocation(MainApp.class.getResource("view/GameEditor.fxml"));
             AnchorPane gameEditor = (AnchorPane) loader.load();
             geCtrl = loader.getController();
-            BlockCreator blkCreator = new BlockCreator(geCtrl);
+
+            MainApp.blockCreator = new BlockCreator(geCtrl);
             ComPortController.openPort();
-            ComPortController.setBlockCreator(blkCreator);
+            ComPortController.setBlockCreator(MainApp.blockCreator);
+            ComPortController.setEventListener();
             ComPortController.writeComPort("s");
             // ComPortController.setEventListener();
-            blkCreator.addDefaultCapabilities();
+            MainApp.blockCreator.addDefaultCapabilities();
             if (TutorialLevel == 2) {
-                blkCreator.addLevel2Capabilities();
+                MainApp.blockCreator.addLevel2Capabilities();
                 geCtrl.learnBtn.setText("Learn - Level 2");
             } else if (TutorialLevel == 3) {
-                blkCreator.addLevel3Capabilities();
+                MainApp.blockCreator.addLevel3Capabilities();
                 geCtrl.learnBtn.setText("Learn - Level 3");
             }
 
             //for test only
-            blkCreator.createDeviceBlock("10", "10");
-            blkCreator.createDeviceBlock("11", "11");
+            //  blkCreator.createDeviceBlock("10", "10");
+            //  blkCreator.createDeviceBlock("11", "11");
             rootPane.setCenter(gameEditor);
         } catch (IOException e) {
             e.printStackTrace();

@@ -13,7 +13,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import org.w3c.dom.NodeList;
 
 /**
  *
@@ -116,6 +115,7 @@ public class BlockCreator {
             switch (command) {
                 case 'c':
                     String address = readValue[1];
+                    System.out.println("add"+address);
                     String type = readValue[2];
                     if (!mainEditor.checkDeviceAddress(address)) {
                         this.createDeviceBlock(type, address);

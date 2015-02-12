@@ -6,7 +6,7 @@
 package com.sifeb.ve;
 
 /**
- *
+ * This class is used to handle game files
  * @author Hashini Senaratne
  */
 public class Game {
@@ -19,10 +19,12 @@ public class Game {
         this.gameFile = file;
     }
 
+    // returns the game id
     public String getGameID() {
         return gameID;
     }
 
+    // returns the game file
     public String getGameFile() {
         return gameFile;
     }

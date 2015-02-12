@@ -77,23 +77,28 @@ public class Capability {
         this.hasTest = hasTest;
     }
 
+    // returns the capability id
     public String getCapID() {
         return capID;
     }
 
+    // returns the capability name 
     public String getCapName() {
         Locale currentLocale = Strings.getLocale();
         return capNames.get(currentLocale);
     }
 
+    // returns the capability name based on the localization
     public String getCapName(Locale locale) {
         return capNames.get(locale);
     }
 
+    // returns the device in the capability
     public Device getDevice() {
         return device;
     }
 
+    // returns the capability type
     public String getType() {
         return type;
     }
@@ -148,8 +153,9 @@ public class Capability {
 
     public Map<Locale, String> getCapNames() {
         return capNames;
-    }   
+    }
 
+    // returns a cloned capability block
     public Capability cloneCapability() {
         Capability cap = new Capability(this.capID, this.capNames, this.device, this.type, this.testCommand, this.exeCommand, this.stopCommand, this.compType, this.respSize, this.refValue, this.imageName, true);
         if (this.device != null) {
@@ -165,7 +171,7 @@ public class Capability {
 
     @Override
     public String toString() {
-        return this.getCapName() + " (" + this.getCapID() + ")";
+        return this.getCapName(Locale.US) + " (" + this.getCapID() + ")";
     }
 
 }

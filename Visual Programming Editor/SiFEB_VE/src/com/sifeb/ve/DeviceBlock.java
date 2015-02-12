@@ -6,25 +6,21 @@
 package com.sifeb.ve;
 
 import com.sifeb.ve.controller.ComPortController;
-import com.sifeb.ve.controller.MainEditorController;
-import com.sifeb.ve.handle.BlockCreator;
 import com.sifeb.ve.handle.CodeGenerator;
+import com.sifeb.ve.resources.Strings;
 import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -34,9 +30,10 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 /**
- *
+ * This class is about the DeviceBlock which is used for handling devices in the system
  * @author Pubudu
  */
 public final class DeviceBlock extends Pane {
@@ -80,10 +77,10 @@ public final class DeviceBlock extends Pane {
 
         name = new Label();
         devNum = new Label();
-        setBlockText();
         setBlockLabel();
         initDevNum();
-        setEventHandlers();
+        setEventHandlers();        
+        setBlockText();
 
     }
 
@@ -94,6 +91,12 @@ public final class DeviceBlock extends Pane {
     }
 
     public void setBlockText() {
+        if(Strings.getLocale().getLanguage().equals("si")){
+            name.setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, 12));
+        }
+        else{
+            name.setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, 14));
+        }
         name.setText(this.device.getDeviceName());
         name.setTooltip(new Tooltip(name.getText()));
     }
@@ -168,7 +171,7 @@ public final class DeviceBlock extends Pane {
             imgView.setEffect(new DropShadow());
         });
         btn.setOnAction((ActionEvent event) -> {
-            FeedBackLogger.sendGoodMessage("We are showing the " + this.device.getDeviceName());
+            FeedBackLogger.sendGoodMessage(Strings.getString("dev.show")+" '" + this.device.getDeviceName()+"'");
 
             CodeGenerator codeGenerator = new CodeGenerator();
             byte[] sendingData = codeGenerator.generateTestDeviceCode(this.device);

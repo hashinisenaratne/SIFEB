@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 /**
+ * This class generates feedback messages for users.
  *
  * @author Udith Arosha
  */
@@ -25,49 +26,26 @@ public class FeedBackLogger {
     private static final Image sadFace = new Image(FeedBackLogger.class.getResourceAsStream("/com/sifeb/ve/images/sad.png"));
     private static final Duration duration = Duration.millis(3000);
 
-//    public static final Timer timer = new Timer();
-//    private static TimerTask timeTask = new TimerTask() {
-//        @Override
-//        public void run() {
-//            FeedBackLogger.sendWelcomeMessage();
-//        }
-//    };
-
     public static void setControls(ImageView fbFace, Label fbText) {
         FeedBackLogger.fbText = fbText;
         FeedBackLogger.fbFace = fbFace;
     }
 
+    // use for sending a good message
     public static void sendGoodMessage(String message) {
-//        timer.
         fbFace.setImage(happyFace);
         sendMessage(message);
-//        timer.schedule(new TimerTask() {
-//
-//            @Override
-//            public void run() {
-//                FeedBackLogger.sendWelcomeMessage();
-//            }
-//        }, 5000);
-
     }
 
+    // use for sending a bad message
     public static void sendBadMessage(String message) {
         fbFace.setImage(sadFace);
         sendMessage(message);
         SoundHandler.playErrorMusic();
-//        timer.schedule(new TimerTask() {
-//
-//            @Override
-//            public void run() {
-//                FeedBackLogger.sendWelcomeMessage();
-//            }
-//        }, 5000);
     }
 
     private static void sendMessage(String text) {
         String content = text;
-//        timeTask.cancel();
         Animation animation = new Transition() {
             {
                 setCycleDuration(duration);
@@ -82,13 +60,7 @@ public class FeedBackLogger {
 
         };
         animation.play();
-//        timeTask = new TimerTask() {
-//            @Override
-//            public void run() {
-//                FeedBackLogger.sendWelcomeMessage();
-//            }
-//        };
-//        timer.schedule(timeTask, 7000);
+
     }
 
     public static void sendWelcomeMessage() {

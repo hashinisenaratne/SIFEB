@@ -5,6 +5,7 @@
  */
 package com.sifeb.ve;
 
+import com.sifeb.ve.resources.Strings;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -32,8 +33,10 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 /**
+ * This is the Block class which handles dragging and its functionalities
  *
  * @author Pubudu
  */
@@ -54,7 +57,6 @@ public final class Block extends Pane {
         this.capability = capability;
         this.textField = null;
         name = new Label();
-        Block.this.setBlockText();
 
         Image bckgndImg = setBackgroundImage(capability.getType());
         setShape(capability.getType(), bckgndImg);
@@ -66,7 +68,8 @@ public final class Block extends Pane {
         super.getChildren().add(blockIcon);
 
         setEventHandlers();
-        super.setCursor(Cursor.OPEN_HAND);
+        super.setCursor(Cursor.OPEN_HAND);        
+        this.setBlockText();
         this.setId(capability.getType() + Integer.toString(this.hashCode()));
     }
 
@@ -84,6 +87,7 @@ public final class Block extends Pane {
 
         name = new Label();
         name.setFont(new Font(14));
+        name.setStyle("-fx-font-weight: bold");
         name.setPrefSize(image.getWidth() * 0.8, 30);
         name.setMaxWidth(image.getWidth() * 0.8);
         name.relocate((image.getWidth() * 0.1), 30);
@@ -91,14 +95,17 @@ public final class Block extends Pane {
         super.getChildren().add(name);
     }
 
+    // returns the capability block
     public Capability getCapability() {
         return capability;
     }
 
+    // returns the textfield in capability block
     public TextField getTextField() {
         return textField;
     }
 
+    // placing icons according to different actions
     private void placeIcon(String type) {
         switch (type) {
             case Capability.CAP_ACTION_C:
@@ -116,6 +123,7 @@ public final class Block extends Pane {
         }
     }
 
+    // setting up different background images based on the capability type
     private Image setBackgroundImage(String type) {
         Image bckImage;
         switch (type) {
@@ -146,13 +154,12 @@ public final class Block extends Pane {
         blockIcon.setImage(img);
     }
 
+    // setting up different event handlers for the block
     private void setEventHandlers() {
         this.setOnMouseEntered((MouseEvent event) -> {
-//            this.setEffect(new Bloom(0.3));
             setIcon(capability.getDynamicImage());
         });
         this.setOnMouseExited((MouseEvent event) -> {
-//            this.setEffect(null);
             setIcon(capability.getStaticImage());
         });
         this.setOnMousePressed((MouseEvent event) -> {
@@ -180,6 +187,7 @@ public final class Block extends Pane {
 
         ContextMenu contextMenu = new ContextMenu();
 
+        // Allows to delete the block
         MenuItem item1 = new MenuItem("Delete");
         item1.setOnAction((ActionEvent e) -> {
             ((Pane) this.getParent()).getChildren().remove(this);
@@ -197,7 +205,7 @@ public final class Block extends Pane {
 
                 if (this.getParent().getClass().getName().contains("ActionBlock") == false) {
 
-                    if (capability.getType().contains(Capability.CAP_ACTION) || capability.getType().equals(Capability.CAP_SENSE) || capability.getType().equals(Capability.CAP_CONDITION) || capability.getType().equals(Capability.CAP_CONTROL)|| capability.getType().equals(Capability.CAP_IFELSE)) {
+                    if (capability.getType().contains(Capability.CAP_ACTION) || capability.getType().equals(Capability.CAP_SENSE) || capability.getType().equals(Capability.CAP_CONDITION) || capability.getType().equals(Capability.CAP_CONTROL) || capability.getType().equals(Capability.CAP_IFELSE)) {
                         contextMenu.show(this, event.getSceneX(), event.getSceneY());
                     }
 
@@ -207,6 +215,11 @@ public final class Block extends Pane {
     }
 
     public void setBlockText() {
+        if(Strings.getLocale().getLanguage().equals("si")){
+            name.setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, 10));
+        }else{
+            name.setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, 14));
+        }
         name.setText(this.capability.getCapName());
         name.setTooltip(new Tooltip(name.getText()));
     }
@@ -214,14 +227,13 @@ public final class Block extends Pane {
     public void setBlockText(String text) {
         name.setText(text);
     }
-    
-    public void setTextField(String value)
-    {
+
+    public void setTextField(String value) {
         this.textField.setText(value);
     }
 
     private void setShape(String type, Image img) {
-        
+
         switch (type) {
             case "rectangle":
                 break;
@@ -229,19 +241,19 @@ public final class Block extends Pane {
             case Capability.CAP_ACTION:
             case Capability.CAP_CONTROL:
             case Capability.CAP_IFELSE:
-                name.setFont(new Font(12));
+                name.setFont(new Font(14));
                 name.setPrefSize(img.getWidth() * 0.9, 12);
                 name.setMaxWidth(img.getWidth() * 0.9);
-                name.relocate((img.getWidth() * 0.05), 45);
+                name.relocate((img.getWidth() * 0.05), 42);
                 break;
             case Capability.CAP_SENSE:
-                name.setFont(new Font(12));
+                name.setFont(new Font(14));
                 name.setPrefSize(img.getWidth() * 0.9, 30);
                 name.setMaxWidth(img.getWidth() * 0.9);
                 name.relocate((img.getWidth() * 0.05), 23);
                 break;
             case Capability.CAP_CONDITION:
-                name.setFont(new Font(12));
+                name.setFont(new Font(14));
                 name.setPrefSize(img.getWidth() * 0.9, 12);
                 name.setMaxWidth(img.getWidth() * 0.9);
                 name.relocate((img.getWidth() * 0.05), 24);
@@ -266,6 +278,7 @@ public final class Block extends Pane {
         }
     }
 
+    // highlights the blocks
     public void toggleHighlight(boolean on) {
         Parent p = this.getParent();
         if (on) {
@@ -283,6 +296,7 @@ public final class Block extends Pane {
         }
     }
 
+    // remove block from the parent
     public void removeMe() {
         Pane node = (Pane) this.getParent();
         node.getChildren().remove(this);

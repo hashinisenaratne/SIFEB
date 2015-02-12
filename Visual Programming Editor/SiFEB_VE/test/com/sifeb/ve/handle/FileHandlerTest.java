@@ -5,28 +5,13 @@
  */
 package com.sifeb.ve.handle;
 
-import com.sifeb.ve.Capability;
-import com.sifeb.ve.Device;
-import com.sifeb.ve.FeedBackLogger;
-import com.sifeb.ve.GameList;
-import java.lang.reflect.Method;
-import java.util.Locale;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  *

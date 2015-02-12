@@ -6,6 +6,8 @@
 package com.sifeb.ve.handle;
 
 /**
+ * This class handles the creation, deletion, writing to and reading from xml
+ * library files
  *
  * @author Pubudu
  */
@@ -35,21 +37,15 @@ import org.xml.sax.SAXException;
 
 public class FileHandler {
 
-//    private final String CAPABILITY_FOLDER = "src/com/sifeb/ve/files/capabilities/";
-//    private final String DEVICE_FOLDER = "src/com/sifeb/ve/files/devices/";
     public static void main(String[] args) {
-
         FileHandler fh = new FileHandler();
 //        fh.generateTestDeviceFiles();
-        fh.generateTestCapabilityFiles();
-//        fh.readFromCapabilityFile("cap_001");
-//        fh.writeToGameFile("game_001");
-//        Element d=fh.readFromGameFile("game_001");
-//        System.out.println(d.getElementsByTagName("Id").item(0).getTextContent());
-
-        //fh.writeToDeviceFile("dev_12");
+//        fh.generateTestCapabilityFiles();
     }
 
+    /*
+     * Writes Device information to a xml file
+     */
     public boolean writeToDeviceFile(Device dev) {
 
         try {
@@ -107,12 +103,19 @@ public class FileHandler {
             return false;
         }
     }
-    
-    public boolean removeDeviceFile(Device dev){
+
+    /*
+     * Deletes a device xml file
+     */
+    public boolean removeDeviceFile(Device dev) {
         File file = new File(SifebUtil.DEV_FILE_DIR + dev.getDeviceID() + ".xml");
         return file.delete();
     }
 
+    /*
+     * Reads device xml file and
+     * returns the Device object
+     */
     public Device readFromDeviceFile(String fileName, String address) {
 
         Element eElement = null;
@@ -133,6 +136,9 @@ public class FileHandler {
         return getDevFromElement(eElement, address);
     }
 
+    /*
+     * Converts an element to a Device object
+     */
     private Device getDevFromElement(Element devElement, String address) {
 
         String devId = devElement.getElementsByTagName("Id").item(0).getTextContent();
@@ -162,6 +168,9 @@ public class FileHandler {
         return device;
     }
 
+    /*
+     * Writes Capability information to a xml file
+     */
     public boolean writeToCapabilityFile(Capability cap) {
 
         try {
@@ -237,12 +246,19 @@ public class FileHandler {
             return false;
         }
     }
-    
-    public boolean removeCapabilityFile(Capability cap){
+
+    /*
+     * Deletes a capability xml file
+     */
+    public boolean removeCapabilityFile(Capability cap) {
         File file = new File(SifebUtil.CAP_FILE_DIR + cap.getCapID() + ".xml");
         return file.delete();
     }
 
+    /*
+     * Reads capability xml file and
+     * returns the Capability object
+     */
     public Capability readFromCapabilityFile(String capID) {
 
         Element eElement = null;
@@ -263,6 +279,9 @@ public class FileHandler {
         return getCapFromElement(eElement);
     }
 
+    /*
+     * Converts an element to a Capability object
+     */
     private Capability getCapFromElement(Element el) {
         String capId = el.getElementsByTagName("Id").item(0).getTextContent();
         NodeList nodeList = el.getElementsByTagName("Names").item(0).getChildNodes();
@@ -277,19 +296,22 @@ public class FileHandler {
         String testCmd = el.getElementsByTagName("TestCommand").item(0).getTextContent();
         String exeCmd = el.getElementsByTagName("ExeCommand").item(0).getTextContent();
         String stopCmd = el.getElementsByTagName("StopCommand").item(0).getTextContent();
-        
+
         String compType = el.getElementsByTagName("Comparator").item(0).getTextContent();
         String resp = el.getElementsByTagName("Response").item(0).getTextContent();
         String refVal = el.getElementsByTagName("Reference").item(0).getTextContent();
-        
+
         String type = el.getElementsByTagName("Type").item(0).getTextContent();
         String image = el.getElementsByTagName("Image").item(0).getTextContent();
         boolean hasTestButton = Boolean.parseBoolean(el.getElementsByTagName("HasTestButton").item(0).getTextContent());
-        Capability cap = new Capability(capId,actNames,null,type,testCmd,exeCmd,stopCmd,compType,resp,refVal,image,hasTestButton);
+        Capability cap = new Capability(capId, actNames, null, type, testCmd, exeCmd, stopCmd, compType, resp, refVal, image, hasTestButton);
 
         return cap;
     }
 
+    /*
+     * Writes to a game xml file
+     */
     public void writeToGameFile(String fileName) {
 
         try {
@@ -333,6 +355,9 @@ public class FileHandler {
 
     }
 
+    /*
+     * Reads from a game xml file
+     */
     public Element readFromGameFile(String fileName) {
 
         Element element = null;
@@ -356,6 +381,9 @@ public class FileHandler {
         return element;
     }
 
+    /*
+     * Writes to an editor xml file
+     */
     public void writeToEditorFile(String filePath, Document doc) {
 
         boolean success = true;
@@ -382,6 +410,9 @@ public class FileHandler {
 
     }
 
+    /*
+     * reads from an editor xml file
+     */
     public Element readFromEditorFile(String filePath) {
         Element element = null;
         File file = new File(filePath);
@@ -446,10 +477,13 @@ public class FileHandler {
     /////////////////////////////////////////////////////////////
     private void generateTestCapabilityFiles() {
 
-        String[] ids = {"cap_10_001", "cap_10_002", "cap_10_003", "cap_10_004", "cap_10_005", "cap_12_001", "cap_12_002", "cap_11_001", "cap_11_002"};
+        String[] ids = {"cap_1_001", "cap_1_002", "cap_1_003", "cap_1_004", "cap_1_005", "cap_3_001", "cap_3_002", "cap_2_001", "cap_2_002"};
         String[] actionNames_en = {"Go Forward", "Reverse", "Turn Left", "Turn Right", "Stop", "Light ON", "Light OFF", "No Object", "See Object"};
         String[] actionNames_si = {"ඉදිරියට යන්න", "පසුපසට යන්න", "වමට හැරෙන්න", "දකුණට හැරෙන්න", "නවතින්න", "Light ON", "Light OFF", "No Object", "See Object"};
-        String[] actionCmd = {"b", "c", "e", "d", "", "l", "", "", ""};
+        String[] actionCmd = {"1", "2", "3", "4", "5", "1", "2", "3", "4"};
+        String[] comparaters = {"", "", "", "", "", "", "", ">", "<"};
+        String[] response = {"", "", "", "", "", "", "", "1", "1"};
+        String[] reference = {"", "", "", "", "", "", "", "100", "100"};
         String[] buttonList = {"true", "true", "true", "true", "false", "true", "false", "false", "false"};
         //String[] imageList = {"forward", "reverse", "left", "right", "stop", "true", "false"};
 
@@ -507,7 +541,7 @@ public class FileHandler {
                 capability.appendChild(type);
 
                 Element testCmd = doc.createElement("TestCommand");
-                testCmd.appendChild(doc.createTextNode(actionCmd[i]));
+                testCmd.appendChild(doc.createTextNode("t" + actionCmd[i]));
                 capability.appendChild(testCmd);
 
                 Element button = doc.createElement("HasTestButton");
@@ -515,23 +549,23 @@ public class FileHandler {
                 capability.appendChild(button);
 
                 Element exeCmd = doc.createElement("ExeCommand");
-                exeCmd.appendChild(doc.createTextNode(actionCmd[i]));
+                exeCmd.appendChild(doc.createTextNode("a" + actionCmd[i]));
                 capability.appendChild(exeCmd);
 
                 Element stopCmd = doc.createElement("StopCommand");
-                stopCmd.appendChild(doc.createTextNode("-"));
+                stopCmd.appendChild(doc.createTextNode("a5"));
                 capability.appendChild(stopCmd);
 
                 Element compType = doc.createElement("Comparator");
-                compType.appendChild(doc.createTextNode("="));
+                compType.appendChild(doc.createTextNode(comparaters[i]));
                 capability.appendChild(compType);
 
                 Element respSize = doc.createElement("Response");
-                respSize.appendChild(doc.createTextNode("1"));
+                respSize.appendChild(doc.createTextNode(response[i]));
                 capability.appendChild(respSize);
 
                 Element refVal = doc.createElement("Reference");
-                refVal.appendChild(doc.createTextNode("100"));
+                refVal.appendChild(doc.createTextNode(reference[i]));
                 capability.appendChild(refVal);
 
                 Element image = doc.createElement("Image");
@@ -557,13 +591,13 @@ public class FileHandler {
     }
 
     private void generateTestDeviceFiles() {
-        String[] ids = {"dev_10", "dev_11", "dev_12"};
+        String[] ids = {"dev_1", "dev_2", "dev_3"};
         String[] deviceNames_en = {"Wheels", "Sonar", "Light"};
         String[] deviceNames_si = {"රෝද", "අතිධ්වනි", "පහන්",};
         String[] types = {Device.DEV_ACTUATOR, Device.DEV_SENSOR, Device.DEV_ACTUATOR};
-        String[][] caps = {{"cap_10_001", "cap_10_002", "cap_10_003", "cap_10_004", "cap_10_005"},
-        {"cap_11_001", "cap_11_002"},
-        {"cap_12_001", "cap_12_002"}
+        String[][] caps = {{"cap_1_001", "cap_1_002", "cap_1_003", "cap_1_004", "cap_1_005"},
+        {"cap_2_001", "cap_2_002"},
+        {"cap_3_001", "cap_3_002"}
         };
 
         try {

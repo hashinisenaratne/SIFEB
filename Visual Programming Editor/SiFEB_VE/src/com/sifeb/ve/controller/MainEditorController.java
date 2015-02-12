@@ -54,6 +54,8 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import jssc.SerialPortException;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
@@ -64,7 +66,7 @@ import org.controlsfx.dialog.Dialog;
  * @author Hashini Senaratne
  */
 public class MainEditorController implements Initializable {
-    
+
     @FXML
     Button addDeviceBtn;
     @FXML
@@ -125,23 +127,23 @@ public class MainEditorController implements Initializable {
         //temp        
         devices = new ArrayList<>();
         capabilities = new ArrayList<>();
-        
+
         editorBox.setFillWidth(false);
         mainBox.setSpacing(-17);
         editorBox.setSpacing(-15);
         editorBox.setAlignment(Pos.TOP_LEFT);
         addStartEndBlocks();
         addBlockHolder(0, editorBox, 0);
-        
+
         setEventHandlers();
         FeedBackLogger.setControls(this.fbFace, this.fbText);
         setFeedbackPanel();
-        
+
         checkConnection(true);
         setTextStrings();
         codeGenerator = new CodeGenerator();
     }
-    
+
     private void checkConnection(boolean initialCheck) {
         if (initialCheck) {
             Image img = new Image(MainApp.class.getResourceAsStream("/com/sifeb/ve/images/Conn_refresh.png"));
@@ -153,7 +155,7 @@ public class MainEditorController implements Initializable {
             connectedImg.setImage(img);
             connectedText.setTextFill(Color.FORESTGREEN);
             connectedText.setText("Robot Connected");
-            refreshConnBtn.setVisible(false);
+            refreshConnBtn.setVisible(true);
         } else {
             Image img = new Image(MainApp.class.getResourceAsStream("/com/sifeb/ve/images/disconnected.png"));
             connectedImg.setImage(img);
@@ -162,7 +164,7 @@ public class MainEditorController implements Initializable {
             refreshConnBtn.setVisible(true);
         }
     }
-    
+
     private void setFeedbackPanel() {
         Image img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/bubbleLeft.png"));
         fbLeft.setImage(img);
@@ -175,29 +177,32 @@ public class MainEditorController implements Initializable {
         uploadImg = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/upload.png"));
         FeedBackLogger.sendWelcomeMessage();
     }
-    
+
     private void addStartEndBlocks() {
         Image img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Start_V.png"));
         mainBox.getChildren().add(0, new Block(img));
-        
+
         img = new Image(getClass().getResourceAsStream("/com/sifeb/ve/images/Stop_V.png"));
         mainBox.getChildren().add(new Block(img));
     }
-    
+
     public void setTextStrings() {
-        toolBar.setMinWidth(440);
-        runBtn.setMinWidth(140);
+        toolBar.setMinWidth(470);
+        runBtn.setMinWidth(150);
         runBtn.setText(Strings.getString("btn.run"));
-        uploadBtn.setMinWidth(140);
+        runBtn.setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, 14));
+        uploadBtn.setMinWidth(150);
         uploadBtn.setText(Strings.getString("btn.upload"));
+        uploadBtn.setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, 14));
         clearBtn.setText(Strings.getString("btn.clear"));
-        clearBtn.setMinWidth(140);
+        clearBtn.setMinWidth(150);
+        clearBtn.setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, 14));
         haveLabel.setText(Strings.getString("label.have"));
         doLabel.setText(Strings.getString("label.do"));
-        
+
         ((Block) mainBox.getChildren().get(0)).setBlockText(Strings.getString("block.start"));
         ((Block) mainBox.getChildren().get(mainBox.getChildren().size() - 1)).setBlockText(Strings.getString("block.end"));
-        
+
         for (Device d : devices) {
             d.getDeviceBlock().setBlockText();
             ArrayList<Capability> caps = d.getCapabilities();
@@ -228,19 +233,19 @@ public class MainEditorController implements Initializable {
                 holder = new Holder(this);
                 break;
         }
-        
+
         if (index >= 0) {
             parent.getChildren().add(index, holder);
         } else {
             parent.getChildren().add(holder);
         }
     }
-    
+
     public void changeHolderType(Holder holder, VBox parent, Node node) {
         String holderType = holder.getClass().getName();
         int index = parent.getChildren().indexOf(holder);
         parent.getChildren().remove(index);
-        
+
         if (node == null) {
             addBlockHolder(index, parent, 0);
         } else if (node.getId().contains(Capability.CAP_ACTION_C)) {
@@ -256,7 +261,7 @@ public class MainEditorController implements Initializable {
             ((Holder) parent.getChildren().get(index)).addElementToVbox(node);
         }
     }
-    
+
     public void addHolderAfterMe(Holder holder, VBox parent, boolean fromBtn) {
         int index = parent.getChildren().indexOf(holder);
 
@@ -267,17 +272,17 @@ public class MainEditorController implements Initializable {
             addBlockHolder(index + 1, parent, 0);
         }
     }
-    
+
     public void deleteHolder(Holder holder, VBox parent) {
         int index = parent.getChildren().indexOf(holder);
         //if there are more than 1 holders
         if (parent.getChildren().size() > 1) {
             parent.getChildren().remove(index);
         } else {
-            FeedBackLogger.sendBadMessage("Sorry, You cannot delete the only holder");
+            FeedBackLogger.sendBadMessage(Strings.getString("message.cannotdelete"));
         }
     }
-    
+
     private void setEventHandlers() {
 //        addDeviceBtn.setOnAction((ActionEvent event) -> {
 //            addBlock(devicesBox);
@@ -294,6 +299,7 @@ public class MainEditorController implements Initializable {
                 ComPortController.closePort();
                 Thread.sleep(2000);
                 ComPortController.openPort();
+                ComPortController.setEventListener();
                 checkConnection(false);
             } catch (InterruptedException ex) {
                 Logger.getLogger(RootController.class.getName()).log(Level.SEVERE, null, ex);
@@ -301,14 +307,14 @@ public class MainEditorController implements Initializable {
                 refreshConnBtn.setDisable(false);
             }
         });
-        
+
         runBtn.setOnAction((ActionEvent event) -> {
-            
+
             Platform.runLater(new Runnable() {
-                
+
                 @Override
                 public void run() {
-                    
+
                     Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
                     dlg.setResizable(false);
                     dlg.setIconifiable(false);
@@ -317,25 +323,25 @@ public class MainEditorController implements Initializable {
                     Dialog.Actions.YES.textProperty().set(Strings.getString("btn.yes"));
                     Dialog.Actions.NO.textProperty().set(Strings.getString("btn.no"));
                     dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
-                    
+
                     Action response = dlg.show();
-                    
+
                     if (response == Dialog.Actions.YES) {
-                        FeedBackLogger.sendGoodMessage("Program is running!");
+                        FeedBackLogger.sendGoodMessage(Strings.getString("message.running"));
                         ComPortController.writeComPort("r");
                     } else {
-                        FeedBackLogger.sendBadMessage("We will check later!!!");
+                        FeedBackLogger.sendBadMessage(Strings.getString("message.testlater"));
                         // ... user cancelled, reset form to default
                     }
-                    
+
                 }
             });
         });
-        
+
         uploadBtn.setOnAction((ActionEvent event) -> {
-            
+
             Platform.runLater(new Runnable() {
-                
+
                 @Override
                 public void run() {
 //                    runProgram();
@@ -348,49 +354,57 @@ public class MainEditorController implements Initializable {
                     Dialog.Actions.YES.textProperty().set(Strings.getString("btn.yes"));
                     Dialog.Actions.NO.textProperty().set(Strings.getString("btn.no"));
                     dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
-                    
+
                     Action response = dlg.show();
-                    
+
                     if (response == Dialog.Actions.YES) {
-                        
+
                         byte[] sendingData = codeGenerator.generateCode(editorBox);
+                        System.out.println("byte array------");
+
+                        for (int i = 0; i < sendingData.length; i++) {
+                            System.out.println("byte v - " + sendingData[i]);
+                        }
+                        System.out.println(sendingData.toString());
                         ComPortController.removeEventListener();
                         boolean success = false;
-                        
-                        for (int i = 0; i < 5; i++) {
+
+                        for (int i = 0; i < 1; i++) {
                             try {
+                                System.out.println("try - " + i);
                                 ComPortController.writeComPort("u");
                                 int size = sendingData.length;
                                 serialPort.writeByte((byte) size);
                                 ComPortController.writeProgram(sendingData);
-                                byte[] receivedData = ComPortController.read(size);
-                                
-                                if (Arrays.equals(receivedData, sendingData)) {
-                                    success = true;
-                                    break;
-                                }
+                                success = true;
+                                /*byte[] receivedData = ComPortController.read(size);
+
+                                 if (Arrays.equals(receivedData, sendingData)) {
+                                 success = true;
+                                 break;
+                                 } */
                             } catch (SerialPortException ex) {
                                 Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            
+
                         }
-                        ComPortController.setEventListener();
-                        
+                        //  ComPortController.setEventListener();
+
                         if (success) {
-                            FeedBackLogger.sendGoodMessage("Program is sucessfully uploaded to SiFEB!");
+                            FeedBackLogger.sendGoodMessage(Strings.getString("message.uploaded"));
                         } else {
-                            FeedBackLogger.sendBadMessage("Program did not upload successfully!");
+                            FeedBackLogger.sendBadMessage(Strings.getString("message.uploadfailed"));
                         }
-                        
+
                     } else {
-                        FeedBackLogger.sendBadMessage("We will upload later!!!");
+                        FeedBackLogger.sendBadMessage(Strings.getString("message.notuploaded"));
                         // ... user cancelled, reset form to default
                     }
-                    
+
                 }
             });
         });
-        
+
         clearBtn.setOnAction((ActionEvent event) -> {
 
             Dialog dlg = new Dialog(null, Strings.getString("message.fromsifeb"));
@@ -400,20 +414,20 @@ public class MainEditorController implements Initializable {
             dlg.setMasthead(Strings.getString("message.cleartheprogram"));
             Dialog.Actions.YES.textProperty().set(Strings.getString("btn.yes"));
             Dialog.Actions.NO.textProperty().set(Strings.getString("btn.no"));
-            dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
+            dlg.getActions().addAll(Dialog.Actions.NO, Dialog.Actions.YES);
 
             Action response = dlg.show();
 
             if (response == Dialog.Actions.YES) {
 
                 clearEditorVbox();
-                FeedBackLogger.sendGoodMessage("Program is Cleared Successfully!!!");
+                FeedBackLogger.sendGoodMessage(Strings.getString("message.cleared"));
             } else {
-                FeedBackLogger.sendGoodMessage("Program is not Cleared!!!");
+                FeedBackLogger.sendGoodMessage(Strings.getString("message.notcleared"));
 
             }
         });
-        
+
         editorPane.setOnDragDropped((DragEvent event) -> {
             Dragboard db = event.getDragboard();
             Parent p = ((Node) event.getGestureSource()).getParent();
@@ -421,7 +435,7 @@ public class MainEditorController implements Initializable {
             if (db.hasString()) {
                 String nodeId = db.getString();
                 Block draggedBlock = (Block) p.lookup("#" + nodeId);
-                
+
                 if (draggedBlock != null) {
                     if (p.getClass().getName().contains("ActionBlock")) {
                         Capability cap = draggedBlock.getCapability().cloneCapability();
@@ -429,7 +443,7 @@ public class MainEditorController implements Initializable {
                     } else {
                         ((Pane) p).getChildren().remove(draggedBlock);
                     }
-                    
+
                     editorPane.getChildren().add(draggedBlock);
                     draggedBlock.setLayoutX(event.getX());
                     draggedBlock.setLayoutY(event.getY());
@@ -441,17 +455,17 @@ public class MainEditorController implements Initializable {
             event.setDropCompleted(success);
             event.consume();
         });
-        
+
         editorPane.setOnDragOver((DragEvent event) -> {
             if (event.getDragboard().hasString()) {
                 event.acceptTransferModes(TransferMode.COPY);
             }
             event.consume();
         });
-        
+
         editorBox.setOnDragDropped((DragEvent event) -> {
         });
-        
+
         editorBox.setOnDragOver((DragEvent event) -> {
             if (event.getGestureSource() != editorBox
                     && event.getDragboard().hasString()) {
@@ -468,9 +482,9 @@ public class MainEditorController implements Initializable {
 //            }
 //        });
     }
-    
+
     public void addDeviceBlock(Device dev) {
-        
+
         String id = dev.getDeviceID();
         int count = 1;
         for (Device d : devices) {
@@ -484,11 +498,11 @@ public class MainEditorController implements Initializable {
         }
         dev.addToPane(devicesBox);
         devices.add(dev);
-        
-        FeedBackLogger.sendGoodMessage(dev.getDeviceName() + " is connected!");
-        
+
+        FeedBackLogger.sendGoodMessage("'" + dev.getDeviceName() + "' " + Strings.getString("dev.connected"));
+
     }
-    
+
     public void removeBlocks(int address) {
         for (Device d : devices) {
             if (address == d.getAddress()) {
@@ -498,8 +512,8 @@ public class MainEditorController implements Initializable {
                     cap.getBlock().removeMe();
                 }
                 devices.remove(d);
-                
-                int count = 0;                
+
+                int count = 0;
                 for (Device d1 : devices) {
                     if (d1.getDeviceID().equals(id)) {
                         count++;
@@ -513,7 +527,7 @@ public class MainEditorController implements Initializable {
                             count++;
                         }
                     }
-                }else if(count==1){
+                } else if (count == 1) {
                     for (Device d1 : devices) {
                         if (d1.getDeviceID().equals(id)) {
                             d1.getDeviceBlock().setDevNum(1, false);
@@ -521,21 +535,21 @@ public class MainEditorController implements Initializable {
                         }
                     }
                 }
-                
-                FeedBackLogger.sendBadMessage(d.getDeviceName() + " is disconnected!");
+
+                FeedBackLogger.sendBadMessage("'"+d.getDeviceName() +"' "+ Strings.getString("dev.disconnected"));
                 break;
             }
         }
-        
+
     }
-    
+
     public void addCapabilityBlock(Capability cap) {
         capabilities.add(cap);
         ActionBlock action = new ActionBlock(cap.getBlock(), cap.isHasTest());
         action.addToPane(capabilityBox);
-        
+
     }
-    
+
     public void runProgram() {
 
 //        while (true) {
@@ -556,9 +570,9 @@ public class MainEditorController implements Initializable {
         Dialog.Actions.YES.textProperty().set(Strings.getString("btn.yes"));
         Dialog.Actions.NO.textProperty().set(Strings.getString("btn.no"));
         dlg.getActions().addAll(Dialog.Actions.YES, Dialog.Actions.NO);
-        
+
         Action response = dlg.show();
-        
+
         if (response == Dialog.Actions.YES) {
             // FeedBackLogger.sendGoodMessage(Strings.getString("message.testing") + " \'" + cp.getCapName() + "\' " + Strings.getString("message.capability") + "...");
             // ComPortController.writeComPort(ComPortController.port, cp.getDevice().getAddress(), cp.getCommand());
@@ -566,7 +580,7 @@ public class MainEditorController implements Initializable {
             devicesBox.setDisable(true);
             capabilityBox.setDisable(true);
             editorBox.setDisable(true);
-            
+
             int numSteps = editorBox.getChildren().size();
             for (int i = 0; i < numSteps; i++) {
                 Holder h = (Holder) editorBox.getChildren().get(i);
@@ -588,14 +602,14 @@ public class MainEditorController implements Initializable {
             devicesBox.setDisable(false);
             capabilityBox.setDisable(false);
             editorBox.setDisable(false);
-            FeedBackLogger.sendGoodMessage("Program Finished!");
-            
+            FeedBackLogger.sendGoodMessage(Strings.getString("message.finished"));
+
         } else {
             FeedBackLogger.sendBadMessage(Strings.getString("message.testlater") + "...");
             // ... user cancelled, reset form to default
         }
     }
-    
+
     public void runConditionBlock(ConditionBlock cb) {
         if ((cb.getActions().getChildren().size() == 0) || (cb.getCondition().getChildren().size() == 0)) {
             cb.toggleHighlight(false);
@@ -615,7 +629,7 @@ public class MainEditorController implements Initializable {
                     .getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void runBlock(Holder h) {
         if (h.getActions().getChildren().size() == 0) {
             h.toggleHighlight(false);
@@ -632,7 +646,7 @@ public class MainEditorController implements Initializable {
                     .getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void runRepeatBlock(RepeatBlock rb) {
         if ((rb.getActions().getChildren().size() == 0) || (rb.getCondition().getChildren().size() == 0)
                 || rb.getHolders().getChildren().size() == 0) {
@@ -657,7 +671,7 @@ public class MainEditorController implements Initializable {
             }
         }
     }
-    
+
     public void runIfBlock(IfBlock ib) {
         if ((ib.getActions().getChildren().size() == 0) || (ib.getCondition().getChildren().size() == 0)
                 || ib.getIfHolders().getChildren().size() == 0) {
@@ -692,7 +706,7 @@ public class MainEditorController implements Initializable {
             }
         }
     }
-    
+
     public void sendCmd(int address, String message) {
         ackReceived = false;
         ComPortController.writeComPort(message);
@@ -703,16 +717,16 @@ public class MainEditorController implements Initializable {
 //            Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
 //        }
     }
-    
+
     public void executeConstraint(Block constBlock) {
         String constID = constBlock.getCapability().getCapID();
         switch (constID) {
             case "cap_def1": {   //time
                 double v = Double.parseDouble(constBlock.getTextField().getText());
                 try {
-                    
+
                     Thread.sleep((long) ((v == 0) ? 0 : (v) * 1000));
-                    
+
                 } catch (InterruptedException ex) {
                     Logger.getLogger(MainEditorController.class
                             .getName()).log(Level.SEVERE, null, ex);
@@ -737,7 +751,7 @@ public class MainEditorController implements Initializable {
                     sendCmd(10, "h");
                     try {
                         Thread.sleep(50);
-                        
+
                     } catch (InterruptedException ex) {
                         Logger.getLogger(MainEditorController.class
                                 .getName()).log(Level.SEVERE, null, ex);
@@ -751,7 +765,7 @@ public class MainEditorController implements Initializable {
                     sendCmd(10, "h");
                     try {
                         Thread.sleep(50);
-                        
+
                     } catch (InterruptedException ex) {
                         Logger.getLogger(MainEditorController.class
                                 .getName()).log(Level.SEVERE, null, ex);
@@ -761,7 +775,7 @@ public class MainEditorController implements Initializable {
             }
         }
     }
-    
+
     public boolean getConstraint(Block constBlock) {    // need to generalize to test constraints
         String constID = constBlock.getCapability().getCapID();
         switch (constID) {
@@ -770,7 +784,7 @@ public class MainEditorController implements Initializable {
                 sendCmd(10, "h");   //where does h get update?
                 try {
                     Thread.sleep(50);
-                    
+
                 } catch (InterruptedException ex) {
                     Logger.getLogger(MainEditorController.class
                             .getName()).log(Level.SEVERE, null, ex);
@@ -785,7 +799,7 @@ public class MainEditorController implements Initializable {
                 hValue = 1000;
                 try {
                     Thread.sleep(50);
-                    
+
                 } catch (InterruptedException ex) {
                     Logger.getLogger(MainEditorController.class
                             .getName()).log(Level.SEVERE, null, ex);
@@ -800,19 +814,19 @@ public class MainEditorController implements Initializable {
         }
         return false;
     }
-    
+
     public ImageView getFbFace() {
         return fbFace;
     }
-    
+
     public Label getFbText() {
         return fbText;
     }
-    
+
     @FXML
     private void goToProgram(ActionEvent event) {
     }
-    
+
     @FXML
     private void goToHome(ActionEvent event) {
         try {
@@ -830,9 +844,9 @@ public class MainEditorController implements Initializable {
             e.printStackTrace();
         }
     }
-    
+
     public Device getConnectedDevice(String devId, int address) {
-        
+
         for (int i = 0; i < devices.size(); i++) {
             Device device = devices.get(i);
             if (device.getDeviceID().equals(devId) && device.getAddress() == address) {
@@ -841,18 +855,20 @@ public class MainEditorController implements Initializable {
         }
         return null;
     }
-    
+
     public void clearEditorVbox() {
         editorBox.getChildren().clear();
         addBlockHolder(0, editorBox, 0);
     }
-    
+
     public VBox getEditorBox() {
         return editorBox;
     }
-    
+
     public boolean checkDeviceAddress(String address) {
-        
+
+        System.out.println("from check method");
+        System.out.println(this);
         boolean isSameAddress = false;
         for (Device device : devices) {
             String devAd = Integer.toString(device.getAddress());

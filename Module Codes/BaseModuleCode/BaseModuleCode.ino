@@ -18,6 +18,7 @@ int mode = 1;  //initial mode
 boolean ledshow=false;
 byte type = '1';
 byte address = 0;
+boolean needToStop = false;
 
 void setup()
 {
@@ -63,6 +64,12 @@ void loop()
     delay(5000);               // wait for 5 seconds
     digitalWrite(LED, LOW);
     ledshow = false;
+  }
+  
+  if(needToStop){
+    delay(500);
+    stopMotors();
+    needToStop = false;
   }
   
   Serial.println(address);
@@ -157,12 +164,10 @@ void act(int id){
     case '2': reverse();
       break;
     case '3': turnRight();
-      delay(3000);
-      stopMotors();
+      needToStop = true;
       break;
     case '4':  turnLeft();
-      delay(3000);
-      stopMotors();
+      needToStop = true;
       break;
     case '5':  stopMotors();
       break;
@@ -175,20 +180,16 @@ void act(int id){
 void test(int id){
     switch (id) {
     case '1': forward();
-      delay(3000);
-      stopMotors();
+      needToStop = true;
       break;
     case '2': reverse();
-      delay(3000);
-      stopMotors();
+      needToStop = true;
       break;
     case '3': turnRight();
-      delay(3000);
-      stopMotors();
+      needToStop = true;
       break;
     case '4':  turnLeft();
-      delay(3000);
-      stopMotors();
+      needToStop = true;
       break;
     default:
       break;

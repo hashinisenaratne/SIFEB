@@ -66,6 +66,10 @@ public class HomeController implements Initializable {
 
     private void goToMainEditor(int level) {
         try {
+//            ComPortController.openPort();
+//            ComPortController.setBlockCreator(MainApp.blockCreator);
+//            ComPortController.setEventListener();
+//            ComPortController.writeComPort("s");
             FXMLLoader loader = new FXMLLoader();
             RootController.setType("Main");
             RootController.setLevel(level);
@@ -100,6 +104,10 @@ public class HomeController implements Initializable {
 
     private void goToTutorials(int level) {
         try {
+//            ComPortController.openPort();
+//            ComPortController.setBlockCreator(MainApp.blockCreator);
+//            ComPortController.setEventListener();
+//            ComPortController.writeComPort("s");
             FXMLLoader loader = new FXMLLoader();
             TutorialController.setLevel(level);
             loader.setLocation(MainApp.class.getResource(MainApp.TutorialFile));
