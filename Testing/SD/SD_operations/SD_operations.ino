@@ -23,7 +23,9 @@
 
 Sd2Card card;
 const int chipSelect = 10;
-int once = 0;
+int once = 0;\
+int sizeByteArr = 1000;
+byte bytearr[sizeByteArr];
 
 void setup()
 {
@@ -61,29 +63,6 @@ void loop()
   }
 }
 
-
-void createFile(){
-    
-  if (SD.exists(programFile)) {
-    Serial.println("File exists.");
-  }
-  else {
-    Serial.println("File doesn't exist.");
-  }
-
-  // open a new file and immediately close it:
-  Serial.println("Creating file...");
-  File myFile = SD.open(programFile, FILE_WRITE);
-  myFile.close();
-
-  // Check to see if the file exists: 
-  if (SD.exists(programFile)) {
-    Serial.println("File exists.");
-  }
-  else {
-    Serial.println("File doesn't exist.");  
-  }
-}
 
 void removeFile(){
 
@@ -142,3 +121,66 @@ void readFile(){
     Serial.println("error opening file");
   }
 }
+
+
+void readFileToByteArray(){
+  File myFile = SD.open(programFile);
+  if (myFile) {
+    Serial.println("reading:");
+    int i = 0;
+    // read from the file until there's nothing else in it:
+    while (myFile.available()) {
+        bytearr[i] = myFile.read();
+        Serial.write(bytearr[i]);
+        i++;
+    }
+    // close the file:
+    myFile.close();
+  } else {
+    // if the file didn't open, print an error:
+    Serial.println("error opening file");
+  }
+}
+
+void writeByteArrayToFile(){
+  File myFile = SD.open(programFile, FILE_WRITE);
+  
+  // if the file opened okay, write to it:
+  if (!myFile) {
+    Serial.println("error opening file");
+    createFile();
+  }
+  Serial.print("Writing to File...");
+  for(int i = 0; i < sizeByteArr; i++){
+    myFile.println(bytearr[i]);
+  }
+  // close the file:
+  myFile.close();
+  Serial.println("done.");
+}
+
+
+
+void createFile(){
+    
+  if (SD.exists(programFile)) {
+    Serial.println("File exists.");
+  }
+  else {
+    Serial.println("File doesn't exist.");
+  }
+
+  // open a new file and immediately close it:
+  Serial.println("Creating file...");
+  File myFile = SD.open(programFile, FILE_WRITE);
+  myFile.close();
+
+  // Check to see if the file exists: 
+  if (SD.exists(programFile)) {
+    Serial.println("File exists.");
+  }
+  else {
+    Serial.println("File doesn't exist.");  
+  }
+}
+
