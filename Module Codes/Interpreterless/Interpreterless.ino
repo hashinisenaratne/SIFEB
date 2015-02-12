@@ -30,7 +30,6 @@
 
 #include <Wire.h>
 #include <LiquidCrystal.h>
-#include <SD.h>
 
 
 // binary expansion to power up each line
@@ -478,6 +477,10 @@ void executeI2CForBasic()
 
 boolean executeI2CForConditional()
 {
+  if(instructionRegister[2]==0)
+  {
+    delay(instructionRegister[7]*1000);
+  }
   Wire.requestFrom(instructionRegister[2], instructionRegister[6]);
   int i=1;
   responseRegister[0] = instructionRegister[6];
@@ -733,6 +736,10 @@ void sendStructureDiff(){
 
 //Send Address Structure updates to PC 
 void sendStructure(){
+  Serial.print('c');// add main module
+  Serial.print((char)0);
+  Serial.println('0');
+  
     for (int i = 0; i < branches; i++) {
       for (int j = 0; j < slavesPerBranch; j++) {
         if(slaveStructure[i][j][0] != 0){  // a module is connected          
