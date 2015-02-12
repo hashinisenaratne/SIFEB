@@ -6,6 +6,8 @@
 package com.sifeb.ve.handle;
 
 /**
+ * This class handles the creation, deletion, writing to and reading from xml
+ * library files
  *
  * @author Pubudu
  */
@@ -35,22 +37,15 @@ import org.xml.sax.SAXException;
 
 public class FileHandler {
 
-//    private final String CAPABILITY_FOLDER = "src/com/sifeb/ve/files/capabilities/";
-//    private final String DEVICE_FOLDER = "src/com/sifeb/ve/files/devices/";
     public static void main(String[] args) {
-
         FileHandler fh = new FileHandler();
-      //  fh.generateTestDeviceFiles();
-
-        fh.generateTestCapabilityFiles();
-//        fh.readFromCapabilityFile("cap_001");
-//        fh.writeToGameFile("game_001");
-//        Element d=fh.readFromGameFile("game_001");
-//        System.out.println(d.getElementsByTagName("Id").item(0).getTextContent());
-
-        //fh.writeToDeviceFile("dev_12");
+//        fh.generateTestDeviceFiles();
+//        fh.generateTestCapabilityFiles();
     }
 
+    /*
+     * Writes Device information to a xml file
+     */
     public boolean writeToDeviceFile(Device dev) {
 
         try {
@@ -109,11 +104,18 @@ public class FileHandler {
         }
     }
 
+    /*
+     * Deletes a device xml file
+     */
     public boolean removeDeviceFile(Device dev) {
         File file = new File(SifebUtil.DEV_FILE_DIR + dev.getDeviceID() + ".xml");
         return file.delete();
     }
 
+    /*
+     * Reads device xml file and
+     * returns the Device object
+     */
     public Device readFromDeviceFile(String fileName, String address) {
 
         Element eElement = null;
@@ -134,6 +136,9 @@ public class FileHandler {
         return getDevFromElement(eElement, address);
     }
 
+    /*
+     * Converts an element to a Device object
+     */
     private Device getDevFromElement(Element devElement, String address) {
 
         String devId = devElement.getElementsByTagName("Id").item(0).getTextContent();
@@ -163,6 +168,9 @@ public class FileHandler {
         return device;
     }
 
+    /*
+     * Writes Capability information to a xml file
+     */
     public boolean writeToCapabilityFile(Capability cap) {
 
         try {
@@ -239,11 +247,18 @@ public class FileHandler {
         }
     }
 
+    /*
+     * Deletes a capability xml file
+     */
     public boolean removeCapabilityFile(Capability cap) {
         File file = new File(SifebUtil.CAP_FILE_DIR + cap.getCapID() + ".xml");
         return file.delete();
     }
 
+    /*
+     * Reads capability xml file and
+     * returns the Capability object
+     */
     public Capability readFromCapabilityFile(String capID) {
 
         Element eElement = null;
@@ -264,6 +279,9 @@ public class FileHandler {
         return getCapFromElement(eElement);
     }
 
+    /*
+     * Converts an element to a Capability object
+     */
     private Capability getCapFromElement(Element el) {
         String capId = el.getElementsByTagName("Id").item(0).getTextContent();
         NodeList nodeList = el.getElementsByTagName("Names").item(0).getChildNodes();
@@ -291,6 +309,9 @@ public class FileHandler {
         return cap;
     }
 
+    /*
+     * Writes to a game xml file
+     */
     public void writeToGameFile(String fileName) {
 
         try {
@@ -334,6 +355,9 @@ public class FileHandler {
 
     }
 
+    /*
+     * Reads from a game xml file
+     */
     public Element readFromGameFile(String fileName) {
 
         Element element = null;
@@ -357,6 +381,9 @@ public class FileHandler {
         return element;
     }
 
+    /*
+     * Writes to an editor xml file
+     */
     public void writeToEditorFile(String filePath, Document doc) {
 
         boolean success = true;
@@ -383,6 +410,9 @@ public class FileHandler {
 
     }
 
+    /*
+     * reads from an editor xml file
+     */
     public Element readFromEditorFile(String filePath) {
         Element element = null;
         File file = new File(filePath);
