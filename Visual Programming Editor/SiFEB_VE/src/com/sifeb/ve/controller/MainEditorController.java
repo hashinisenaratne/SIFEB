@@ -54,6 +54,8 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import jssc.SerialPortException;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
@@ -185,13 +187,16 @@ public class MainEditorController implements Initializable {
     }
 
     public void setTextStrings() {
-        toolBar.setMinWidth(440);
-        runBtn.setMinWidth(140);
+        toolBar.setMinWidth(470);
+        runBtn.setMinWidth(150);
         runBtn.setText(Strings.getString("btn.run"));
-        uploadBtn.setMinWidth(140);
+        runBtn.setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, 14));
+        uploadBtn.setMinWidth(150);
         uploadBtn.setText(Strings.getString("btn.upload"));
+        uploadBtn.setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, 14));
         clearBtn.setText(Strings.getString("btn.clear"));
-        clearBtn.setMinWidth(140);
+        clearBtn.setMinWidth(150);
+        clearBtn.setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, 14));
         haveLabel.setText(Strings.getString("label.have"));
         doLabel.setText(Strings.getString("label.do"));
 
@@ -274,7 +279,7 @@ public class MainEditorController implements Initializable {
         if (parent.getChildren().size() > 1) {
             parent.getChildren().remove(index);
         } else {
-            FeedBackLogger.sendBadMessage("Sorry, You cannot delete the only holder");
+            FeedBackLogger.sendBadMessage(Strings.getString("message.cannotdelete"));
         }
     }
 
@@ -322,10 +327,10 @@ public class MainEditorController implements Initializable {
                     Action response = dlg.show();
 
                     if (response == Dialog.Actions.YES) {
-                        FeedBackLogger.sendGoodMessage("Program is running!");
+                        FeedBackLogger.sendGoodMessage(Strings.getString("message.running"));
                         ComPortController.writeComPort("r");
                     } else {
-                        FeedBackLogger.sendBadMessage("We will check later!!!");
+                        FeedBackLogger.sendBadMessage(Strings.getString("message.testlater"));
                         // ... user cancelled, reset form to default
                     }
 
@@ -386,13 +391,13 @@ public class MainEditorController implements Initializable {
                         //  ComPortController.setEventListener();
 
                         if (success) {
-                            FeedBackLogger.sendGoodMessage("Program is sucessfully uploaded to SiFEB!");
+                            FeedBackLogger.sendGoodMessage(Strings.getString("message.uploaded"));
                         } else {
-                            FeedBackLogger.sendBadMessage("Program did not upload successfully!");
+                            FeedBackLogger.sendBadMessage(Strings.getString("message.uploadfailed"));
                         }
 
                     } else {
-                        FeedBackLogger.sendBadMessage("We will upload later!!!");
+                        FeedBackLogger.sendBadMessage(Strings.getString("message.notuploaded"));
                         // ... user cancelled, reset form to default
                     }
 
@@ -416,9 +421,9 @@ public class MainEditorController implements Initializable {
             if (response == Dialog.Actions.YES) {
 
                 clearEditorVbox();
-                FeedBackLogger.sendGoodMessage("Program is Cleared Successfully!!!");
+                FeedBackLogger.sendGoodMessage(Strings.getString("message.cleared"));
             } else {
-                FeedBackLogger.sendGoodMessage("Program is not Cleared!!!");
+                FeedBackLogger.sendGoodMessage(Strings.getString("message.notcleared"));
 
             }
         });
@@ -494,7 +499,7 @@ public class MainEditorController implements Initializable {
         dev.addToPane(devicesBox);
         devices.add(dev);
 
-        FeedBackLogger.sendGoodMessage(dev.getDeviceName() + " is connected!");
+        FeedBackLogger.sendGoodMessage("'" + dev.getDeviceName() + "' " + Strings.getString("dev.connected"));
 
     }
 
@@ -531,7 +536,7 @@ public class MainEditorController implements Initializable {
                     }
                 }
 
-                FeedBackLogger.sendBadMessage(d.getDeviceName() + " is disconnected!");
+                FeedBackLogger.sendBadMessage("'"+d.getDeviceName() +"' "+ Strings.getString("dev.disconnected"));
                 break;
             }
         }
@@ -597,7 +602,7 @@ public class MainEditorController implements Initializable {
             devicesBox.setDisable(false);
             capabilityBox.setDisable(false);
             editorBox.setDisable(false);
-            FeedBackLogger.sendGoodMessage("Program Finished!");
+            FeedBackLogger.sendGoodMessage(Strings.getString("message.finished"));
 
         } else {
             FeedBackLogger.sendBadMessage(Strings.getString("message.testlater") + "...");

@@ -21,7 +21,7 @@
                             <children>
                                 <Label fx:id="haveLabel" alignment="CENTER" text="I Have" textAlignment="CENTER" textFill="#9e0f7a" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <font>
-                                        <Font name="Comic Sans MS" size="20.0" />
+                                        <Font name="Comic Sans MS Bold" size="20.0" />
                                     </font>
                                 </Label>
                                 <ScrollPane prefHeight="400.0" prefWidth="200.0" styleClass="blockPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
@@ -39,7 +39,7 @@
                             <children>
                                 <Label fx:id="doLabel" alignment="CENTER" text="I can Do" textAlignment="CENTER" textFill="#9e0f7a" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <font>
-                                        <Font name="Comic Sans MS" size="20.0" />
+                                        <Font name="Comic Sans MS Bold" size="20.0" />
                                     </font>
                                 </Label>
                                 <ScrollPane prefHeight="400.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
@@ -61,7 +61,7 @@
                                         <ImageView fx:id="fbLeft" fitHeight="100.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                                         <Label fx:id="fbText" contentDisplay="CENTER" prefHeight="100.0" textFill="#000000" wrapText="true" HBox.hgrow="SOMETIMES">
                                             <font>
-                                                <Font size="20.0" /> 
+                                                <Font name="System Bold" size="20.0" /> 
                                             </font>
                                         </Label>
                                         <ImageView fx:id="fbRight" fitHeight="100.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
@@ -69,9 +69,9 @@
                                 </HBox>
                                 <SplitPane dividerPositions="0.2109375" layoutY="113.0" prefHeight="429.0" prefWidth="386.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
                                     <items>
-                                        <ScrollPane fitToWidth="true" hbarPolicy="ALWAYS" pannable="true" prefHeight="439.0" prefWidth="216.0" vbarPolicy="ALWAYS">
+                                        <ScrollPane hbarPolicy="ALWAYS" pannable="true" prefHeight="439.0" prefWidth="216.0" vbarPolicy="ALWAYS">
                                             <content>
-                                                <AnchorPane minHeight="800.0" minWidth="0.0" prefHeight="800.0" prefWidth="600.0">
+                                                <AnchorPane minHeight="800.0" minWidth="1000.0" prefHeight="800.0" prefWidth="600.0">
                                                     <children>
                                                         <Pane fx:id="editorPane" layoutY="-38.0" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                             <children>
