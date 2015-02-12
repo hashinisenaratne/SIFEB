@@ -149,21 +149,16 @@ public class RootController implements Initializable {
         libEditMenu.setOnAction((ActionEvent event) -> {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/LibraryEditor.fxml"));
-            try {
+
                 if (libEditStage == null) {
-                    AnchorPane rootLayout = (AnchorPane) loader.load();
                     libEditStage = new Stage();
                     libEditStage.setTitle("SiFEB Library Editor");
-                    libEditStage.setScene(new Scene(rootLayout));
+                libEditStage.setScene(LibraryEditorController.getLibEditor(libEditStage));
                     libEditStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("/com/sifeb/ve/images/appIcon.png")));
                     libEditStage.show();
                 } else {
                     libEditStage.toFront();
                 }
-
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
 
         });
 
@@ -237,8 +232,9 @@ public class RootController implements Initializable {
             }
 
             //for test only
-         //   MainApp.blockCreator.createDeviceBlock("1", "1");
-          //  MainApp.blockCreator.createDeviceBlock("2", "2");
+//            MainApp.blockCreator.createDeviceBlock("0", "0");
+//            MainApp.blockCreator.createDeviceBlock("1", "1");
+//            MainApp.blockCreator.createDeviceBlock("2", "2");
             rootPane.setCenter(mainEditor);
         } catch (IOException e) {
             e.printStackTrace();

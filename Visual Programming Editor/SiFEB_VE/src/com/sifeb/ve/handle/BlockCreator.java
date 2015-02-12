@@ -55,7 +55,7 @@ public class BlockCreator {
     }
 
     public void addDefaultCapabilities() {
-        String[] defaultCaps = {"cap_def1", "cap_def2"};
+        String[] defaultCaps = {};
         for (String capId : defaultCaps) {
             Capability cap = fileHandler.readFromCapabilityFile(capId);
             mainEditor.addCapabilityBlock(cap);
