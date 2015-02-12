@@ -1,4 +1,3 @@
-#include <Wire.h>
 
 /*decoder pin definition*/
 #define DECODER_1 A0
@@ -19,6 +18,19 @@
 #define Greater '>'
 #define LesserThanOrEqual ','
 #define Lesser '<'
+
+/*LCD pin definition*/
+#define LCD_REGISTERSELECT 9
+#define LCD_ENABLE 8
+#define LCD_DATA4 5
+#define LCD_DATA5 4
+#define LCD_DATA6 3
+#define LCD_DATA7 2
+#define LCD_BACKLIGHT 6
+
+#include <Wire.h>
+#include <LiquidCrystal.h>
+
 
 // binary expansion to power up each line
 byte decoder[16][4] = {
@@ -237,6 +249,10 @@ int programLength;
 int instructionStartPositionCounter = 0;
 boolean isProgrammeRunning=false;
 
+// initialize the LCD library with the numbers of the interface pins
+LiquidCrystal lcd(LCD_REGISTERSELECT, LCD_ENABLE, LCD_DATA4, LCD_DATA5, LCD_DATA6, LCD_DATA7);
+byte lcd_error = 0;
+
 void setup() {
   Wire.begin();
   Serial.begin(9600);     // opens serial port, sets data rate to 9600 bps
@@ -247,6 +263,14 @@ void setup() {
   pinMode(DECODER_4, OUTPUT);
 
   resetDecoder();
+  
+    pinMode(LCD_BACKLIGHT,OUTPUT);
+  digitalWrite(LCD_BACKLIGHT,HIGH);
+  // set up the LCD's number of columns and rows: 
+  lcd.begin(16, 2);
+  // Print a message to the LCD.
+  lcdMessage(0,"     SiFEB     ",0);
+  
   updateAddressAllocation();
   if(!updatedPC){
     sendStructureDiff();
@@ -278,6 +302,7 @@ void loop() {
 
     case 'd':
       {
+        lcdMessage(1, "Action Testing", 0);
         while (Serial.available() <= 0) continue;
         instructionRegister[0] = Serial.read();
         for( int i=1; i<instructionRegister[0]; i++)
@@ -286,22 +311,27 @@ void loop() {
           instructionRegister[i] = Serial.read();
         }
         executeInstruction();
+        lcdMessage(1, " Action  Tested ", 0);
         break;
       }
     case 'u':
       {
+        lcdMessage(1, " Upload Program ", 0);
         receiveAndStoreProgram();
         for( int i=0; i<programLength; i++)
         {
           Serial.print(program[i]);
         }
+        lcdMessage(1, "Program Uploaded", 0);
         break;
       }
 
     case 'r':
       {
+        lcdMessage(1, "Program  Running", 0);
         //Serial.println("programme running");//Test
         runProgramme();
+        lcdMessage(1, " Program  Ended ", 0);
         break;
       }
       
@@ -748,7 +778,7 @@ void selectDecoderLines(byte line1, byte line2, byte line3, byte line4){
   digitalWrite(DECODER_4, line4); 
 }
 
-/* Function to Print Structure */
+// function to Print Structure
 void printStructure(){  
   for(int i=0;i<branches;i++){
     for(int j=0; j<slavesPerBranch; j++){      
@@ -762,6 +792,26 @@ void printStructure(){
   }
   Serial.println();
 }
+
+
+/* Functions related to LCD display */
+//writing a message to LCD display
+void lcdMessage(int row, char message[], byte error){
+  // set the cursor to column 0, line 1
+  // (note: line 1 is the second row, since counting begins with 0):
+  lcd.setCursor(0, row);
+  digitalWrite(LCD_BACKLIGHT,HIGH);
+  lcd.print(message);
+  if(error == 1){
+    while (true) {
+      digitalWrite(LCD_BACKLIGHT,HIGH);
+      delay(500);
+      digitalWrite(LCD_BACKLIGHT,LOW);
+      delay(500);
+    }
+  }
+}
+
 
 
 

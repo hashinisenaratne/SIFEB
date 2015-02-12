@@ -4,3 +4,14 @@ sonar check single including 'd'
 sonar loop including 'u'
 117 10 8 99 8 60 0 0 1 50 2 101
 
+
+simple if else(right/left if see/no object)
+10 99 8 60 19 0 1 20 97 52
+5 98 78 97 52
+4 106 9 0
+5 98 78 97 51
+2 101
+
+10 99 8 60 19 0 1 20 97 52 5 98 78 97 52 4 106 9 0 5 98 78 97 51 2 101
+
+
