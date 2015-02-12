@@ -18,7 +18,7 @@ int mode = 1;  //initial mode
 boolean ledshow=false;
 byte type = '1';
 byte address = 0;
-boolean needToStop = false;
+volatile boolean needToStop = false;
 
 void setup()
 {
@@ -145,6 +145,14 @@ void requestEvent()
     case 2:
       break;
     case 3:
+    if(needToStop)
+    {
+    Wire.write(0);
+    }
+    else
+    {
+    Wire.write(1);
+    }
       break;
     default:
       break;
