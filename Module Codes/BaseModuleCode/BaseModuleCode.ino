@@ -1,7 +1,7 @@
 // Base Module Code
 // s - show, t - test, a - act, A - address, B - on selectout, C - off selectout
 // mode 1- initial(ask is device there), 2 - send an address to set, 3 - send command to on (B)/off (C) select or request to act or test
-// a (act), t (test) : 1-forward, 2- reverse, 3-right, 4- left, 5- stop (no test to stop)
+// a (act), t (test) : 1-forward, 2- reverse, 3-right, 4- left, 5- stop (no test to stop), 6-LED ON, 7-LED OFF
 #include <Wire.h>
 
 #define LED  15    //change accordingly
@@ -61,7 +61,7 @@ void loop()
   
   if(ledshow == true){        //handling show command
     digitalWrite(LED, HIGH);
-    delay(5000);               // wait for 5 seconds
+    delay(3000);               // wait for 5 seconds
     digitalWrite(LED, LOW);
     ledshow = false;
   }
@@ -171,6 +171,12 @@ void act(int id){
       break;
     case '5':  stopMotors();
       break;
+    case '6':
+      digitalWrite(LED, HIGH);
+      break;
+    case '7':
+      digitalWrite(LED, LOW);
+      break;
     default:
       break;
   }
@@ -190,6 +196,11 @@ void test(int id){
       break;
     case '4':  turnLeft();
       needToStop = true;
+      break;
+    case '5':  stopMotors();
+      break;
+    case '6':      
+      show();
       break;
     default:
       break;
