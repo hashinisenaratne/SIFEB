@@ -69,9 +69,9 @@
                                 </HBox>
                                 <SplitPane dividerPositions="0.2109375" layoutY="113.0" prefHeight="429.0" prefWidth="386.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
                                     <items>
-                                        <ScrollPane fitToWidth="true" hbarPolicy="ALWAYS" pannable="true" prefHeight="439.0" prefWidth="216.0" vbarPolicy="ALWAYS">
+                                        <ScrollPane hbarPolicy="ALWAYS" pannable="true" prefHeight="439.0" prefWidth="216.0" vbarPolicy="ALWAYS">
                                             <content>
-                                                <AnchorPane minHeight="800.0" minWidth="0.0" prefHeight="800.0" prefWidth="600.0">
+                                                <AnchorPane minHeight="800.0" minWidth="1000.0" prefHeight="800.0" prefWidth="600.0">
                                                     <children>
                                                         <Pane fx:id="editorPane" layoutY="-38.0" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                             <children>

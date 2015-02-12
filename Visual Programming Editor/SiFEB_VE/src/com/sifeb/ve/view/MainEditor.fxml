@@ -66,9 +66,9 @@
                                         <ImageView fx:id="fbRight" fitHeight="100.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
                                     </children>
                                 </HBox>
-                        <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+                        <ScrollPane prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
                           <content>
-                            <AnchorPane minHeight="800.0" minWidth="0.0">
+                            <AnchorPane minHeight="800.0" minWidth="1000.0">
                                  <children>
                                     <Pane fx:id="editorPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
