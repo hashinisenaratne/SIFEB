@@ -126,20 +126,20 @@ public class HomeController implements Initializable {
 
     @FXML
     private void goToAPI(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource(MainApp.LibraryFile));
-            MainApp.setPane((Pane) loader.load());
-            Scene scene = new Scene(MainApp.getPane());
+//        try {
+//            FXMLLoader loader = new FXMLLoader();
+//            loader.setLocation(MainApp.class.getResource(MainApp.LibraryFile));
+////            MainApp.setPane((Pane) loader.load());
+            Scene scene = LibraryEditorController.getLibEditor(MainApp.getStage());
             MainApp.getStage().setScene(scene);
             MainApp.getStage().setMaximized(false);
             MainApp.getStage().setResizable(false);
             MainApp.getStage().show();
 
             SoundHandler.stopBackMusic();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @FXML

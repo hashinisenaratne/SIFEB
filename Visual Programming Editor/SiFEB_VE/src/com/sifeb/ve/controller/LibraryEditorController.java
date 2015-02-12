@@ -51,6 +51,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
@@ -169,6 +170,27 @@ public class LibraryEditorController implements Initializable {
     boolean isNewCap;
     boolean isNewDev;
 
+    private static Scene libEditScene;
+    private static Stage currentStage;
+    
+    public static Scene getLibEditor(Stage stage) {
+        
+        if((LibraryEditorController.currentStage!=null)){
+            LibraryEditorController.currentStage.close();
+        }
+        LibraryEditorController.currentStage = stage;
+        if(libEditScene==null){
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource(MainApp.LibraryFile));
+            try {
+                LibraryEditorController.libEditScene = new Scene((Pane)loader.load());
+            } catch (IOException ex) {
+                Logger.getLogger(LibraryEditorController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return LibraryEditorController.libEditScene;
+    }
+    
     /**
      * Initializes the controller class.
      */
