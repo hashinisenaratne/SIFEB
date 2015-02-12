@@ -36,9 +36,9 @@ public class IfBlock extends Holder {
     private static final String BG_IF_TOP_LEFT_IMG = "/com/sifeb/ve/images/If_V_top_left.png";
     private static final String BG_IF_TOP_MID_IMG = "/com/sifeb/ve/images/If_V_top_middle.png";
     private static final String BG_IF_TOP_RIGHT_IMG = "/com/sifeb/ve/images/If_V_top_right.png";
-    private static final String BG_BOTTOM1_IMG = "/com/sifeb/ve/images/Repeat_V_bottom.png";
-    private static final String BG_BOTTOM2_IMG = "/com/sifeb/ve/images/If_V_bottom.png";
-    private static final String BG_MID_IMG = "/com/sifeb/ve/images/Repeat_V_middle_2.png";
+    private static final String BG_BOTTOM1_IMG = "/com/sifeb/ve/images/If_V_bottom.png";
+    private static final String BG_BOTTOM2_IMG = "/com/sifeb/ve/images/If_V_bottom_2.png";
+    private static final String BG_MID_IMG = "/com/sifeb/ve/images/If_V_middle_2.png";
 
     private VBox condition;
     protected VBox ifHolders;
