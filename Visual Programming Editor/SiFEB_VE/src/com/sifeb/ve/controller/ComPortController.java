@@ -62,7 +62,7 @@ public class ComPortController {
                 sport.setParams(SerialPort.BAUDRATE_9600,
                         SerialPort.DATABITS_8,
                         SerialPort.STOPBITS_1,
-                        SerialPort.PARITY_EVEN);
+                        SerialPort.PARITY_NONE);
 
                 String msg = "AreYouSiFEB?";
                 int inputByteSize = 1;
@@ -79,7 +79,7 @@ public class ComPortController {
             }
         } catch (SerialPortException ex) {
             isPortOpen = false;
-            Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
 
         } finally {
             return isPortOpen;
@@ -103,12 +103,12 @@ public class ComPortController {
                 serialPort.setParams(SerialPort.BAUDRATE_9600,
                         SerialPort.DATABITS_8,
                         SerialPort.STOPBITS_1,
-                        SerialPort.PARITY_EVEN);
+                        SerialPort.PARITY_NONE);
 
             }
 
         } catch (SerialPortException ex) {
-            Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+            // Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
 
         }
 
@@ -133,7 +133,7 @@ public class ComPortController {
             serialPort.removeEventListener();
 
         } catch (SerialPortException ex) {
-            Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+            //  Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
 
@@ -143,7 +143,7 @@ public class ComPortController {
                 serialPort.addEventListener(reader);//Add SerialPortEventListener
 
             } catch (SerialPortException ex) {
-                Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+                // Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -154,7 +154,7 @@ public class ComPortController {
             serialPort.removeEventListener();
             System.out.println(" removed eventlisterner");
         } catch (SerialPortException ex) {
-            Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+            //  Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -162,7 +162,7 @@ public class ComPortController {
 
         byte[] buffer = null;
         try {
-            writeLock.acquire();
+            //  writeLock.acquire();
             openPort();
             serialPort.setParams(SerialPort.BAUDRATE_9600,
                     SerialPort.DATABITS_8,
@@ -173,8 +173,9 @@ public class ComPortController {
             buffer = serialPort.readBytes(bytes);
             System.out.println("Buffer received in serial read");
 
+            System.out.println("buffer length - " + buffer.length);
             for (int i = 0; i < buffer.length; i++) {
-                System.out.println(buffer[i]);
+                System.out.println("received - " + buffer[i]);
             }
             data = serialPort.isDSR();
             System.out.println("dataddd - " + data);
@@ -182,7 +183,7 @@ public class ComPortController {
         } catch (SerialPortException ex) {
             System.out.println(ex);
         } finally {
-            writeLock.release();
+            //  writeLock.release();
             return buffer;
 
         }
@@ -190,11 +191,11 @@ public class ComPortController {
     }
 
     public static void writeComPort(String msg) {
-        try {
-            writeLock.acquire();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            writeLock.acquire();
+//        } catch (InterruptedException ex) {
+//            Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         try {
             openPort();
             serialPort.writeBytes(msg.getBytes());
@@ -203,18 +204,37 @@ public class ComPortController {
         } catch (SerialPortException ex) {
             System.out.println(ex);
         } finally {
-            writeLock.release();
+            // writeLock.release();
+        }
+
+    }
+
+    public static void writeComPort(byte byteValue) {
+//        try {
+//            writeLock.acquire();
+//        } catch (InterruptedException ex) {
+//            Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        try {
+            openPort();
+            serialPort.writeByte(byteValue);
+
+            System.out.println("wrote to the port");
+        } catch (SerialPortException ex) {
+            System.out.println(ex);
+        } finally {
+            // writeLock.release();
         }
 
     }
 
     public static void writeProgram(byte[] byteArray) {
-        try {
-            // serialPort = new SerialPort(port);
-            writeLock.acquire();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            // serialPort = new SerialPort(port);
+//           // writeLock.acquire();
+//        } catch (InterruptedException ex) {
+//            Logger.getLogger(ComPortController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         try {
             //Open port
             openPort();
@@ -223,7 +243,7 @@ public class ComPortController {
         } catch (SerialPortException ex) {
             System.out.println(ex);
         } finally {
-            writeLock.release();
+            //writeLock.release();
         }
     }
 
@@ -266,10 +286,9 @@ public class ComPortController {
 
             if (event.isRXCHAR()) {//If data is available
 
+                // if (event.getEventValue() == 5) {
                 try {
-
                     byte[] readByte = serialPort.readBytes(5);
-
                     //  System.out.println("read val1 - " + readValue);
                     String command = new String(new byte[]{readByte[0]});// Byte.toString(readByte[0]);
                     String readValue = "";
@@ -277,11 +296,9 @@ public class ComPortController {
                     while (!command.contains("#")) {
 
                         readValue = processByteArray(readByte);
-
                         System.out.println("read val1 - " + readValue);
                         System.out.println("blockcccccc - " + blkC);
                         MainApp.blockCreator.addMessagetoQueue(readValue);
-
                         System.out.println("added to queue");
                         //  readByte = serialPort.readBytes(5);
                         readByte = serialPort.readBytes(5);//new String(readBytes);
@@ -292,6 +309,8 @@ public class ComPortController {
                 } catch (SerialPortException ex) {
                     System.out.println(ex);
                 }
+
+                // }
             } else if (event.isCTS()) {//If CTS line has changed state
                 if (event.getEventValue() == 1) {//If line is ON
                     System.out.println("CTS - ON");

@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
- *
+ * Handles the game module which operates the work relates to Game Editor
  * @author Pubudu
  * @author Hashini Senaratne
  */
@@ -74,20 +74,24 @@ public class GameEditorController extends MainEditorController {
 
     }
 
+    // returns the story from the file
     public Node getStory(int storyNumber) {
         return (Node) nodeList.item(storyNumber);
     }
 
+    // sets the progress bar
     public void setProgressBar(int num) {
         double progress = (double) num / (double) totalStories;
         progressBar.setProgress(progress);
     }
 
+    // read from the game file
     public void readGameFile(String gameName) {
         Element element = fileHandler.readFromGameFile(gameName);
         nodeList = element.getElementsByTagName("Stories").item(0).getChildNodes();
     }
 
+    // sets the starting conditions for the game editor
     public void setStartingConditions() {
         prevBtn.setDisable(true);
         String imgText = nodeList.item(storyCount - 1).getChildNodes().item(0).getTextContent();
@@ -105,6 +109,7 @@ public class GameEditorController extends MainEditorController {
 
     }
 
+    // sets event listeners 
     public void setEventListeners() {
         prevBtn.setOnAction(new EventHandler<ActionEvent>() {
 
