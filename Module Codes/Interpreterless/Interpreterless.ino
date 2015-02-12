@@ -30,6 +30,7 @@
 
 #include <Wire.h>
 #include <LiquidCrystal.h>
+#include <SD.h>
 
 
 // binary expansion to power up each line
@@ -244,7 +245,7 @@ unsigned long lastSec=0;
 
 char instructionRegister[20];//first byte contains the valid length
 char responseRegister[10]; //first byte contains the valid length
-char program[1000];
+char program[256];
 int programLength;
 int instructionStartPositionCounter = 0;
 boolean isProgrammeRunning=false;
@@ -318,10 +319,10 @@ void loop() {
       {
         lcdMessage(1, " Upload Program ", 0);
         receiveAndStoreProgram();
-        for( int i=0; i<programLength; i++)
+        /*for( int i=0; i<programLength; i++)
         {
           Serial.print(program[i]);
-        }
+        }*/
         lcdMessage(1, "Program Uploaded", 0);
         break;
       }
