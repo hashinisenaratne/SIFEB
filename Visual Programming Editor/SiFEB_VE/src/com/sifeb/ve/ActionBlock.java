@@ -120,10 +120,12 @@ public class ActionBlock extends HBox {
         });
     }
 
+    // adds action block to the pane
     public void addToPane(Pane parent) {
         parent.getChildren().add(this);
     }
 
+    // remove action block from the pane
     public void removeMe() {
         Pane node = (Pane) this.getParent();
         node.getChildren().remove(this);

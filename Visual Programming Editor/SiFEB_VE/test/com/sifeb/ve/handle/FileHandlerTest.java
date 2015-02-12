@@ -60,13 +60,32 @@ public class FileHandlerTest {
         System.out.println("readFromEditorFile");
 
         String filePath1 = "C:\\FYP\\SIFEB\\Visual Programming Editor\\SiFEB_VE\\test\\TestFiles\\test1.sifeb";
+        //   String filePath2 = "C:\\FYP\\SIFEB\\Visual Programming Editor\\SiFEB_VE\\test\\TestFiles\\test2.sifeb";
+        FileHandler instance = new FileHandler();
+        String expResult1 = "MainEditor";
+        //   Element expResult2 = null;
+        String result1 = instance.readFromEditorFile(filePath1).getNodeName();
+        // Element result2 = instance.readFromEditorFile(filePath2);
+        assertEquals(expResult1, result1);
+        // assertEquals(expResult2, result2);
+
+    }
+
+    /**
+     * Test of readFromEditorFile method, of class FileHandler.
+     */
+    @Test
+    public void testReadFromEditorFileForInvalidInput() {
+        System.out.println("readFromEditorFile");
+
+        //  String filePath1 = "C:\\FYP\\SIFEB\\Visual Programming Editor\\SiFEB_VE\\test\\TestFiles\\test1.sifeb";
         String filePath2 = "C:\\FYP\\SIFEB\\Visual Programming Editor\\SiFEB_VE\\test\\TestFiles\\test2.sifeb";
         FileHandler instance = new FileHandler();
         String expResult1 = "MainEditor";
         Element expResult2 = null;
-        String result1 = instance.readFromEditorFile(filePath1).getNodeName();
+        //String result1 = instance.readFromEditorFile(filePath1).getNodeName();
         Element result2 = instance.readFromEditorFile(filePath2);
-        assertEquals(expResult1, result1);
+        //assertEquals(expResult1, result1);
         assertEquals(expResult2, result2);
 
     }

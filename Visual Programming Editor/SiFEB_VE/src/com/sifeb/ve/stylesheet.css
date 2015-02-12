@@ -60,28 +60,28 @@ and open the template in the editor.
 
 #runBtn {
     -fx-text-fill: white;
-    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-background-color: linear-gradient(#319314, #63E43B);
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
     -fx-cursor: hand;
 }
 #runBtn:hover {
-    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+    -fx-background-color: linear-gradient(#63E43B, #319314);
 }
 #runBtn:pressed {
-    -fx-background-color: linear-gradient(#0A0008, #61a2b1);
+    -fx-background-color: linear-gradient(#0A0008, #319314);
 }
 
 #clearBtn {
     -fx-text-fill: white;
-    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-background-color: linear-gradient(#9C1717, #F05454);
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
     -fx-cursor: hand;
 }
 #clearBtn:hover {
-    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+    -fx-background-color: linear-gradient(#F05454, #9C1717);
 }
 #clearBtn:pressed {
-    -fx-background-color: linear-gradient(#0A0008, #61a2b1);
+    -fx-background-color: linear-gradient(#0A0008, #9C1717);
 }
 
 #uploadBtn {

@@ -237,8 +237,8 @@ public class RootController implements Initializable {
             }
 
             //for test only
-            MainApp.blockCreator.createDeviceBlock("1", "1");
-            MainApp.blockCreator.createDeviceBlock("2", "2");
+         //   MainApp.blockCreator.createDeviceBlock("1", "1");
+          //  MainApp.blockCreator.createDeviceBlock("2", "2");
             rootPane.setCenter(mainEditor);
         } catch (IOException e) {
             e.printStackTrace();

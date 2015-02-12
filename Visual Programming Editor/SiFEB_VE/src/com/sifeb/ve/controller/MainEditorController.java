@@ -297,7 +297,7 @@ public class MainEditorController implements Initializable {
             refreshConnBtn.setDisable(true);
             try {
                 ComPortController.closePort();
-                Thread.sleep(2000);
+                Thread.sleep(4000);
                 ComPortController.openPort();
                 ComPortController.setEventListener();
                 checkConnection(false);
@@ -366,29 +366,28 @@ public class MainEditorController implements Initializable {
                             System.out.println("byte v - " + sendingData[i]);
                         }
                         System.out.println(sendingData.toString());
-                        ComPortController.removeEventListener();
+
                         boolean success = false;
 
                         for (int i = 0; i < 1; i++) {
-                            try {
-                                System.out.println("try - " + i);
-                                ComPortController.writeComPort("u");
-                                int size = sendingData.length;
-                                serialPort.writeByte((byte) size);
-                                ComPortController.writeProgram(sendingData);
-                                success = true;
-                                /*byte[] receivedData = ComPortController.read(size);
 
-                                 if (Arrays.equals(receivedData, sendingData)) {
-                                 success = true;
-                                 break;
-                                 } */
-                            } catch (SerialPortException ex) {
-                                Logger.getLogger(MainEditorController.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+                            System.out.println("try - " + i);
+                            ComPortController.writeComPort("u");
+                            int size = sendingData.length;
+                            System.out.println("size of sending - " + size);
+                            ComPortController.writeComPort((byte) size);
+                            //   ComPortController.removeEventListener();
+                            ComPortController.writeProgram(sendingData);
+                            success = true;
 
+                            // byte[] receivedData = ComPortController.read(1);
+//                            System.out.println("byte 1 - " + receivedData[0]);
+//                            if (Arrays.equals(receivedData, sendingData)) {
+//                                success = true;
+//                                break;
+//                            }
                         }
-                        //  ComPortController.setEventListener();
+                        //   ComPortController.setEventListener();
 
                         if (success) {
                             FeedBackLogger.sendGoodMessage(Strings.getString("message.uploaded"));
@@ -536,7 +535,7 @@ public class MainEditorController implements Initializable {
                     }
                 }
 
-                FeedBackLogger.sendBadMessage("'"+d.getDeviceName() +"' "+ Strings.getString("dev.disconnected"));
+                FeedBackLogger.sendBadMessage("'" + d.getDeviceName() + "' " + Strings.getString("dev.disconnected"));
                 break;
             }
         }
