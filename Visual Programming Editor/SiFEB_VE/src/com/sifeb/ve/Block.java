@@ -5,6 +5,7 @@
  */
 package com.sifeb.ve;
 
+import com.sifeb.ve.resources.Strings;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -32,6 +33,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 /**
  * This is the Block class which handles dragging and its functionalities
@@ -55,7 +57,6 @@ public final class Block extends Pane {
         this.capability = capability;
         this.textField = null;
         name = new Label();
-        Block.this.setBlockText();
 
         Image bckgndImg = setBackgroundImage(capability.getType());
         setShape(capability.getType(), bckgndImg);
@@ -67,7 +68,8 @@ public final class Block extends Pane {
         super.getChildren().add(blockIcon);
 
         setEventHandlers();
-        super.setCursor(Cursor.OPEN_HAND);
+        super.setCursor(Cursor.OPEN_HAND);        
+        this.setBlockText();
         this.setId(capability.getType() + Integer.toString(this.hashCode()));
     }
 
@@ -85,6 +87,7 @@ public final class Block extends Pane {
 
         name = new Label();
         name.setFont(new Font(14));
+        name.setStyle("-fx-font-weight: bold");
         name.setPrefSize(image.getWidth() * 0.8, 30);
         name.setMaxWidth(image.getWidth() * 0.8);
         name.relocate((image.getWidth() * 0.1), 30);
@@ -212,6 +215,11 @@ public final class Block extends Pane {
     }
 
     public void setBlockText() {
+        if(Strings.getLocale().getLanguage().equals("si")){
+            name.setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, 10));
+        }else{
+            name.setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, 14));
+        }
         name.setText(this.capability.getCapName());
         name.setTooltip(new Tooltip(name.getText()));
     }
@@ -233,19 +241,19 @@ public final class Block extends Pane {
             case Capability.CAP_ACTION:
             case Capability.CAP_CONTROL:
             case Capability.CAP_IFELSE:
-                name.setFont(new Font(12));
+                name.setFont(new Font(14));
                 name.setPrefSize(img.getWidth() * 0.9, 12);
                 name.setMaxWidth(img.getWidth() * 0.9);
-                name.relocate((img.getWidth() * 0.05), 45);
+                name.relocate((img.getWidth() * 0.05), 42);
                 break;
             case Capability.CAP_SENSE:
-                name.setFont(new Font(12));
+                name.setFont(new Font(14));
                 name.setPrefSize(img.getWidth() * 0.9, 30);
                 name.setMaxWidth(img.getWidth() * 0.9);
                 name.relocate((img.getWidth() * 0.05), 23);
                 break;
             case Capability.CAP_CONDITION:
-                name.setFont(new Font(12));
+                name.setFont(new Font(14));
                 name.setPrefSize(img.getWidth() * 0.9, 12);
                 name.setMaxWidth(img.getWidth() * 0.9);
                 name.relocate((img.getWidth() * 0.05), 24);

@@ -20,7 +20,7 @@
                             <children>
                                 <Label fx:id="haveLabel" alignment="CENTER" text="I Have" textAlignment="CENTER" textFill="#9e0f7a" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <font>
-                                        <Font name="Comic Sans MS" size="20.0" />
+                                        <Font name="Comic Sans MS Bold" size="20.0" />
                                     </font>
                                 </Label>
                                 <ScrollPane prefHeight="400.0" prefWidth="200.0" styleClass="blockPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
@@ -38,7 +38,7 @@
                             <children>
                                 <Label fx:id="doLabel" alignment="CENTER" text="I can Do" textAlignment="CENTER" textFill="#9e0f7a" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <font>
-                                        <Font name="Comic Sans MS" size="20.0" />
+                                        <Font name="Comic Sans MS Bold" size="20.0" />
                                     </font>
                                 </Label>
                                 <ScrollPane prefHeight="400.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
@@ -60,7 +60,7 @@
                                         <ImageView fx:id="fbLeft" fitHeight="100.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                                         <Label fx:id="fbText" contentDisplay="CENTER" prefHeight="100.0" textFill="#000000" wrapText="true" HBox.hgrow="SOMETIMES">
                                             <font>
-                                                <Font size="20.0" /> 
+                                                <Font name="System Bold" size="20.0" /> 
                                             </font>
                                         </Label>
                                         <ImageView fx:id="fbRight" fitHeight="100.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
@@ -121,17 +121,17 @@
                         </Button>
                   <ToolBar fx:id="toolBar" layoutX="404.0" prefHeight="60.0" prefWidth="325.0">
                     <items>
-                        <Button fx:id="clearBtn" minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="CLEAR ALL">
+                        <Button fx:id="clearBtn" minHeight="-Infinity" minWidth="100.0" mnemonicParsing="false" prefHeight="37.0" text="CLEAR ALL">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
                         </Button>
-                        <Button fx:id="uploadBtn" minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="UPLOAD">
+                        <Button fx:id="uploadBtn" minHeight="-Infinity" minWidth="100.0" mnemonicParsing="false" prefHeight="37.0" text="UPLOAD">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
                         </Button>
-                              <Button fx:id="runBtn" minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="RUN">
+                              <Button fx:id="runBtn" minHeight="-Infinity" minWidth="100.0" mnemonicParsing="false" prefHeight="37.0" text="RUN">
                                  <font>
                                     <Font name="System Bold" size="16.0" />
                                  </font>

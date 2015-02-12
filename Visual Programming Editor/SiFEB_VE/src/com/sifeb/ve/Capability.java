@@ -171,7 +171,7 @@ public class Capability {
 
     @Override
     public String toString() {
-        return this.getCapName() + " (" + this.getCapID() + ")";
+        return this.getCapName(Locale.US) + " (" + this.getCapID() + ")";
     }
 
 }

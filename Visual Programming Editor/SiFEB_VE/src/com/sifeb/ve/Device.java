@@ -107,7 +107,7 @@ public class Device {
 
     @Override
     public String toString() {
-        return (this.getDeviceName() + " (" + this.getDeviceID() + ")");
+        return (this.getDeviceName(Locale.US) + " (" + this.getDeviceID() + ")");
     }
 
     public Block getCapabilityBlock(String capId) {
