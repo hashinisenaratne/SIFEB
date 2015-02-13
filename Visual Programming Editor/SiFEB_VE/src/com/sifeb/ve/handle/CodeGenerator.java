@@ -119,21 +119,56 @@ public class CodeGenerator {
         }
         Block acBlock = (Block) h.getActions().getChildren().get(0);
 
-        ArrayList<Byte> cmdArr = new ArrayList<>();
+        ArrayList<Byte> cmdArr1 = new ArrayList<>();
+        ArrayList<Byte> cmdArr2 = new ArrayList<>();
 
         //executing action
         char instruction = 'b';
         int address = acBlock.getCapability().getDevice().getAddress();
         char cmdChar = acBlock.getCapability().getExeCommand().charAt(0);
         char cmdChar1 = acBlock.getCapability().getExeCommand().charAt(1);
-        cmdArr.add((byte) instruction);
-        cmdArr.add((byte) address);
-        cmdArr.add((byte) cmdChar);
-        cmdArr.add((byte) cmdChar1);
+        cmdArr1.add((byte) instruction);
+        cmdArr1.add((byte) address);
+        cmdArr1.add((byte) cmdChar);
+        cmdArr1.add((byte) cmdChar1);
 
         //prepending command length parameter
-        cmdArr.add(0, (byte) (cmdArr.size() + 1));
-        return cmdArr;
+        cmdArr1.add(0, (byte) (cmdArr1.size() + 1));
+        
+        //checking condition or sense
+        instruction = 'c';
+        cmdChar = acBlock.getCapability().getExeCommand().charAt(0);
+        cmdChar1 = acBlock.getCapability().getExeCommand().charAt(1);
+        char compType = '!';
+
+        cmdArr2.add((byte) instruction);
+        cmdArr2.add((byte) address);
+        cmdArr2.add((byte) compType);
+        short jumpAdd = 0;
+        byte[] jumpArr = shortToByteArray(jumpAdd);
+        for (byte b : jumpArr) {
+            cmdArr2.add(b);
+        }
+        short respSize = 1;
+        byte[] respArr = shortToByteArray(respSize);
+        cmdArr2.add(respArr[0]);
+//        for(byte b:respArr){
+//            cmdArr2.add(b);
+//        }
+        int refVal = 0;
+        
+        byte[] refArr = intToByteArray(refVal);
+        for (int i = 0; i < respSize; i++) {
+            cmdArr2.add(refArr[i]);
+        }
+        cmdArr2.add((byte) cmdChar);
+        cmdArr2.add((byte) cmdChar1);
+        //prepending command length parameter
+        cmdArr2.add(0, (byte) (cmdArr2.size() + 1));
+        
+        cmdArr1.addAll(cmdArr2);
+        
+        return cmdArr1;
     }
 
     /*
