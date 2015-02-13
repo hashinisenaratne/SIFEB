@@ -65,16 +65,19 @@ public class ConditionBlock extends Holder {
         condition.getChildren().remove(0);
     }
 
+    // returns the conditon in the block
     public VBox getCondition() {
         return condition;
     }
 
+    // set the condition in block
     public final void setCondition() {
         this.condition = new VBox();
         this.condition.setPrefSize(90, 60);
         this.condition.relocate(157, 19);
     }
 
+    // sets event handler for drag and drop
     @Override
     public void setEventHandlers() {
         this.setOnDragDropped((DragEvent event) -> {
@@ -134,6 +137,7 @@ public class ConditionBlock extends Holder {
         });
     }
 
+    // add event listeners
     private void addListeners() {
         super.getActions().getChildren().addListener(new AbstractNotifyListener() {
 

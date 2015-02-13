@@ -84,12 +84,14 @@ public final class DeviceBlock extends Pane {
 
     }
 
+    // sets event handlers
     public void setEventHandlers() {
         this.setOnMouseClicked((MouseEvent event) -> {
             toggleHighlight();
         });
     }
 
+    // sets device block name based on locale
     public void setBlockText() {
         if(Strings.getLocale().getLanguage().equals("si")){
             name.setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, 12));
@@ -101,6 +103,7 @@ public final class DeviceBlock extends Pane {
         name.setTooltip(new Tooltip(name.getText()));
     }
 
+    // sets block label
     private void setBlockLabel() {
         name.setFont(new Font(14));
         name.setPrefSize(bckImg.getWidth() * 0.6, 30);
@@ -205,6 +208,7 @@ public final class DeviceBlock extends Pane {
 
     }
 
+    // remove device block from the parent object
     public void removeMe() {
         Pane node = (Pane) this.getParent();
         node.getChildren().remove(this);
