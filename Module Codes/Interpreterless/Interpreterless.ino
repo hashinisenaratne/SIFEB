@@ -313,7 +313,7 @@ void loop() {
         //wait for inpuuts
         while (Serial.available() <= 0) continue;
         //set instruction length
-        instructionRegister[0] = Serial.read
+        instructionRegister[0] = Serial.read();
         //set instruction
         for( int i=1; i<instructionRegister[0]; i++)
         {
@@ -503,6 +503,7 @@ boolean executeI2CForConditional()
   if(instructionRegister[2]==0)
   {
     delay(instructionRegister[7]*1000);
+    return true;
   }
   Wire.requestFrom(instructionRegister[2], instructionRegister[6]);
   int i=1;
