@@ -44,6 +44,7 @@ public class FeedBackLogger {
         SoundHandler.playErrorMusic();
     }
 
+    // Use for sending a message without any face
     private static void sendMessage(String text) {
         String content = text;
         Animation animation = new Transition() {
@@ -63,6 +64,7 @@ public class FeedBackLogger {
 
     }
 
+    // sends the welcome message
     public static void sendWelcomeMessage() {
         fbFace.setImage(happyFace);
         sendMessage("Hi, Welcome to SiFEB!!!");

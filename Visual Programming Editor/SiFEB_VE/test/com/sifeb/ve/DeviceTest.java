@@ -3,42 +3,68 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.sifeb.ve;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
  * @author Pubudu
  */
 public class DeviceTest {
-    
+
+    static Device dev;
+
     public DeviceTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
+//        try {
+//            System.out.printf("About to launch FX App\n");
+//            Thread t = new Thread("JavaFX Init Thread") {
+//                public void run() {
+//                    Application.launch(MainApp.class, new String[0]);
+//                }
+//            };
+//            t.setDaemon(true);
+//            t.start();
+//            System.out.printf("FX App thread started\n");
+//            Thread.sleep(500);
+//            Map<Locale, String> actNames = new HashMap<>();
+//            actNames.put(new Locale("en_US"), "Wheels");
+//            dev = new Device("id1", actNames, 10, "actionC", "dev_1");
+//        } catch (InterruptedException ex) {
+//            Logger.getLogger(DeviceTest.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+
+        Map<Locale, String> actNames = new HashMap<>();
+        actNames.put(new Locale("en_US"), "Wheels");
+        dev = new Device("id1", actNames, 10, "actionC", "dev_1");
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -49,12 +75,12 @@ public class DeviceTest {
     @Test
     public void testGetDeviceID() {
         System.out.println("getDeviceID");
-        Device instance = null;
-        String expResult = "";
-        String result = instance.getDeviceID();
+
+        String expResult = "id1";
+        String result = dev.getDeviceID();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //  fail("The test case is a prototype.");
     }
 
     /**
@@ -266,5 +292,5 @@ public class DeviceTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-    
+
 }
