@@ -31,7 +31,7 @@ import javafx.scene.layout.VBox;
  * @author Hashini
  */
 public class RepeatBlock extends Holder {
-
+    //Related image resources for repeat block
     private static final String BG_TOP_IMG = "/com/sifeb/ve/images/Repeat_V_top.png";
     private static final String BG_BOTTOM_IMG = "/com/sifeb/ve/images/Repeat_V_bottom.png";
     private static final String BG_MID_IMG1 = "/com/sifeb/ve/images/Repeat_V_middle_1.png";
@@ -40,6 +40,7 @@ public class RepeatBlock extends Holder {
     private VBox condition;
     protected VBox holders;
 
+    // Initial set ups in the constructor
     public RepeatBlock(MainEditorController mainCtrl) {
 
         super(mainCtrl);
@@ -58,7 +59,8 @@ public class RepeatBlock extends Holder {
 
         addRepeatContent(middleImage1, middleImage2);
     }
-
+    
+    // set repeat block gui set ups
     public final void setActions() {
         actions.setMinWidth(122);
         actions.setMinHeight(60);
@@ -66,7 +68,8 @@ public class RepeatBlock extends Holder {
         this.actions.setBackground(Background.EMPTY);
         this.actions.relocate(11, 19.5);
     }
-
+    
+    // set repeat block image contents
     private void addRepeatContent(Image img1, Image img2) {
         this.holders = new VBox();
         this.holders.setSpacing(-15);
@@ -80,15 +83,18 @@ public class RepeatBlock extends Holder {
         ((Pane) this.holders).getChildren().add(new Holder(mainCtrl));
         super.getChildren().add(this.holders);
     }
-
+    
+    // function to add condition for the repeat block
     public void addCondition(Node node) {
         condition.getChildren().add(node);
     }
 
+    // check whether a condition exists
     public boolean hasCondition() {
         return (condition.getChildren().size() > 0);
     }
 
+    // function to remove the condition from the repeat block
     public void removeCurrentCondition() {
         condition.getChildren().remove(0);
     }
@@ -97,10 +103,12 @@ public class RepeatBlock extends Holder {
         return condition;
     }
 
+    // return the holders inside the repeat block
     public VBox getHolders() {
         return holders;
     }
 
+    // setup gui needs for condition block
     public final void setCondition() {
         this.condition = new VBox();
         this.condition.setPrefSize(90, 60);
@@ -109,7 +117,7 @@ public class RepeatBlock extends Holder {
     }
 
     @Override
-    public void setEventHandlers() {
+    public void setEventHandlers() {    // handles drag and drops on repeat block area
         this.setOnDragDropped((DragEvent event) -> {
             Dragboard db = event.getDragboard();
             Parent p = ((Node) event.getGestureSource()).getParent();
@@ -127,7 +135,7 @@ public class RepeatBlock extends Holder {
                     }
                     String blockType = draggedBlock.getCapability().getType();
                     switch (blockType) {
-                        case Capability.CAP_CONTROL:
+                        case Capability.CAP_CONTROL:        // replace with another repeat block
                             this.addElementToVbox(draggedBlock);
                             if (this.getActions().getChildren().size() > 1) {
                                 this.getActions().getChildren().remove(0);
@@ -135,13 +143,13 @@ public class RepeatBlock extends Holder {
                             success = true;
                             this.mainCtrl.addHolderAfterMe(this, (VBox) this.getParent(), false);
                             break;
-                        case Capability.CAP_ACTION:
+                        case Capability.CAP_ACTION:         // change holder type when another type is added
                         case Capability.CAP_ACTION_C:
                         case Capability.CAP_IFELSE:
                             super.mainCtrl.changeHolderType(this, (VBox) this.getParent(), draggedBlock);
                             success = true;
                             break;
-                        case Capability.CAP_SENSE:
+                        case Capability.CAP_SENSE:          // hadle adding conditions to repeat block
                         case Capability.CAP_CONDITION:
                             if (this.hasCondition()) {
                                 this.removeCurrentCondition();
@@ -157,7 +165,7 @@ public class RepeatBlock extends Holder {
             }
             event.setDropCompleted(success);
             event.consume();
-            SoundHandler.playAudioClip("blockDrop.wav", 1);
+            SoundHandler.playAudioClip("blockDrop.wav", 1);     // sound feebbacks
         });
 
         this.setOnDragOver((DragEvent event) -> {
@@ -168,6 +176,7 @@ public class RepeatBlock extends Holder {
         });
     }
 
+    // event listeners on changes
     private void addListeners() {
         super.getActions().getChildren().addListener(new AbstractNotifyListener() {
 
@@ -186,6 +195,7 @@ public class RepeatBlock extends Holder {
         });
     }
 
+    // change the holder type to normal if the condition and repeat action not exist
     private void changeBackToHolder() {
         int numActions = super.getActions().getChildren().size();
         int numConditions = this.getCondition().getChildren().size();
