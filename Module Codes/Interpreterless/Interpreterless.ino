@@ -28,6 +28,7 @@
 #define LCD_DATA7 2
 #define LCD_BACKLIGHT 6
 
+/*librarry declarations*/
 #include <Wire.h>
 #include <LiquidCrystal.h>
 
@@ -244,10 +245,10 @@ unsigned long lastSec=0;
 
 char instructionRegister[20];//first byte contains the valid length
 char responseRegister[10]; //first byte contains the valid length
-char program[256];
+char program[256];//contains executable program
 int programLength;
-int instructionStartPositionCounter = 0;
-boolean isProgrammeRunning=false;
+int instructionStartPositionCounter = 0;//directs to the starting byte of the current instruction
+boolean isProgrammeRunning=false;//flag to terminate the program run loop
 
 // initialize the LCD library with the numbers of the interface pins
 LiquidCrystal lcd(LCD_REGISTERSELECT, LCD_ENABLE, LCD_DATA4, LCD_DATA5, LCD_DATA6, LCD_DATA7);
@@ -257,21 +258,25 @@ void setup() {
   Wire.begin();
   Serial.begin(9600);     // opens serial port, sets data rate to 9600 bps
 
+//make decoder inputs as output at arduino
   pinMode(DECODER_1, OUTPUT);
   pinMode(DECODER_2, OUTPUT);
   pinMode(DECODER_3, OUTPUT);
   pinMode(DECODER_4, OUTPUT);
 
-  resetDecoder();
+  resetDecoder();//turn off all the branches
   
-    pinMode(LCD_BACKLIGHT,OUTPUT);
-  digitalWrite(LCD_BACKLIGHT,HIGH);
+  pinMode(LCD_BACKLIGHT,OUTPUT);
+  digitalWrite(LCD_BACKLIGHT,HIGH);//light the display
+  
   // set up the LCD's number of columns and rows: 
   lcd.begin(16, 2);
   // Print a message to the LCD.
   lcdMessage(0,"     SiFEB     ",0);
   
-  updateAddressAllocation();
+  updateAddressAllocation();//initial address allocation
+  
+  //initial structure transmission
   if(!updatedPC){
     sendStructureDiff();
   }
@@ -280,6 +285,7 @@ void setup() {
 
 void loop() {
 
+  //check changes in structure in every 5s
   if(millis()-lastSec >= 5000)
   {
     lastSec = millis();
@@ -293,27 +299,32 @@ void loop() {
     lastSec = 0;
   }
 
+//look for any command from pc
   if(Serial.available())
   {
     char mode = Serial.read();
 
     switch(mode)
     {
-
+//demonstration of capabilities
     case 'd':
       {
         lcdMessage(1, "Action Testing", 0);
+        //wait for inpuuts
         while (Serial.available() <= 0) continue;
-        instructionRegister[0] = Serial.read();
+        //set instruction length
+        instructionRegister[0] = Serial.read
+        //set instruction
         for( int i=1; i<instructionRegister[0]; i++)
         {
           while (Serial.available() <= 0) continue;
           instructionRegister[i] = Serial.read();
         }
-        executeInstruction();
+        executeInstruction();// execute single
         lcdMessage(1, " Action  Tested ", 0);
         break;
       }
+ //uploading program
     case 'u':
       {
         lcdMessage(1, " Upload Program ", 0);
@@ -325,7 +336,7 @@ void loop() {
         lcdMessage(1, "Program Uploaded", 0);
         break;
       }
-
+//run the program
     case 'r':
       {
         lcdMessage(1, "Program  Running", 0);
@@ -334,7 +345,7 @@ void loop() {
         lcdMessage(1, " Program  Ended ", 0);
         break;
       }
-      
+//send all connected modules     
      case 's':
       {
         sendStructure();
@@ -378,8 +389,12 @@ void loop() {
 
 void receiveAndStoreProgram()
 {
+  //wait for inputs
   while (Serial.available() <= 0) continue;
+  
+  //get and set program length
   programLength = Serial.read();
+  //get program
   for( int i=0; i<programLength; i++)
   {
     while (Serial.available() <= 0) continue;
@@ -393,6 +408,7 @@ void runProgramme()
   instructionStartPositionCounter = 0;
   while(true)
   {
+    //get the current instruction to the IR
     for(int i=0;i<program[instructionStartPositionCounter];i++)
     {
       instructionRegister[i] = program[instructionStartPositionCounter + i];
@@ -409,7 +425,9 @@ void runProgramme()
       Serial.write(responseRegister[i]);
     }
     Serial.println();*/
-    executeInstruction();
+    executeInstruction();//Execute single
+    
+    //check if the end command is reached
     if(!isProgrammeRunning)
     {
      break;
@@ -418,7 +436,7 @@ void runProgramme()
   }
 }
 
-
+//execute the instruction in the IR
 void executeInstruction()
 {
   switch(instructionRegister[1])
@@ -427,17 +445,19 @@ void executeInstruction()
     {
       //Serial.println("Basic");//Test
       executeI2CForBasic();
-      instructionStartPositionCounter+=instructionRegister[0];
+      instructionStartPositionCounter+=instructionRegister[0];// directs the next instruction
       break; 
     }
   case ConditionalInstruction : 
     {
       //Serial.println("Conditional");//Test
+      //if condition is met, move to the next instruction
       if(executeI2CForConditional())
       {
         //Serial.println("TRUE");//Test
         instructionStartPositionCounter+=instructionRegister[0];
       }
+      //if condition is not met, jump
       else
       {
         //Serial.println("FALSE");//Test
@@ -449,6 +469,7 @@ void executeInstruction()
   case JumpInstruction : 
     {
       //Serial.println("Jump");//Test
+      //jump the number of instructions
       int* jump = (int*)&instructionRegister[2];
       instructionStartPositionCounter += *jump;
       break; 
@@ -462,6 +483,7 @@ void executeInstruction()
   } 
 }
 
+//simple command
 void executeI2CForBasic()
 {
 
@@ -475,6 +497,7 @@ void executeI2CForBasic()
   Wire.endTransmission();
 }
 
+//check for condition
 boolean executeI2CForConditional()
 {
   if(instructionRegister[2]==0)
@@ -493,6 +516,8 @@ boolean executeI2CForConditional()
   return evaluateComparison();
 }
 
+
+//comparisions for condition check
 boolean evaluateComparison()
 {
   switch (instructionRegister[3])
