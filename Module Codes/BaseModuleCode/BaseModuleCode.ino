@@ -4,9 +4,10 @@
 // a (act), t (test) : 1-forward, 2- reverse, 3-right, 4- left, 5- stop (no test to stop), 6-LED ON, 7-LED OFF
 #include <Wire.h>
 
-#define LED  15    //change accordingly
-#define SELECT_IN A3    //change accordingly
-#define SELECT_OUT A2    //change accordingly
+/* Pin Definitions*/
+#define LED  15    
+#define SELECT_IN A3    
+#define SELECT_OUT A2    
 #define MOTOR1_1 8
 #define MOTOR1_2 9
 #define MOTOR1_PWM 5
@@ -22,6 +23,7 @@ volatile boolean needToStop = false;
 
 void setup()
 {
+  // set pins to input and output modes 
   pinMode(LED, OUTPUT);
   pinMode(SELECT_IN, INPUT);
   pinMode(SELECT_OUT, OUTPUT);  
@@ -35,55 +37,61 @@ void setup()
   
   Serial.begin(9600);
   
-  Wire.begin(10);                  // unconfigured
+  //begin i2c communication with default address
+  Wire.begin(10);
   Wire.onReceive(receiveEvent);   // register events
   Wire.onRequest(requestEvent);
-  Serial.println("address 10");
+  //Serial.println("address 10");//TEST
   
+  //giving some time to set up
   delay(5000);
   
+  //waite unttil the slave is selected
   while (digitalRead(SELECT_IN) == HIGH) {
-    delay(10);    //change accordingly
-    Serial.println("address 10");
+    delay(10);    
+    //Serial.println("address 10");//TEST
   }
   
-  //NEED TO TAKE CARE AT MASTER. WARNNING: I2C POWER UP MAY NOT FINISHED WHEN MASTER BIGIN COMMUNICATION
-  Wire.begin(11);                  // selected
+  //when selected change the default address to another
+  Wire.begin(11);                  
   Wire.onReceive(receiveEvent);   // register events
   Wire.onRequest(requestEvent);
-  Serial.println("address 11");
+  //Serial.println("address 11");//TEST
   
 }
 
 void loop()
 {
-  delay(10);    //change accordingly
+  delay(10);
   
-  if(ledshow == true){        //handling show command
+  //handling show command - On LED for 3 seconds
+  if(ledshow == true){        
     digitalWrite(LED, HIGH);
-    delay(3000);               // wait for 5 seconds
+    delay(3000);             
     digitalWrite(LED, LOW);
     ledshow = false;
   }
   
+  //handling stops after activating motors
   if(needToStop){
     delay(500);
     stopMotors();
     needToStop = false;
   }
   
-  Serial.println(address);
+  //Serial.println(address);//TEST
 }
 
 // function that executes whenever data is received from master
 void receiveEvent(int howMany)
 {
-  //types of messages - s - show, A - address assign, t1 - test 1, a1 - act 1  
+  //types of messages - s - show, B- On selectout, C- Off selectout, t1 - test 1, a1 - act 1  
 
   char command;
   int id;
   int add;
   
+  //Address assigning
   if(mode == 2){
     add = Wire.read ();  
     address = add;  
@@ -94,6 +102,7 @@ void receiveEvent(int howMany)
     mode = 3;
   }
   
+  //listening mode
   else if(mode == 3){
     
     command = Wire.read ();
@@ -108,17 +117,19 @@ void receiveEvent(int howMany)
       
     //if got one byte
     else if (howMany == 1){
-      if(command == 's'){     // show
+      if(command == 's'){     // show LED
            show();
       }
     }
       
     //if got two bytes
     else if (howMany == 2){
+      //real time capability demonstration
       if(command == 't'){     // test
           id= Wire.read ();
           test(id);
       }
+      //actions in programs
       else if(command == 'a'){  // act
           id= Wire.read ();
           act(id);
@@ -126,7 +137,6 @@ void receiveEvent(int howMany)
     }
   }
   
-
   // throw away any garbage
   while (Wire.available () > 0) {
     Wire.read ();
@@ -136,22 +146,20 @@ void receiveEvent(int howMany)
 // function that executes whenever data is requested by master
 void requestEvent()
 {
-  Serial.println("write");
+  //Serial.println("write");//TEST
   switch (mode) {
     case 1: 
-      Wire.write(type); 
-      mode = 2; //will receive an address soon      
+      Wire.write(type); //send type
+      mode = 2;         //will receive an address soon      
       break;
     case 2:
       break;
-    case 3:
-    if(needToStop)
-    {
-    Wire.write(0);
+    case 3:          //send whether ready to receive another message
+    if(needToStop){
+      Wire.write(0);
     }
-    else
-    {
-    Wire.write(1);
+    else{
+      Wire.write(1);
     }
       break;
     default:
@@ -164,7 +172,7 @@ void show(){
     ledshow = true;
 }
 
-// action
+// actions
 void act(int id){
     switch (id) {
     case '1': forward();
@@ -190,7 +198,7 @@ void act(int id){
   }
 }
 
-// test
+// tests
 void test(int id){
     switch (id) {
     case '1': forward();
@@ -215,6 +223,7 @@ void test(int id){
   }
 }
 
+// run the base forward
 void forward(){
   digitalWrite(MOTOR1_PWM, HIGH);
   digitalWrite(MOTOR1_1, HIGH);    
@@ -224,6 +233,7 @@ void forward(){
   digitalWrite(MOTOR2_2, LOW);
 }
 
+// run the base reverse
 void reverse(){
   digitalWrite(MOTOR1_PWM, HIGH);
   digitalWrite(MOTOR1_1, LOW);    
@@ -233,6 +243,7 @@ void reverse(){
   digitalWrite(MOTOR2_2, HIGH);
 }
 
+// turn right the base
 void turnRight(){
   digitalWrite(MOTOR1_PWM, HIGH);
   digitalWrite(MOTOR1_1, HIGH);    
@@ -242,6 +253,7 @@ void turnRight(){
   digitalWrite(MOTOR2_2, HIGH);
 }
 
+// turn left the base
 void turnLeft(){
   digitalWrite(MOTOR1_PWM, HIGH);
   digitalWrite(MOTOR1_1, LOW);    
@@ -251,6 +263,7 @@ void turnLeft(){
   digitalWrite(MOTOR2_2, LOW);
 }
 
+//fast stop
 void stopMotors(){
   digitalWrite(MOTOR1_PWM, HIGH);
   digitalWrite(MOTOR1_1, HIGH);    

@@ -5,13 +5,15 @@
 #include <Wire.h>
 #include <NewPing.h>
 
+/* Pin Definitions*/
 #define TRIGGER_PIN  12  // Arduino pin tied to trigger pin on the ultrasonic sensor.
 #define ECHO_PIN     11  // Arduino pin tied to echo pin on the ultrasonic sensor.
 #define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
-#define LED  13    //change accordingly
-#define SELECT_IN 7    //change accordingly
-#define SELECT_OUT 8    //change accordingly
+#define LED  13    
+#define SELECT_IN 7    
+#define SELECT_OUT 8   
 
+//NewPing Library setup
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
 int mode = 1;  //initial mode
@@ -22,27 +24,30 @@ byte distance;
 
 void setup()
 {
+  // set pins to input and output modes
   pinMode(LED, OUTPUT);
   pinMode(SELECT_IN, INPUT);
   pinMode(SELECT_OUT, OUTPUT);
   
   Serial.begin(9600);
   
-  Wire.begin(10);                  // unconfigured
+  //begin i2c communication with default address
+  Wire.begin(10);                  
   Wire.onReceive(receiveEvent);   // register events
   Wire.onRequest(requestEvent);
-  Serial.println("address 10");   // TESTING
-  
+  //Serial.println("address 10");// TEST
+    
+  //waite unttil the slave is selected
   while (digitalRead(SELECT_IN) == HIGH) {
-    delay(10);    //change accordingly
-    Serial.println("address 10"); // TESTING
+    delay(10);
+    //Serial.println("address 10");// TEST
   }
   
-  //NEED TO TAKE CARE AT MASTER. WARNNING: I2C POWER UP MAY NOT FINISHED WHEN MASTER BIGIN COMMUNICATION
-  Wire.begin(11);                  // selected
+  //when selected change the default address to another
+  Wire.begin(11);                  
   Wire.onReceive(receiveEvent);   // register events
   Wire.onRequest(requestEvent);
-  Serial.println("address 11"); // TESTING
+  //Serial.println("address 11");// TEST
   
 }
 
@@ -51,28 +56,30 @@ void loop()
   delay(50);                      // Wait 50ms between pings (about 20 pings/sec). 29ms should be the shortest delay between pings.
   unsigned int uS = sonar.ping(); // Send ping, get ping time in microseconds (uS).
   distance = (byte)(uS / US_ROUNDTRIP_CM); // Convert ping time to distance in cm and print result (0 = outside set distance range)
-    //Serial.print(distance); // TESTING
-     // Serial.println("cm"); // TESTING
+  //Serial.print(distance);//TEST
+  //Serial.println("cm");//TEST
   
-  if(ledshow == true){        //handling show command
+  //handling show command - On LED for 3 seconds
+  if(ledshow == true){       
     digitalWrite(LED, HIGH);
-    delay(3000);               // wait for 5 seconds
+    delay(3000);               // wait for 3 seconds
     digitalWrite(LED, LOW);
     ledshow = false;
   }
   
-  //Serial.println(address); // TESTING
+  //Serial.println(address);//TEST
 }
 
 // function that executes whenever data is received from master
 void receiveEvent(int howMany)
 {
-  //types of messages - s - show, A - address assign, t1 - test 1, a1 - act 1  
+  //types of messages - s - show, B- On selectout, C- Off selectout, t1 - test 1, a1 - act 1  
 
   char command;
   int id;
   int add;
   
+  //Address assigning
   if(mode == 2){
     add = Wire.read ();  
     address = add;  
@@ -83,6 +90,7 @@ void receiveEvent(int howMany)
     mode = 3;
   }
   
+  //listening mode
   else if(mode == 3){
     
     command = Wire.read ();
@@ -94,14 +102,6 @@ void receiveEvent(int howMany)
     else if(command == 'C'){
       digitalWrite(SELECT_OUT, LOW); //Off selectout
     }
-    
-    //NO NEED TO RESET AS ADDRESSING IS DONE BRANCH WISE
-//    else if(command == 'R'){          // Reset in order to do addressing ??? NOT RESETING CORRECTLY
-//      Wire.begin(10);                  // unconfigured
-//      Wire.onReceive(receiveEvent);   // register events
-//      Wire.onRequest(requestEvent);  
-//      digitalWrite(SELECT_OUT, LOW); //Off selectout
-//    }
       
     //if got one byte
     else if (howMany == 1){
@@ -112,10 +112,12 @@ void receiveEvent(int howMany)
       
     //if got two bytes
     else if (howMany == 2){
+      //real time capability demonstration
       if(command == 't'){     // test
           id= Wire.read ();
           test(id);
       }
+      //actions in programs
       else if(command == 'a'){  // act
           id= Wire.read ();
           act(id);
@@ -123,7 +125,6 @@ void receiveEvent(int howMany)
     }
   }
   
-
   // throw away any garbage
   while (Wire.available () > 0) {
     Wire.read ();
@@ -136,17 +137,17 @@ void requestEvent()
   Serial.println("write");
   switch (mode) {
     case 1: 
-      Wire.write(type); 
-      mode = 2; //will receive an address soon      
+      Wire.write(type); //send type
+      mode = 2;         //will receive an address soon      
       break;
     case 2:
       break;
-    case 3:    
+    case 3:              //sending distance on request
       if(distance == 0)
       {
-      distance = 200;
+        distance = 200;
       }
-      Wire.write(distance);  //sending distance 
+      Wire.write(distance);
       break;
     default:
       break;
@@ -158,7 +159,7 @@ void show(){
     ledshow = true;
 }
 
-// action
+// actions
 void act(int id){
     switch (id) {
     case '1':      
@@ -172,7 +173,7 @@ void act(int id){
   }
 }
 
-// test
+// tests
 void test(int id){
     switch (id) {
     case '1':      
