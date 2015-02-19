@@ -75,6 +75,7 @@ public class Holder extends Pane {
         setEventHandlers();
     }
 
+    // set event handlers
     public void setEventHandlers() {
         this.setOnDragDropped((DragEvent event) -> {
             Dragboard db = event.getDragboard();
@@ -122,14 +123,17 @@ public class Holder extends Pane {
         });
     }
 
+    // add an element to vbox
     public void addElementToVbox(Node node) {
         actions.getChildren().add(node);
     }
 
+    // returns actions in vbox
     public VBox getActions() {
         return actions;
     }
 
+    // set actions 
     public final void setActions(Image img1, Image img2) {
         this.actions = new VBox();
         BackgroundImage bckImg1 = new BackgroundImage(img1, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
@@ -142,6 +146,7 @@ public class Holder extends Pane {
         super.getChildren().add(this.actions);
     }
 
+    // set back image 
     public final void setBackImage(Image topImage, Image bottomImage) {
         super.setMinWidth(topImage.getWidth());
         super.setPadding(new Insets(20, 0, 8, 0));
@@ -151,6 +156,7 @@ public class Holder extends Pane {
         super.setBackground(new Background(bottom, top));
     }
 
+    // set back image empty
     public final void setEmptyBackImage() {
         super.setBackground(Background.EMPTY);
     }

@@ -59,48 +59,58 @@ public class Device {
         return type;
     }
 
+    // returns the device image
     public Image getImage() {
         return image;
     }
 
+    // returns device's capabilities
     public ArrayList<Capability> getCapabilities() {
         return capabilities;
     }
     
+    // add capabilities to the device
     public void addCapabilities(ArrayList<Capability> caps){
         this.capabilities.addAll(caps);
     }
 
+    // returns device name
     public String getDeviceName() {
         Locale currentLocale = Strings.getLocale();
         return deviceNames.get(currentLocale);
     }
 
+    // returns device name based on the locale
     public String getDeviceName(Locale locale) {
         return deviceNames.get(locale);
     }
 
+    // returns device block
     public DeviceBlock getDeviceBlock() {
         return deviceBlock;
     }
 
+    // returns device names mapping
     public Map<Locale, String> getDeviceNames() {
         return deviceNames;
     }
 
+    // returns image name
     public String getImgName() {
         return imgName;
     }
     
-
+    // add device block to the pane
     public void addToPane(Pane parent) {
         parent.getChildren().add(this.deviceBlock);
     }
-
+    
+    // adds the capability to the device
     public void addCapability(Capability cap) {
         this.capabilities.add(cap);
     }
     
+    // remove capability from the device
     public boolean removeCapability(Capability cap){
         return this.capabilities.remove(cap);
     }
@@ -110,6 +120,7 @@ public class Device {
         return (this.getDeviceName(Locale.US) + " (" + this.getDeviceID() + ")");
     }
 
+    // returns capability block
     public Block getCapabilityBlock(String capId) {
         for (Capability capabilitie : capabilities) {
             if (capabilitie.getCapID().equals(capId)) {
